@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import store from "./store";
+// React router
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// Componentes
+import AppWrapper from "./components/wrappers/AppWrapper";
+import Home from "./components/home/Home";
+
+// Navegacion
+import Navigation from "./components/navigation/Navigation";
+import TopBar from "./components/navigation/TopBar";
+
+// css
+import "./css/main.css";
+
+export class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <Router>
+          <div className="App">
+            <AppWrapper>
+              <TopBar />
+              <div className="app_wrapper">
+                <Navigation />
+                <Switch>
+                  {/* Homepage */}
+                  <Route
+                    exact
+                    path="/"
+                    render={(props) => <Home {...props} />}
+                  />
+
+                  {/* 404 */}
+                  <Route render={(props) => <Home {...props} />} />
+                </Switch>
+              </div>
+            </AppWrapper>
+          </div>
+        </Router>
+      </Provider>
+    );
+  }
 }
 
 export default App;
