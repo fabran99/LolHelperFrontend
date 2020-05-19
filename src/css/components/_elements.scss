@@ -1,0 +1,35 @@
+.element_box {
+  background: $background_lighter;
+}
+
+.header_text {
+  position: relative;
+  text-align: center;
+  font-size: 1.6em;
+  margin-bottom: 1em;
+  color: lighten($gold, 22%);
+  font-family: "Beautifort";
+  text-transform: uppercase;
+  font-weight: bolder;
+
+  &:after {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    content: "";
+    height: 1px;
+    width: calc(50% - 10em);
+    background: $gold;
+    background: linear-gradient(to right, transparent, rgba($gold, 0.5));
+  }
+  &:before {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    content: "";
+    height: 1px;
+    width: calc(50% - 10em);
+    background: $gold;
+    background: linear-gradient(to right, rgba($gold, 0.5), transparent);
+  }
+}

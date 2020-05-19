@@ -5,7 +5,6 @@ import classnames from "classnames";
 import { navToggle } from "../../actions/navbarActions";
 // Iconos
 import { AiOutlineHome, AiOutlineUser } from "react-icons/ai";
-import { GiPocketBow } from "react-icons/gi";
 import { RiSettings5Line } from "react-icons/ri";
 import { MdGames } from "react-icons/md";
 
@@ -44,14 +43,6 @@ export class Navigation extends Component {
             })}
           >
             <MdGames /> Ingame
-          </Link>
-          <Link
-            to="/champions"
-            className={classnames({
-              selected: pathname == "/champions",
-            })}
-          >
-            <GiPocketBow /> Campeones
           </Link>
           <Link
             to="/profile"

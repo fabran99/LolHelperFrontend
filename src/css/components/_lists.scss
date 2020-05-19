@@ -1,0 +1,365 @@
+.list_wrapper {
+  max-height: 550px;
+  padding-right: 4px;
+  transition: width 0.2s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .empty {
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 1em;
+  }
+}
+
+.championlist {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+
+  //   Filtro
+
+  &__filters {
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 0.5em;
+    display: flex;
+
+    &__input {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0.5em;
+      border: 1px solid rgba($gold, 0.15);
+      width: 35%;
+      background: $content_background;
+
+      input {
+        background: none;
+        font-family: "Roboto";
+        color: lighten(rgba($gold, 0.5), 30%);
+        border: none;
+        outline: none;
+        font-weight: lighter;
+        width: calc(100% - 40px);
+
+        &::placeholder {
+          color: lighten(rgba($gold, 0.2), 30%);
+        }
+      }
+    }
+
+    input,
+    select {
+      font-size: 0.9em;
+    }
+
+    &__icon {
+      width: 30px;
+      padding-right: 10px;
+      text-align: center;
+      color: lighten(rgba($gold, 0.5), 20%);
+    }
+
+    &__select {
+      width: 23.3%;
+      padding-left: 1em;
+      background: $content_background;
+      select {
+        width: 100%;
+        display: block;
+        background: none;
+        font-family: "Roboto";
+        color: lighten(rgba($gold, 0.5), 30%);
+        border: none;
+        outline: none;
+        font-weight: lighter;
+        padding: 0.5em;
+        border: 1px solid rgba($gold, 0.15);
+
+        option {
+          background: $content_background;
+          padding: 0.5em;
+          height: 1.2em;
+        }
+      }
+    }
+  }
+
+  //   Detalle
+  .championdetail {
+    padding-right: 1em;
+    width: 28%;
+    text-align: center;
+    transition: width 0.2s ease;
+    background: rgba($skyblue, 0.009);
+    padding: 1em 0.5em;
+    margin-right: 1em;
+    border: 1px solid rgba($gold, 0.15);
+
+    &__img {
+      height: 230px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba($gold, 0.5);
+      width: 180px;
+      margin: 0 auto;
+      display: block;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      img {
+        @extend %abs_center;
+        width: 107%;
+        top: 65%;
+      }
+
+      &--placeholder img {
+        height: 100%;
+        width: auto;
+        top: 50%;
+      }
+    }
+
+    &__name {
+      color: lighten($gold, 22%);
+      font-family: "Beautifort";
+      text-transform: uppercase;
+      font-weight: bolder;
+      margin: 0.5em 0;
+      font-size: 1.4em;
+      position: relative;
+    }
+
+    &__lane {
+      text-align: center;
+      color: lighten($gold, 22%);
+      font-family: "Beautifort";
+      text-transform: uppercase;
+      font-weight: bolder;
+      position: relative;
+      margin-top: 2.7em;
+      font-size: 1.1em;
+
+      img {
+        display: inline-block;
+        width: 60px;
+      }
+      span {
+        position: absolute;
+        top: -1.2em;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+  //   Listado
+  &__container {
+    width: 70%;
+    &--full {
+      width: 100%;
+    }
+  }
+
+  &__element {
+    text-decoration: none;
+    color: white;
+    margin: 0 auto;
+    display: flex;
+    border-bottom: 1px solid rgba($ranking_border_color, 0.5);
+    padding: 0.5em;
+    align-items: center;
+    border-left: 3px solid transparent;
+    position: relative;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+    overflow: hidden;
+
+    &:hover {
+      .championlist__icon {
+        transform: scale(1.1);
+      }
+    }
+
+    &:after {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      content: "";
+      padding: 2px;
+      border: 1px solid rgba($ranking_border_color, 0.5);
+      transform: translateY(50%) translateX(-50%) rotate(45deg);
+      background: $content_background;
+      z-index: 3;
+    }
+    &:before {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      content: "";
+      padding: 2px;
+      border: 1px solid rgba($ranking_border_color, 0.5);
+      transform: translateY(50%) translateX(50%) rotate(45deg);
+      background: $content_background;
+      z-index: 3;
+    }
+
+    &:not(.championlist__element--active):nth-child(even) {
+      background: rgba($skyblue, 0.03);
+    }
+
+    &--active {
+      background: rgba($skyblue, 0.1);
+      border-left-color: darken($blue_accent, 15%);
+    }
+  }
+
+  &__number {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 1.1em;
+    opacity: 0.2;
+  }
+
+  &__icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid $gold;
+    background: $content_background;
+    transition: all 0.2s ease;
+
+    img {
+      @extend %abs_center;
+      width: 110%;
+      opacity: 0.9;
+    }
+
+    &:hover {
+      img {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__info {
+    text-align: left;
+    margin: 0 1em;
+    font-family: "Beautifort-Bold";
+    width: 180px;
+  }
+
+  &__name {
+    font-size: 1.2em;
+    text-transform: uppercase;
+    color: lighten($gold, 25%);
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__lane {
+    color: rgb(71, 72, 75);
+    text-transform: uppercase;
+    font-size: 0.85em;
+    margin-top: 0.1em;
+    img {
+      display: inline-block;
+      width: 14px;
+      margin-right: 0.3em;
+      transform: translateY(2px);
+    }
+  }
+
+  //   Stats
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    width: 570px;
+  }
+
+  &__stat {
+    display: flex;
+    width: 33%;
+    position: relative;
+    align-items: center;
+    font-family: "Roboto";
+
+    &:not(:last-child) {
+      padding-right: 1em;
+      .championlist__stat__value {
+        right: 1em;
+      }
+    }
+
+    &__bar {
+      width: 100%;
+      height: 15px;
+      top: 10px;
+      background: lighten($background, 3%);
+      display: flex;
+      position: relative;
+      border-radius: 10px;
+      align-items: center;
+      padding: 3px;
+    }
+
+    &__fill {
+      height: 100%;
+      background: $blue_accent;
+      background: linear-gradient(
+        to right,
+        lighten($blue_accent, 5%),
+        darken($blue_accent, 15%)
+      );
+      z-index: 10;
+      border-radius: 10px;
+      position: relative;
+      overflow-x: hidden;
+
+      &:after {
+        content: "";
+        position: absolute;
+        right: 3px;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 3px;
+        background: rgba(0, 0, 0, 0.479);
+      }
+
+      &--pink {
+        background: $pink;
+        background: linear-gradient(to right, $pink, darken($pink, 10%));
+      }
+      &--green {
+        background: $green;
+        background: linear-gradient(to right, $green, darken($green, 10%));
+      }
+    }
+
+    &__name {
+      position: absolute;
+      left: 0;
+      top: -0.8em;
+      font-size: 0.8em;
+      opacity: 0.6;
+      z-index: 10;
+    }
+
+    &__value {
+      position: absolute;
+      right: 0;
+      top: -0.8em;
+      opacity: 0.6;
+      font-size: 0.8em;
+      z-index: 10;
+    }
+  }
+}

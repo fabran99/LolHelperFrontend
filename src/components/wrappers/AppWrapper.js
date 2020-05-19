@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+
+import Loading from "../utility/Loading";
+
 import { lcuConnect, lcuDisconnect } from "../../actions/lcuConnectorActions";
 import { getAssets } from "../../actions/assetsActions";
 
@@ -9,14 +12,10 @@ export class AppWrapper extends Component {
     super(props);
   }
 
-  // componentDidMount() {
-  //   const { getAssets } = this.props;
-  //   getAssets();
-
-  //   if (window.ipcRenderer) {
-  //     this.initWatchers();
-  //   }
-  // }
+  componentDidMount() {
+    const { getAssets } = this.props;
+    getAssets();
+  }
 
   // initWatchers() {
   //   const { lcuDisconnect, lcuConnect } = this.props;
@@ -65,6 +64,10 @@ export class AppWrapper extends Component {
   }
 
   render() {
+    const { assets } = this.props;
+    if (!assets.general.content) {
+      return <Loading />;
+    }
     return this.props.children;
   }
 }

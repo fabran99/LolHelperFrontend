@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import classnames from "classnames";
+import ChampRanking from "./ChampRanking";
+import ChampionList from "../lists/ChampionList";
 
 export class Home extends Component {
   constructor(props) {
@@ -9,14 +11,15 @@ export class Home extends Component {
 
   render() {
     const { assets, navbar } = this.props;
-
     return (
       <div
         className={classnames("app_content home_page", {
           nav_visible: navbar.visible,
         })}
       >
-        <h1>homepage</h1>
+        <ChampRanking />
+        <div className="header_text mt-2">Campeones</div>
+        <ChampionList list={assets.general.content.main_list} />
       </div>
     );
   }

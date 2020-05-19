@@ -16,7 +16,6 @@ export class TopBar extends Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <div className="top_bar">
         <div className="navbar_toggle" onClick={this.toggleNav}>

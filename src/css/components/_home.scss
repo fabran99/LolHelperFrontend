@@ -1,4 +1,94 @@
 .home_page {
-  background: $content_background;
-  color: white;
+  .ranking {
+    text-align: center;
+    font-weight: bolder;
+    text-transform: uppercase;
+
+    &__list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &__element {
+      width: 20%;
+      background: $content_background;
+      text-decoration: none;
+      padding: 0.3em;
+      cursor: pointer;
+
+      &:hover {
+        .ranking__img {
+          opacity: 1;
+        }
+        .ranking__info {
+          border: 1px solid rgba($gold, 0.5);
+        }
+      }
+    }
+
+    &__lane {
+      color: rgba(lighten($gold, 12%), 0.9);
+      font-size: 1.2em;
+      margin-bottom: 0.5em;
+      font-family: "Beautifort-Bold";
+
+      img {
+        display: inline-block;
+        width: 20px;
+        position: relative;
+        top: 3px;
+        margin-right: 0.2em;
+      }
+    }
+
+    &__info {
+      border: 1px solid rgba($ranking_border_color, 0.5);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      height: 300px;
+    }
+
+    &__overlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.658), black);
+    }
+
+    &__img {
+      @extend %abs_center;
+      top: 60%;
+      width: 230px;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+      z-index: 0;
+    }
+
+    &__text {
+      z-index: 10;
+      position: absolute;
+      bottom: 0.5em;
+      left: 0;
+      width: 100%;
+    }
+
+    &__champ {
+      color: lighten($gold, 25%);
+      font-size: 1.3em;
+      margin-bottom: 0.4em;
+    }
+
+    &__winrate {
+      color: lighten($gold, 20%);
+      margin-bottom: 0.4em;
+    }
+
+    &__winrate_text {
+      font-size: 0.7em;
+      opacity: 0.3;
+      color: lighten($gold, 15%);
+    }
+  }
 }

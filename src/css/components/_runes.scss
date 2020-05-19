@@ -1,0 +1,177 @@
+.runes {
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: $border_radius;
+  position: relative;
+  margin: 0 auto;
+  padding: 1em 0;
+
+  &:after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    width: 100%;
+    height: 1px;
+    left: 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba($gold, 0.5),
+      transparent
+    );
+  }
+  &:before {
+    position: absolute;
+    top: 0;
+    content: "";
+    width: 100%;
+    height: 1px;
+    left: 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba($gold, 0.5),
+      transparent
+    );
+  }
+
+  &__secondary,
+  &__perks {
+    &:after {
+      content: "";
+      @extend %abs_center;
+      width: 2px;
+      height: 80px;
+      background: rgb(129, 129, 129);
+      z-index: -1;
+      top: 40%;
+    }
+  }
+
+  &__primary,
+  &__secondary,
+  &__perks {
+    width: 33%;
+    padding: 0.5em;
+    position: relative;
+
+    &:not(:last-child) {
+      border-right: 1px solid rgba($ranking_border_color, 0.1);
+    }
+
+    img {
+      width: 32px;
+      margin: 0.2em;
+      border-radius: 50%;
+      border: 2px solid $gold;
+      overflow: hidden;
+      background: $content_background;
+      transition: all 0.1s ease;
+      cursor: pointer;
+      padding: 1px;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    &__first,
+    &__perk {
+      &--inline {
+        display: inline-block;
+        width: 50%;
+      }
+    }
+  }
+
+  &__primary {
+    &:after {
+      content: "";
+      @extend %abs_center;
+      width: 2px;
+      height: 80px;
+      background: rgb(129, 129, 129);
+      z-index: -1;
+      top: 65%;
+    }
+    &:before {
+      content: "";
+      background: rgb(129, 129, 129);
+      z-index: -1;
+      @extend %abs_center;
+      top: 15%;
+      height: 2px;
+      width: 50px;
+    }
+
+    &__first--inline {
+      img {
+        padding: 5px;
+      }
+    }
+  }
+
+  &__secondary {
+    &__first {
+      img {
+        padding: 5px;
+      }
+    }
+  }
+}
+
+.build {
+  margin: 0 auto;
+
+  &:after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    width: 100%;
+    height: 1px;
+    left: 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba($gold, 0.5),
+      transparent
+    );
+  }
+  &:before {
+    position: absolute;
+    top: 0;
+    content: "";
+    width: 100%;
+    height: 1px;
+    left: 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba($gold, 0.5),
+      transparent
+    );
+  }
+
+  &--notop {
+    &:before {
+      content: none;
+    }
+  }
+
+  &__item {
+    width: 35px;
+    height: 35px;
+    background: lighten($content_background, 2%);
+    display: inline-block;
+    border: 2px solid rgba($ranking_border_color, 0.9);
+    cursor: pointer;
+
+    &:not(:last-child) {
+      margin-right: 0.5em;
+    }
+
+    img {
+      max-width: 100%;
+    }
+  }
+}

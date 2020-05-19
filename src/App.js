@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import Particles from "react-particles-js";
+import particles_config from "./json/particlesjs-config.json";
+// Redux
 import { Provider } from "react-redux";
 import store from "./store";
 // React router
@@ -23,8 +26,10 @@ export class App extends Component {
           <div className="App">
             <AppWrapper>
               <TopBar />
+              <Navigation />
+
               <div className="app_wrapper">
-                <Navigation />
+                <Particles params={particles_config} />
                 <Switch>
                   {/* Homepage */}
                   <Route
