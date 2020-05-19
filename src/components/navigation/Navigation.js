@@ -2,11 +2,18 @@ import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import classnames from "classnames";
-import { AiOutlineHome, AiOutlineBarChart } from "react-icons/ai";
+import { navToggle } from "../../actions/navbarActions";
+// Iconos
+import { AiOutlineHome, AiOutlineUser } from "react-icons/ai";
+import { GiPocketBow } from "react-icons/gi";
 import { RiSettings5Line } from "react-icons/ri";
 import { MdGames } from "react-icons/md";
 
 export class Navigation extends Component {
+  toggle = () => {
+    this.props.navToggle();
+  };
+
   render() {
     const { pathname } = this.props.history.location;
     return (
@@ -15,6 +22,12 @@ export class Navigation extends Component {
           visible: this.props.navbar.visible,
         })}
       >
+        <div
+          className={classnames("bg", {
+            visible: this.props.navbar.visible,
+          })}
+          onClick={this.toggle}
+        ></div>
         <div className="nav_content">
           <Link
             to="/"
@@ -33,17 +46,25 @@ export class Navigation extends Component {
             <MdGames /> Ingame
           </Link>
           <Link
-            to="/stats"
+            to="/champions"
             className={classnames({
-              selected: pathname == "/stats",
+              selected: pathname == "/champions",
             })}
           >
-            <AiOutlineBarChart /> Estadísticas
+            <GiPocketBow /> Campeones
           </Link>
           <Link
-            to="/config"
+            to="/profile"
             className={classnames({
-              selected: pathname == "/config",
+              selected: pathname == "/profile",
+            })}
+          >
+            <AiOutlineUser /> Perfil
+          </Link>
+          <Link
+            to="/configurations"
+            className={classnames({
+              selected: pathname == "/configurations",
             })}
           >
             <RiSettings5Line /> Configuración
@@ -59,4 +80,4 @@ const mapStateToProps = (state) => ({
   navbar: state.navbar,
 });
 
-export default connect(mapStateToProps, null)(withRouter(Navigation));
+export default connect(mapStateToProps, { navToggle })(withRouter(Navigation));

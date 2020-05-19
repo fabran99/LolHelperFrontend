@@ -10,29 +10,24 @@
   padding: 0;
 }
 
+html {
+  background: transparent;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   overflow: hidden;
   border-radius: $border_radius;
-  min-height: 700px;
-  min-width: 900px;
-  background: $background;
+  min-height: 750px;
+  min-width: 1100px;
 }
 
 .app_wrapper {
-  display: flex;
-  background: white;
-  flex-wrap: wrap;
-  min-height: calc(100vh - 39px);
+  background: $content_background;
 
   .app_content {
-    display: flex;
     width: 100vw;
-    transition: width 0.4s ease;
-    border-top-left-radius: $border_radius;
-
-    &.nav_visible {
-      width: calc(100vw - 200px);
-    }
+    height: calc(100vh - 39px);
+    padding: 1.5em;
   }
 }

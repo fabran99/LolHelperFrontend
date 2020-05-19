@@ -21,15 +21,15 @@ var createWindow = () => {
   }
 
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 700,
+    width: 1100,
+    height: 750,
     icon: "",
     webPreferences: {
       nodeIntegration: true,
       preload: __dirname + "/electron_related/preload.js",
     },
     frame: false,
-    // resizable: false,
+    resizable: false,
     transparent: true,
   });
 
@@ -43,7 +43,7 @@ var createWindow = () => {
   );
 
   // Abro herramientas de desarrollo
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Cierro programa al cerrar ventana
   mainWindow.on("closed", () => (mainWindow = null));
