@@ -1,9 +1,10 @@
 .list_wrapper {
-  max-height: 550px;
+  height: 570px;
   padding-right: 4px;
   transition: width 0.2s ease;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
 
   .empty {
     text-align: center;
@@ -16,9 +17,53 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  user-select: none;
+  position: relative;
+  animation: fadeIn 0.5s ease;
 
-  //   Filtro
+  &__up {
+    position: absolute;
+    right: 25px;
+    bottom: 0;
+    font-size: 6em;
+    z-index: 15;
+    cursor: pointer;
+    width: 55px;
+    overflow: hidden;
+    height: 55px;
+    animation: fadeIn 0.5s ease;
 
+    svg {
+      width: 55px;
+      height: 55px;
+      @extend %abs_center;
+
+      g {
+        path:first-child {
+          display: none;
+        }
+        path:last-child {
+          fill: lighten($content_background, 5%);
+          stroke: darken($gold, 20%);
+          stroke-width: 0.45px;
+          transform: scale(1.8) translateY(5.5px);
+          transform-origin: bottom;
+        }
+      }
+    }
+
+    &:hover {
+      svg {
+        g {
+          path:last-child {
+            stroke: darken($gold, 10%);
+          }
+        }
+      }
+    }
+  }
+
+  //   Filtros
   &__filters {
     margin: 0 auto;
     text-align: center;
@@ -35,7 +80,7 @@
 
       input {
         background: none;
-        font-family: "Roboto";
+        font-family: "Source Sans Pro";
         color: lighten(rgba($gold, 0.5), 30%);
         border: none;
         outline: none;
@@ -67,8 +112,10 @@
       select {
         width: 100%;
         display: block;
+        text-indent: 5px;
+
         background: none;
-        font-family: "Roboto";
+        font-family: "Source Sans Pro";
         color: lighten(rgba($gold, 0.5), 30%);
         border: none;
         outline: none;
@@ -78,8 +125,9 @@
 
         option {
           background: $content_background;
-          padding: 0.5em;
-          height: 1.2em;
+          line-height: 3em;
+          border-bottom: 1px solid grey;
+          font-weight: lighter;
         }
       }
     }
@@ -87,17 +135,18 @@
 
   //   Detalle
   .championdetail {
-    padding-right: 1em;
     width: 28%;
     text-align: center;
     transition: width 0.2s ease;
     background: rgba($skyblue, 0.009);
-    padding: 1em 0.5em;
+    padding: 0 0;
     margin-right: 1em;
     border: 1px solid rgba($gold, 0.15);
+    min-height: 615px;
+    background: rgba(0, 0, 0, 0.1);
 
     &__img {
-      height: 230px;
+      height: 245px;
       overflow: hidden;
       position: relative;
       border: 1px solid rgba($gold, 0.5);
@@ -105,6 +154,7 @@
       margin: 0 auto;
       display: block;
       opacity: 0.8;
+      margin-top: 1em;
 
       &:hover {
         opacity: 1;
@@ -123,7 +173,7 @@
       }
     }
 
-    &__name {
+    &__sectionname {
       color: lighten($gold, 22%);
       font-family: "Beautifort";
       text-transform: uppercase;
@@ -175,13 +225,6 @@
     position: relative;
     border-top: 1px solid transparent;
     cursor: pointer;
-    overflow: hidden;
-
-    &:hover {
-      .championlist__icon {
-        transform: scale(1.1);
-      }
-    }
 
     &:after {
       position: absolute;
@@ -219,8 +262,8 @@
   &__number {
     position: absolute;
     bottom: 0;
-    left: 0;
-    font-size: 1.1em;
+    left: 2px;
+    font-size: 0.75em;
     opacity: 0.2;
   }
 
@@ -289,7 +332,7 @@
     width: 33%;
     position: relative;
     align-items: center;
-    font-family: "Roboto";
+    font-family: "Source Sans Pro";
 
     &:not(:last-child) {
       padding-right: 1em;

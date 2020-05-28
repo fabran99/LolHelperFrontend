@@ -29,7 +29,7 @@ var createWindow = () => {
       preload: __dirname + "/electron_related/preload.js",
     },
     frame: false,
-    resizable: false,
+    // resizable: false,
     transparent: true,
   });
 
@@ -43,7 +43,7 @@ var createWindow = () => {
   );
 
   // Abro herramientas de desarrollo
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Cierro programa al cerrar ventana
   mainWindow.on("closed", () => (mainWindow = null));

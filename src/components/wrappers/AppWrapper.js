@@ -65,7 +65,7 @@ export class AppWrapper extends Component {
 
   render() {
     const { assets } = this.props;
-    if (!assets.general.content) {
+    if (!assets.champions) {
       return <Loading />;
     }
     return this.props.children;

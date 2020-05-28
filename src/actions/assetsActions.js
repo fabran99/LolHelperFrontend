@@ -13,6 +13,7 @@ export const getAssets = () => (dispatch) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       dispatch({
         type: ERROR_GET_ASSETS,
       });

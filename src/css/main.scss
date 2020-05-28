@@ -1,6 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap");
 @import "colors";
 @import "config";
+@import "animations";
 @import "./components/navigation";
 @import "./components/home";
 @import "./components/elements";
@@ -56,14 +57,17 @@ body {
   background-color: lighten($background_lighter, 25%);
 }
 
-.app_wrapper {
+.App {
+  width: 100vw;
+  height: 100vh;
+
   #tsparticles canvas {
     display: block;
     vertical-align: bottom;
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     transform: scale(1);
-    opacity: 1;
+    opacity: 0.6;
     transition: opacity 0.8s ease, transform 1.4s ease;
   }
 
@@ -76,7 +80,8 @@ body {
     left: 0;
     opacity: 0.7;
   }
-
+}
+.app_wrapper {
   .app_content {
     width: 100vw;
     height: calc(100vh - 39px);
@@ -84,5 +89,54 @@ body {
     overflow-y: auto;
     color: white;
     z-index: 15;
+    animation: fadeIn 0.4s ease;
+  }
+}
+
+.loading_container {
+  width: 100vw;
+  height: 100vh;
+
+  .loading {
+    @extend %abs_center;
+    color: white;
+    font-size: 3em;
+    color: lighten($gold, 20%);
+    text-align: center;
+
+    &__bar {
+      width: 300px;
+      height: 14px;
+      border-radius: 10px;
+      background: lighten($content_background, 5%);
+      margin: 10px auto;
+      padding: 3px;
+    }
+
+    &__fill {
+      height: 100%;
+      background: $blue_accent;
+      background: linear-gradient(
+        to right,
+        lighten($blue_accent, 5%),
+        darken($blue_accent, 15%)
+      );
+      z-index: 10;
+      border-radius: 10px;
+      position: relative;
+      overflow-x: hidden;
+      animation: loading 3s ease;
+
+      &:after {
+        content: "";
+        position: absolute;
+        right: 3px;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 3px;
+        background: rgba(0, 0, 0, 0.479);
+      }
+    }
   }
 }

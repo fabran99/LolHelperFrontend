@@ -5,7 +5,10 @@ export class Loading extends Component {
     return (
       <div className="loading_container">
         <div className="loading">
-          <div className="loading__animation">Cargando...</div>
+          <div className="loading__text">Cargando...</div>
+          <div className="loading__bar">
+            <div className="loading__fill"></div>
+          </div>
         </div>
       </div>
     );

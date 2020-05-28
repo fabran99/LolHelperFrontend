@@ -24,12 +24,13 @@ export class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
+            <Particles params={particles_config} />
+            <TopBar />
+
             <AppWrapper>
-              <TopBar />
               <Navigation />
 
               <div className="app_wrapper">
-                <Particles params={particles_config} />
                 <Switch>
                   {/* Homepage */}
                   <Route

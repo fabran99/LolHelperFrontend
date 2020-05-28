@@ -18,9 +18,12 @@ export class TopBar extends Component {
   render() {
     return (
       <div className="top_bar">
-        <div className="navbar_toggle" onClick={this.toggleNav}>
-          <i className="fas fa-bars"></i>
-        </div>
+        {this.props.assets.champions && (
+          <div className="navbar_toggle" onClick={this.toggleNav}>
+            <i className="fas fa-bars"></i>
+          </div>
+        )}
+
         <div className="icons">
           <i className="fas fa-window-minimize" onClick={this.minimize}></i>
           <i className="fas fa-times" onClick={this.close}></i>
@@ -32,6 +35,7 @@ export class TopBar extends Component {
 
 const mapStateToProps = (state) => ({
   navbar: state.navbar,
+  assets: state.assets,
 });
 
 export default connect(mapStateToProps, { navToggle })(TopBar);
