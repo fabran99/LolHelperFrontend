@@ -4,57 +4,65 @@ import { connect } from "react-redux";
 
 import Loading from "../utility/Loading";
 
-import { lcuConnect, lcuDisconnect } from "../../actions/lcuConnectorActions";
+import {
+  lcuConnect,
+  lcuDisconnect,
+  champselectchange,
+  gamesessionChange,
+} from "../../actions/lcuConnectorActions";
 import { getAssets } from "../../actions/assetsActions";
+import { electron } from "../../helpers/outsideObjects";
 
 export class AppWrapper extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     const { getAssets } = this.props;
     getAssets();
+    this.initListeners();
   }
 
-  // initWatchers() {
-  //   const { lcuDisconnect, lcuConnect } = this.props;
+  initListeners() {
+    const {
+      lcuDisconnect,
+      lcuConnect,
+      gameflowChange,
+      champselectchange,
+      gamesessionChange,
+    } = this.props;
 
-  //   this.lcu_connect_listener = window.ipcRenderer.on(
-  //     "LCU_CONNECT",
-  //     (event, data) => {
-  //       console.log(data);
-  //       // setTimeout(() => {
-  //       //   console.log("connect");
-  //       //   const { auth } = window.league_connect;
-  //       //   auth()
-  //       //     .then((res) => {
-  //       //       console.log(res);
-  //       //       if (!this.props.lcuConnector.connected) {
-  //       //         lcuConnect(res);
-  //       //       }
-  //       //     })
-  //       //     .catch((err) => {
-  //       //       console.log(err);
-  //       //     });
-  //       //   lcuConnect(null);
-  //       // }, 5000);
-  //     }
-  //   );
-  //   this.lcu_socket = window.ipcRenderer.on("LCU_SOCKET", (event, socket) => {
-  //     console.log(socket);
-  //   });
+    // Check connected
+    this.lcu_connect_listener = electron.ipcRenderer.on(
+      "LCU_CONNECT",
+      (event, data) => {
+        lcuConnect(data);
+      }
+    );
 
-  //   this.lcu_disconnect_listener = window.ipcRenderer.on(
-  //     "LCU_DISCONNECT",
-  //     () => {
-  //       console.log("disconected");
-  //       // lcuDisconnect();
-  //     }
-  //   );
+    // ChampSelect
+    this.champselectchange_listener = electron.ipcRenderer.on(
+      "CHAMPSELECT_CHANGE",
+      (event, data) => {
+        champselectchange(data);
+      }
+    );
 
-  //   window.ipcRenderer.send("WORKING", true);
-  // }
+    // GameSession
+    this.sessionchange_listener = electron.ipcRenderer.on(
+      "GAMESESSION_CHANGE",
+      (event, data) => {
+        gamesessionChange(data);
+      }
+    );
+
+    // Check disconnected
+    this.lcu_disconnect_listener = electron.ipcRenderer.on(
+      "LCU_DISCONNECT",
+      () => {
+        lcuDisconnect();
+      }
+    );
+
+    electron.ipcRenderer.send("WORKING", true);
+  }
 
   componentDidUpdate(prevProps) {
     // Me aseguro de scrollear la pag
@@ -74,11 +82,12 @@ export class AppWrapper extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
-  lcuConnector: state.lcuConnector,
 });
 
 export default connect(mapStateToProps, {
   getAssets,
   lcuConnect,
   lcuDisconnect,
+  champselectchange,
+  gamesessionChange,
 })(withRouter(AppWrapper));

@@ -4,7 +4,7 @@
   "private": true,
   "description": "Lol app",
   "author": "fabran99",
-  "main": "public/electron.js",
+  "main": "./electron.js",
   "build": {
     "appId": "lol.app",
     "win": {
@@ -23,6 +23,7 @@
     "electron-is-dev": "^1.2.0",
     "lcu-connector": "^2.1.3",
     "league-connect": "^2.0.1",
+    "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",

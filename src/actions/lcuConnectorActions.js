@@ -1,31 +1,37 @@
-import { LCU_CONNECT, LCU_DISCONNECT } from "./types";
+import {
+  LCU_CONNECT,
+  LCU_DISCONNECT,
+  GAMEFLOW_CHANGE,
+  CHAMPSELECT_CHANGE,
+  GAMESESSION_CHANGE,
+} from "./types";
 
 export const lcuConnect = (data) => (dispatch) => {
-  const { auth } = window.league_connect;
-  // Guarda en redux la info para la conexion
-  console.log("action");
-  if (data) {
-    dispatch({
-      type: LCU_CONNECT,
-      payload: data,
-    });
-    return null;
-  }
-  auth()
-    .then((res) => {
-      dispatch({
-        type: LCU_CONNECT,
-        payload: res,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // Guarda la info de conexion en redux
+  dispatch({
+    type: LCU_CONNECT,
+    payload: data,
+  });
 };
 
 export const lcuDisconnect = () => (dispatch) => {
   // Borra la info de conexion en redux
   dispatch({
     type: LCU_DISCONNECT,
+  });
+};
+
+export const champselectchange = (data) => (dispatch) => {
+  // Borra la info de conexion en redux
+  dispatch({
+    type: CHAMPSELECT_CHANGE,
+    payload: data,
+  });
+};
+export const gamesessionChange = (data) => (dispatch) => {
+  // Borra la info de conexion en redux
+  dispatch({
+    type: GAMESESSION_CHANGE,
+    payload: data,
   });
 };

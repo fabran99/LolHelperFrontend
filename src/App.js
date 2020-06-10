@@ -10,9 +10,9 @@ import { HashRouter as Router, Route, Switch } from "react-router-dom";
 // Componentes
 import AppWrapper from "./components/wrappers/AppWrapper";
 import Home from "./components/home/Home";
+import Ingame from "./components/ingame/Ingame";
 
 // Navegacion
-import Navigation from "./components/navigation/Navigation";
 import TopBar from "./components/navigation/TopBar";
 
 // css
@@ -28,8 +28,6 @@ export class App extends Component {
             <TopBar />
 
             <AppWrapper>
-              <Navigation />
-
               <div className="app_wrapper">
                 <Switch>
                   {/* Homepage */}
@@ -37,6 +35,12 @@ export class App extends Component {
                     exact
                     path="/"
                     render={(props) => <Home {...props} />}
+                  />
+                  {/* Ingame */}
+                  <Route
+                    exact
+                    path="/ingame"
+                    render={(props) => <Ingame {...props} />}
                   />
 
                   {/* 404 */}

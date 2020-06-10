@@ -1,19 +1,18 @@
 import {
   LCU_CONNECT,
   LCU_DISCONNECT,
-  LCU_NOT_LAUNCHED,
+  GAMEFLOW_CHANGE,
+  CHAMPSELECT_CHANGE,
+  GAMESESSION_CHANGE,
 } from "../actions/types";
 
 const initialState = {
-  connection: {
-    name: null,
-    password: null,
-    pid: null,
-    port: null,
-    protocol: null,
-  },
   connected: false,
-  not_launched: false,
+  connection: null,
+  champSelect: null,
+  gameSession: {
+    phase: "None",
+  },
 };
 
 export default (state = initialState, action) => {
@@ -25,20 +24,19 @@ export default (state = initialState, action) => {
           ...action.payload,
         },
         connected: true,
-        not_launched: false,
       };
     case LCU_DISCONNECT:
+      return initialState;
+
+    case CHAMPSELECT_CHANGE:
       return {
         ...state,
-        connection: {
-          name: null,
-          password: null,
-          pid: null,
-          protocol: null,
-          port: null,
-        },
-        connected: false,
-        not_launched: false,
+        champSelect: action.payload.data,
+      };
+    case GAMESESSION_CHANGE:
+      return {
+        ...state,
+        gameSession: action.payload.data,
       };
     default:
       return state;

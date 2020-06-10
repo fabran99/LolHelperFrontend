@@ -1,25 +1,62 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { navToggle } from "../../actions/navbarActions";
-import { electronWindow } from "../../helpers/outsideObjects";
+import { electron } from "../../helpers/outsideObjects";
+import { Link, withRouter } from "react-router-dom";
+import classnames from "classnames";
+
+const currentWindow = electron.remote.getCurrentWindow();
 
 export class TopBar extends Component {
   minimize = () => {
-    electronWindow.minimize();
+    currentWindow.minimize();
   };
   close = () => {
-    electronWindow.close();
-  };
-
-  toggleNav = () => {
-    this.props.navToggle();
+    currentWindow.close();
   };
 
   render() {
+    const isActive = (path) => {
+      return this.props.location.pathname == path;
+    };
     return (
       <div className="top_bar">
+        <div className="links">
+          <Link
+            to="/"
+            className={classnames({
+              active: isActive("/"),
+            })}
+          >
+            Inicio
+          </Link>
+          <Link
+            to="/ingame"
+            className={classnames({
+              active: isActive("/ingame"),
+            })}
+          >
+            InGame
+          </Link>
+          <Link
+            to="/profile"
+            className={classnames({
+              active: isActive("/profile"),
+            })}
+          >
+            Perfil
+          </Link>
+          <Link
+            to="/configuration"
+            className={classnames({
+              active: isActive("/configuration"),
+            })}
+          >
+            Configuración
+          </Link>
+        </div>
+
         {this.props.assets.champions && (
-          <div className="navbar_toggle" onClick={this.toggleNav}>
+          <div className="navbar_toggle">
             <i className="fas fa-bars"></i>
           </div>
         )}
@@ -34,8 +71,7 @@ export class TopBar extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  navbar: state.navbar,
   assets: state.assets,
 });
 
-export default connect(mapStateToProps, { navToggle })(TopBar);
+export default connect(mapStateToProps, null)(withRouter(TopBar));

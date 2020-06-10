@@ -5,7 +5,9 @@ export const ERROR_GET_ASSETS = "ERROR_GET_ASSETS";
 // LCUconnectorReducer
 export const LCU_CONNECT = "LCU_CONNECT";
 export const LCU_DISCONNECT = "LCU_DISCONNECT";
-export const LCU_NOT_LAUNCHED = "LCU_NOT_LAUNCHED";
+export const GAMEFLOW_CHANGE = "GAMEFLOW_CHANGE";
+export const CHAMPSELECT_CHANGE = "CHAMPSELECT_CHANGE";
+export const GAMESESSION_CHANGE = "GAMESESSION_CHANGE";
 
 // Navbar
 

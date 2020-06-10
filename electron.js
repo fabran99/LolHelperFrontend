@@ -9,10 +9,15 @@ const { lstatSync, readdirSync } = require("fs");
 
 // LCU
 const LCUConnector = require("lcu-connector");
-
 const { auth, connect } = require("league-connect");
+// Socket handler
+const {
+  handleChampSelect,
+  handleGameSession,
+} = require("./electron_related/lcuSockets");
 
 let mainWindow;
+let socket;
 
 var createWindow = () => {
   // Agrego extensiones
@@ -63,6 +68,12 @@ app.on("activate", () => {
 });
 
 ipc.on("WORKING", () => {
+  if (socket) {
+    for (key in socket.subscriptions) {
+      socket.unsubscribe(key);
+    }
+    socket = null;
+  }
   const connector = new LCUConnector();
   console.log("working");
   // Escucho el archivo lockfile para avisar si hubo cambios
@@ -71,26 +82,33 @@ ipc.on("WORKING", () => {
       console.log(res);
       mainWindow.webContents.send("LCU_CONNECT", res);
 
-      sendListeners(res);
+      startListeners(res);
     });
 
     console.log("connected");
   });
   connector.on("disconnect", () => {
     mainWindow.webContents.send("LCU_DISCONNECT", true);
+    if (socket) {
+      for (key in socket.subscriptions) {
+        socket.unsubscribe(key);
+      }
+      socket = null;
+    }
     console.log("disconnected");
   });
 
   connector.start();
 });
 
-const sendListeners = (auth_data) => {
-  connect(auth_data).then((socket) => {
-    const champ_select_url = "/lol-champ-select/v1/session";
-    socket.subscribe(champ_select_url, (data, event) => {
-      mainWindow.webContents.send("LCU_SOCKET", { data, event });
+const startListeners = (auth_data) => {
+  setTimeout(() => {
+    connect(auth_data).then((lcusocket) => {
+      socket = lcusocket;
+      handleChampSelect(mainWindow, auth_data, socket);
+      handleGameSession(mainWindow, auth_data, socket);
     });
-  });
+  }, 3000);
 };
 
 // Extensiones para desarrollo

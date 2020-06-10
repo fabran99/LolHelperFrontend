@@ -16,7 +16,6 @@ export class ChampionList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [],
       order: "desc",
       order_var: "high_elo_winrate",
       current_champ: null,
@@ -54,23 +53,15 @@ export class ChampionList extends Component {
   };
 
   componentDidMount() {
-    const { list, order, order_var } = this.props;
-    this.setState(
-      {
-        list: list || this.state.list,
-        order: order || this.state.order,
-        order_var: order_var || this.state.order_var,
-      },
-      () => {
-        this.setState({
-          list: this.filterList(),
-        });
-      }
-    );
+    const { order, order_var } = this.props;
+    this.setState({
+      order: order || this.state.order,
+      order_var: order_var || this.state.order_var,
+    });
   }
 
   filterList() {
-    const { order, order_var, search, lane, current_champ } = this.state;
+    const { order, order_var, search, lane } = this.state;
     var new_list = [...this.props.list];
     new_list = new_list.filter((item) => {
       let name = item.name.toLowerCase();
@@ -90,22 +81,32 @@ export class ChampionList extends Component {
       return 0;
     });
 
-    if (!current_champ && new_list.length > 0) {
-      this.setState({
-        current_champ: new_list[0].championId,
-      });
-    } else if (current_champ && new_list.length > 0) {
-      var is_in_list = new_list.find(
-        (item) => item.championId == current_champ
-      );
-      if (!is_in_list) {
+    return new_list;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.lane != this.state.lane ||
+      prevState.search != this.state.search
+    ) {
+      var new_list = this.filterList();
+      const { current_champ } = this.state;
+
+      if (!current_champ && new_list.length > 0) {
         this.setState({
           current_champ: new_list[0].championId,
         });
+      } else if (current_champ && new_list.length > 0) {
+        var is_in_list = new_list.find(
+          (item) => item.championId == current_champ
+        );
+        if (!is_in_list) {
+          this.setState({
+            current_champ: new_list[0].championId,
+          });
+        }
       }
     }
-
-    return new_list;
   }
 
   handleInput = (e) => {
@@ -122,9 +123,10 @@ export class ChampionList extends Component {
   };
 
   render() {
-    const { current_champ, search, list, order_var, order, lane } = this.state;
+    const { current_champ, search, order_var, order, lane } = this.state;
     const { assets } = this.props;
     // Busco el champ seleccionado
+    var list = this.filterList();
 
     var champ_data = list.find((champ) => champ.championId == current_champ);
     if (!champ_data && list.length) {
