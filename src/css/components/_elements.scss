@@ -33,3 +33,158 @@
     background: linear-gradient(to right, rgba($gold, 0.5), transparent);
   }
 }
+
+// Tarjetas
+
+.detailcard {
+  width: 100%;
+  height: 490px;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  box-shadow: 0 0 15px 10px rgba(0, 0, 0, 0.26);
+  border: 1px solid $card_border_color;
+  background: black;
+  margin: 0 auto;
+  margin-bottom: 1em;
+  cursor: pointer;
+  text-decoration: none;
+
+  &__border {
+    border-width: 2px;
+    position: absolute;
+    z-index: 6;
+    bottom: -1px;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    border-width: 2px;
+    border-style: solid;
+    opacity: 0;
+    transition: all 0.4s ease;
+    border-image-source: linear-gradient(
+      rgb(239, 229, 212) 0px,
+      rgb(198, 155, 75)
+    );
+    border-image-slice: 20;
+  }
+
+  &:hover {
+    .detailcard__border,
+    .detailcard__overlay {
+      opacity: 1;
+    }
+  }
+
+  &__background {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    img {
+      @extend %abs_center;
+      width: 107%;
+      opacity: 0.9;
+    }
+  }
+
+  &__overlay {
+    z-index: 2;
+    background: linear-gradient(
+      45deg,
+      rgba(22, 22, 22, 0.95) 0%,
+      rgba(8, 11, 26, 0.85) 20%,
+      rgba(17, 27, 37, 0.6) 48%,
+      rgba(17, 27, 37, 0) 80%,
+      rgba(18, 27, 36, 0) 100%
+    );
+    @extend %abs_center;
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    transition: opacity 0.5s ease;
+  }
+
+  &__text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1.2em;
+    text-align: left;
+    font-family: "Source Sans Pro";
+    padding-bottom: 0.7em;
+    z-index: 10;
+
+    .name {
+      font-size: 1em;
+      margin-bottom: 3px;
+      font-weight: 600;
+      color: lighten($gold, 5%);
+
+      transition: all 0.4s ease;
+    }
+
+    .title {
+      text-transform: uppercase;
+      font-size: 1.3em;
+      font-weight: bolder;
+      color: lighten($gold, 20%);
+      margin-bottom: 10px;
+
+      transition: all 0.4s ease;
+    }
+
+    .lane {
+      position: relative;
+      max-height: 28px;
+      overflow: hidden;
+      margin: 10px 0;
+
+      &__icon {
+        display: inline-block;
+        background-color: $card_adc;
+        width: 28px;
+        height: 28px;
+        position: relative;
+
+        img {
+          @extend %abs_center;
+          width: 20px;
+          filter: brightness(0) invert(1);
+        }
+
+        &--support {
+          background-color: $card_supp;
+        }
+        &--mid {
+          background-color: $card_mid;
+        }
+        &--jungla {
+          background-color: $card_jungla;
+        }
+        &--top {
+          background-color: $card_top;
+        }
+      }
+      &__name {
+        display: inline-block;
+        background-color: rgb(30, 35, 40);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        line-height: 100%;
+        font-size: 12px;
+        color: rgb(160, 155, 140);
+        text-overflow: ellipsis;
+        text-transform: capitalize;
+        white-space: nowrap;
+        border-width: 2px 2px 2px;
+        border-style: solid solid solid none;
+        border-color: rgb(60, 60, 65) rgb(60, 60, 65) rgb(60, 60, 65);
+        border-image: initial;
+        border-left: none;
+        overflow: hidden;
+        padding: 6px 7px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}

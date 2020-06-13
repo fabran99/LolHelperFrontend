@@ -7,6 +7,10 @@ import store from "./store";
 // React router
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
+// Toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // Componentes
 import AppWrapper from "./components/wrappers/AppWrapper";
 import Home from "./components/home/Home";
@@ -24,6 +28,7 @@ export class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
+            <ToastContainer />
             <Particles params={particles_config} />
             <TopBar />
 

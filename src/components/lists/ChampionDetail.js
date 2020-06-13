@@ -3,21 +3,45 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { getLoading, getItem, getSpell } from "../../helpers/getImgLinks";
 import Tooltip from "@material-ui/core/Tooltip";
+import { icon_dict } from "../../helpers/iconDict";
 
 export class ChampionDetail extends Component {
   render() {
     const { champ_data, assets, build, working_runes, spells } = this.props;
     const { img_links } = assets;
+
     return (
       <div className="championdetail">
-        <Link
+        <Link to={`/champion/${champ_data.key}`} className="detailcard">
+          <div className="detailcard__border"></div>
+          <div className="detailcard__background">
+            <img src={getLoading(img_links, champ_data.key)} alt="" />
+          </div>
+          <div className="detailcard__overlay"></div>
+
+          <div className="detailcard__text">
+            <div className="name">{champ_data.name}</div>
+            <div className="title">{champ_data.title}</div>
+            <div className="lane">
+              <div
+                className={`lane__icon lane__icon--${champ_data.lane.toLowerCase()}`}
+              >
+                <img src={icon_dict[champ_data.lane.toLowerCase()]} alt="" />
+              </div>
+              <div className="lane__name">{champ_data.lane}</div>
+            </div>
+          </div>
+        </Link>
+        {/* <Link
           to={`/champion/${champ_data.championId}`}
           className="championdetail__img"
         >
           <img src={getLoading(img_links, champ_data.key)} />
-        </Link>
+        </Link> */}
         {/* Spells */}
-        <div className="spells">
+        <div className="championdetail__lore">{champ_data.lore}</div>
+
+        <div className="spells d-none">
           {spells.map((spell, i) => {
             return (
               <Tooltip
@@ -43,8 +67,38 @@ export class ChampionDetail extends Component {
             );
           })}
         </div>
+
+        <div className="build build--notop d-none">
+          {/* <div className="championdetail__sectionname">Build</div> */}
+          {build &&
+            build.map((item, i) => {
+              return (
+                <Tooltip
+                  arrow
+                  key={item.id}
+                  title={
+                    <div className="buildtooltip">
+                      <div className="buildtooltip__name">{item.name}</div>
+
+                      <div className="buildtooltip__desc">
+                        {item.description}
+                      </div>
+                      <div className="buildtooltip__price">
+                        Precio: {item.price}
+                      </div>
+                    </div>
+                  }
+                >
+                  <div className="build__item">
+                    <img src={getItem(img_links, item.id)} alt="" />
+                  </div>
+                </Tooltip>
+              );
+            })}
+        </div>
+
         {/* <div className="championdetail__sectionname">Runas</div> */}
-        <div className="runes">
+        <div className="runes d-none">
           {/* runas principales */}
           {working_runes && (
             <div className="runes__primary">
@@ -177,34 +231,6 @@ export class ChampionDetail extends Component {
           )}
         </div>
         {/* Build */}
-        <div className="build build--notop">
-          {/* <div className="championdetail__sectionname">Build</div> */}
-          {build &&
-            build.map((item, i) => {
-              return (
-                <Tooltip
-                  arrow
-                  key={item.id}
-                  title={
-                    <div className="buildtooltip">
-                      <div className="buildtooltip__name">{item.name}</div>
-
-                      <div className="buildtooltip__desc">
-                        {item.description}
-                      </div>
-                      <div className="buildtooltip__price">
-                        Precio: {item.price}
-                      </div>
-                    </div>
-                  }
-                >
-                  <div className="build__item">
-                    <img src={getItem(img_links, item.id)} alt="" />
-                  </div>
-                </Tooltip>
-              );
-            })}
-        </div>
       </div>
     );
   }

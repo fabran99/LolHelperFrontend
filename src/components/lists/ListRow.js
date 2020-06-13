@@ -40,17 +40,9 @@ export class ListRow extends Component {
           </div>
         </div>
         <div className="championlist__stats">
-          <ListStat value={champ.high_elo_winrate} title="Winrate" />
-          <ListStat
-            value={champ.high_elo_banrate}
-            title="Banrate"
-            color="pink"
-          />
-          <ListStat
-            value={champ.high_elo_pickrate}
-            title="Pickrate"
-            color="green"
-          />
+          <ListStat value={champ.winRate} title="Winrate" />
+          <ListStat value={champ.banRate} title="Banrate" color="pink" />
+          <ListStat value={champ.pickRate} title="Pickrate" color="green" />
         </div>
       </div>
     );

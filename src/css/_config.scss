@@ -57,3 +57,7 @@ $spaceamounts: (1, 2, 3, 4, 5);
     padding-right: #{$space}rem;
   }
 }
+
+.d-none {
+  display: none !important;
+}

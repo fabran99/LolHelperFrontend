@@ -7,9 +7,9 @@
   padding: 1em 0;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.31),
+    rgba(0, 0, 0, 0.4),
     transparent,
-    rgba(0, 0, 0, 0.31)
+    rgba(0, 0, 0, 0.4)
   );
 
   &:after {
@@ -151,54 +151,19 @@
 }
 
 .build {
-  margin: 0 auto;
-  width: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35),
-    transparent,
-    rgba(0, 0, 0, 0.35)
-  );
-  padding: 1em 0;
-
-  .championdetail__sectionname {
-    margin-top: 0;
-  }
-
-  &:before {
-    position: absolute;
-    top: 0;
-    content: "";
-    width: 100%;
-    height: 1px;
-    left: 0;
-    background: linear-gradient(
-      to right,
-      transparent,
-      rgba($gold, 0.5),
-      transparent
-    );
-  }
-
-  &--notop {
-    &:before {
-      content: none;
-    }
-  }
-
   &__item {
-    width: 35px;
-    height: 35px;
+    width: 27px;
+    height: 27px;
     max-width: 16%;
     background: lighten($content_background, 2%);
     display: inline-block;
-    border: 2px solid rgba($ranking_border_color, 0.9);
+    border: 1px solid rgba($ranking_border_color, 0.9);
     cursor: pointer;
     overflow: hidden;
     animation: fadeIn 0.5s ease;
 
     &:not(:last-child) {
-      margin-right: 0.5em;
+      margin-right: 0.3em;
     }
 
     img {
@@ -208,34 +173,10 @@
 }
 
 .spells {
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35),
-    transparent,
-    rgba(0, 0, 0, 0.35)
-  );
-  padding: 0.8em 0;
-  position: relative;
-  margin-top: 1em;
-
-  &:before {
-    position: absolute;
-    top: 0;
-    content: "";
-    width: 100%;
-    height: 1px;
-    left: 0;
-    background: linear-gradient(
-      to right,
-      transparent,
-      rgba($gold, 0.5),
-      transparent
-    );
-  }
-
+  margin-bottom: 1em;
   &__item {
-    width: 38px;
-    height: 38px;
+    width: 35px;
+    height: 35px;
     display: inline-block;
     margin: 0 0.5em;
     overflow: hidden;
@@ -243,6 +184,7 @@
     img {
       max-width: 100%;
       border: 2px solid rgba($gold, 0.3);
+      transition: all 0.3s ease;
 
       &:hover {
         cursor: pointer;

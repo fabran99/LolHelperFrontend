@@ -17,7 +17,7 @@ export class ChampionList extends Component {
     super(props);
     this.state = {
       order: "desc",
-      order_var: "high_elo_winrate",
+      order_var: "winRate",
       current_champ: null,
       champ_locked: false,
       search: "",

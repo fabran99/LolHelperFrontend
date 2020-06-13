@@ -20,9 +20,9 @@ export class ListFilter extends Component {
         <div className="championlist__filters__select">
           <select value={order_var} onChange={handleInput} name="order_var">
             <option value="name">Nombre</option>
-            <option value="high_elo_pickrate">Pickrate</option>
-            <option value="high_elo_winrate">Winrate</option>
-            <option value="high_elo_banrate">Banrate</option>
+            <option value="pickRate">Pickrate</option>
+            <option value="winRate">Winrate</option>
+            <option value="banRate">Banrate</option>
           </select>
         </div>
         <div className="championlist__filters__select">

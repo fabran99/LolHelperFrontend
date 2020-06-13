@@ -13,18 +13,75 @@ import {
 import { getAssets } from "../../actions/assetsActions";
 import { electron } from "../../helpers/outsideObjects";
 
+import { toast } from "react-toastify";
+
 export class AppWrapper extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      assetTimeout: 1000 * 60 * 10,
+    };
+  }
   componentDidMount() {
-    const { getAssets } = this.props;
-    getAssets();
     this.initListeners();
+    this.getAssets();
+  }
+
+  getAssets() {
+    this.props.getAssets();
+    this.timeoutAssets = setTimeout(() => {
+      this.getAssets();
+    }, this.state.assetTimeout);
+  }
+
+  retryAssetsFast() {
+    toast.error("Error al actualizar los assets", {
+      position: "bottom-left",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    if (this.timeoutAssets) {
+      clearTimeout(this.timeoutAssets);
+    }
+    this.setState(
+      {
+        assetTimeout: 1000 * 10,
+      },
+      () => {
+        setTimeout(() => {
+          this.getAssets();
+        }, 1000 * 10);
+      }
+    );
+  }
+
+  retryAssetsNormal() {
+    toast.info("Se actualizaron los assets correctamente!", {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    if (this.timeoutAssets) {
+      clearTimeout(this.timeoutAssets);
+    }
+    this.timeoutAssets = setTimeout(() => {
+      this.getAssets();
+      this.setState({
+        assetTimeout: 1000 * 60 * 10,
+      });
+    }, 1000 * 60 * 10);
   }
 
   initListeners() {
     const {
       lcuDisconnect,
       lcuConnect,
-      gameflowChange,
       champselectchange,
       gamesessionChange,
     } = this.props;
@@ -68,6 +125,29 @@ export class AppWrapper extends Component {
     // Me aseguro de scrollear la pag
     if (this.props.location.pathname !== prevProps.location.pathname) {
       window.scrollTo(0, 0);
+    }
+
+    // Muestro cartel de error si no se pudo actualizar los assets
+    if (!prevProps.assets.error && this.props.assets.error) {
+      this.retryAssetsFast();
+    } else if (prevProps.assets.error && !this.props.assets.error) {
+      this.retryAssetsNormal();
+    }
+
+    // Si cambia la version muestro cartel
+    if (
+      prevProps.assets.lol_version &&
+      prevProps.assets.lol_version != this.props.assets.lol_version
+    ) {
+      // Muestro cartel
+      toast.info(`Nueva version de LOL ${this.props.assets.lol_version}.`, {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   }
 

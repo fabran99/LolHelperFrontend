@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classnames from "classnames";
 import { connect } from "react-redux";
+import bg from "../../img/universe-bg.jpg";
 
 export class AppContent extends Component {
   render() {
@@ -11,6 +12,9 @@ export class AppContent extends Component {
           nav_visible: navbar.visible,
           [extraclass]: extraclass ? extraclass : false,
         })}
+        style={{
+          backgroundImage: `url(${bg})`,
+        }}
       >
         {this.props.children}
       </div>

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { electron } from "../../helpers/outsideObjects";
 import { Link, withRouter } from "react-router-dom";
 import classnames from "classnames";
+import logo from "../../img/heimericon.png";
 
 const currentWindow = electron.remote.getCurrentWindow();
 
@@ -55,11 +56,10 @@ export class TopBar extends Component {
           </Link>
         </div>
 
-        {this.props.assets.champions && (
-          <div className="navbar_toggle">
-            <i className="fas fa-bars"></i>
-          </div>
-        )}
+        <div className="navbar_toggle">
+          {/* <i className="fas fa-bars"></i> */}
+          <img src={logo} alt="" />
+        </div>
 
         <div className="icons">
           <i className="fas fa-window-minimize" onClick={this.minimize}></i>

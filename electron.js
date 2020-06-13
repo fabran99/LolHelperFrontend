@@ -34,7 +34,7 @@ var createWindow = () => {
       preload: __dirname + "/electron_related/preload.js",
     },
     frame: false,
-    // resizable: false,
+    resizable: false,
     transparent: true,
   });
 
@@ -108,7 +108,7 @@ const startListeners = (auth_data) => {
       handleChampSelect(mainWindow, auth_data, socket);
       handleGameSession(mainWindow, auth_data, socket);
     });
-  }, 3000);
+  }, 5000);
 };
 
 // Extensiones para desarrollo
