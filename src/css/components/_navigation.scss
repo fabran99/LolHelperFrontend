@@ -1,7 +1,7 @@
 // Barra de arriba
 .top_bar {
   width: 100%;
-  background: $background_lighter;
+  background: rgba($content_background, 0.6);
   color: white;
   position: relative;
   -webkit-app-region: drag;
@@ -11,7 +11,7 @@
   padding: 0.3em 0.5em;
   height: 37px;
 
-  .navbar_toggle {
+  .navbar_logo {
     color: white;
     cursor: pointer;
     display: inline-block;
@@ -26,23 +26,52 @@
 
   .icons {
     position: absolute;
-    right: 10px;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
     font-size: 0.9em;
     -webkit-app-region: no-drag;
-    i {
-      display: inline-block;
-      padding: 0.5em;
-      cursor: pointer;
-      opacity: 0.7;
 
-      &:nth-child(1) {
-        transform: translateY(-3px);
-      }
+    div {
+      width: 37px;
+      height: 37px;
+      display: inline-block;
+      cursor: pointer;
 
       &:hover {
-        opacity: 1;
+        background: rgba(255, 255, 255, 0.048);
+      }
+
+      &.minimize {
+        position: relative;
+        span {
+          @extend %abs_center;
+          width: 15px;
+          top: 65%;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.5);
+          display: block;
+        }
+      }
+      &.close {
+        position: relative;
+
+        &:hover {
+          background: rgb(170, 23, 23);
+        }
+        span {
+          @extend %abs_center;
+          width: 15px;
+          top: 55%;
+          transform: translateX(-50%) translateY(-50%) rotate(45deg);
+          height: 2px;
+          background: rgba(255, 255, 255, 0.5);
+          display: block;
+
+          &:nth-child(2) {
+            transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+          }
+        }
       }
     }
   }
@@ -58,9 +87,8 @@
       display: inline-block;
       font-family: inherit;
       color: white;
-      font-weight: bolder;
       text-transform: uppercase;
-      font-size: 0.7em;
+      font-size: 0.75em;
       padding: 1em 1em;
       cursor: pointer;
       color: lighten($gold, 20%);
@@ -73,154 +101,6 @@
       &.active {
         opacity: 1;
       }
-    }
-  }
-}
-
-.navigation {
-  transition: all 0.4s ease;
-  position: fixed;
-  left: 0;
-  top: 39px;
-  z-index: 100;
-  font-family: "Source Sans Pro";
-
-  .bg {
-    background: rgba(0, 0, 0, 0.459);
-    position: fixed;
-    left: 0;
-    top: 39;
-    height: calc(100vh - 39px);
-    width: 100vw;
-    z-index: -2;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-
-    &:not(.visible) {
-      z-index: -100;
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-
-  .nav_content {
-    z-index: 102;
-    left: -200px;
-    position: absolute;
-    transition: all 0.4s ease;
-    background: $background;
-    width: 200px;
-    min-height: calc(100vh - 39px);
-
-    a {
-      color: white;
-      display: block;
-      padding: 1em;
-      text-decoration: none;
-      font-weight: lighter;
-      font-size: 0.9em;
-      opacity: 0.5;
-      letter-spacing: 0.2px;
-      border-left: 3px solid none;
-      transition: all 0.2s ease;
-      overflow: hidden;
-      text-overflow: hidden;
-      white-space: nowrap;
-      border-left: 3px solid transparent;
-
-      &:hover {
-        border-left: 3px solid rgba($blue_accent, 0.2);
-        opacity: 0.9;
-        background: linear-gradient(
-          to right,
-          rgba($blue_accent, 0.05),
-          transparent
-        );
-
-        &.orange {
-          border-left-color: rgba($orange, 0.2);
-          background: linear-gradient(
-            to right,
-            rgba($orange, 0.05),
-            transparent
-          );
-        }
-        &.green {
-          border-left-color: rgba($green, 0.2);
-          background: linear-gradient(
-            to right,
-            rgba($green, 0.05),
-            transparent
-          );
-        }
-        &.yellow {
-          border-left-color: rgba($yellow, 0.2);
-          background: linear-gradient(
-            to right,
-            rgba($yellow, 0.05),
-            transparent
-          );
-        }
-        &.pink {
-          border-left-color: rgba($pink, 0.2);
-          background: linear-gradient(to right, rgba($pink, 0.05), transparent);
-        }
-      }
-
-      svg,
-      i {
-        width: 2em;
-        display: inline-block;
-        font-size: 1em;
-        transform: translateY(1px);
-        transition: all 0.2s ease;
-      }
-
-      &.selected {
-        border-left: 3px solid $blue_accent;
-        opacity: 1;
-        background: linear-gradient(
-          to right,
-          rgba($blue_accent, 0.1),
-          transparent
-        );
-
-        svg {
-          transform: translateY(1px) scale(1.2);
-        }
-
-        &.orange {
-          border-left-color: $orange;
-          background: linear-gradient(
-            to right,
-            rgba($orange, 0.1),
-            transparent
-          );
-        }
-        &.green {
-          border-left-color: $green;
-          background: linear-gradient(to right, rgba($green, 0.1), transparent);
-        }
-        &.yellow {
-          border-left-color: $yellow;
-          background: linear-gradient(
-            to right,
-            rgba($yellow, 0.1),
-            transparent
-          );
-        }
-        &.pink {
-          border-left-color: $pink;
-          background: linear-gradient(to right, rgba($pink, 0.1), transparent);
-        }
-      }
-    }
-  }
-
-  &.visible {
-    .nav_content {
-      left: 0;
-      box-shadow: 5px 8px 10px 2px rgba(0, 0, 0, 0.25);
     }
   }
 }

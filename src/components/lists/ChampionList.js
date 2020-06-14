@@ -40,6 +40,7 @@ export class ChampionList extends Component {
 
   lockChamp = (champ) => {
     const { current_champ, champ_locked } = this.state;
+
     if (current_champ == champ && champ_locked) {
       this.setState({
         champ_locked: false,
@@ -54,10 +55,18 @@ export class ChampionList extends Component {
 
   componentDidMount() {
     const { order, order_var } = this.props;
-    this.setState({
-      order: order || this.state.order,
-      order_var: order_var || this.state.order_var,
-    });
+    this.setState(
+      {
+        order: order || this.state.order,
+        order_var: order_var || this.state.order_var,
+      },
+      () => {
+        var list = this.filterList();
+        this.setState({
+          current_champ: list[0].championId,
+        });
+      }
+    );
   }
 
   filterList() {
@@ -148,8 +157,10 @@ export class ChampionList extends Component {
           />
         ) : (
           <div className="championdetail">
-            <div className="championdetail__img championdetail__img--placeholder">
-              <img src={img_placeholder} />
+            <div className="detailcard">
+              <div className="detailcard__background">
+                <img src={img_placeholder} style={{ width: "485px" }} />
+              </div>
             </div>
           </div>
         )}

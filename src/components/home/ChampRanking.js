@@ -28,31 +28,34 @@ export class ChampRanking extends Component {
               return null;
             }
             return (
-              <div key={i} className="ranking__element">
-                <div className="ranking__lane">
-                  <img src={icon_dict[key.toLowerCase()]} /> <span>{key}</span>
+              <Link
+                to={`/champions/${ranking[key].championId}`}
+                className="detailcard"
+              >
+                <div className="detailcard__border"></div>
+                <div className="detailcard__background">
+                  <img src={getLoading(img_links, champ_data.key)} alt="" />
                 </div>
+                <div className="detailcard__overlay"></div>
 
-                <Link
-                  to={`/champions/${ranking[key].championId}`}
-                  className="ranking__info"
-                >
-                  <img
-                    className="ranking__img"
-                    src={getLoading(img_links, champ_data.key)}
-                  />
-                  <div className="ranking__overlay"></div>
-                  <div className="ranking__text">
-                    <div className="ranking__champ">
-                      {ranking[key].champName}
-                    </div>
-                    <div className="ranking__winrate">
-                      {ranking[key].winRate.toFixed(2)} %
-                      <div className="ranking__winrate_text">Winrate</div>
-                    </div>
+                <div className="detailcard__text">
+                  <div className="name">{champ_data.name}</div>
+                  <div className="title title--percent">
+                    {ranking[key].winRate.toFixed(2)} % <small>WinRate</small>
                   </div>
-                </Link>
-              </div>
+                  <div className="lane">
+                    <div
+                      className={`lane__icon lane__icon--${champ_data.lane.toLowerCase()}`}
+                    >
+                      <img
+                        src={icon_dict[champ_data.lane.toLowerCase()]}
+                        alt=""
+                      />
+                    </div>
+                    <div className="lane__name">{champ_data.lane}</div>
+                  </div>
+                </div>
+              </Link>
             );
           })}
         </div>

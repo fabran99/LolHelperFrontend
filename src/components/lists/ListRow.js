@@ -20,13 +20,16 @@ export class ListRow extends Component {
         onClick={lockChamp.bind(this, champ.championId)}
       >
         <div className="championlist__number">{i + 1}</div>
-        <div className="championlist__icon">
+        <Link
+          className="championlist__icon"
+          to={`/champion/${champ.championId}`}
+        >
           <img
             className="championlist__img__preloader"
             src={img_placeholder}
           ></img>
           <img src={getSquare(img_links, champ.key)} alt={champ.name} />
-        </div>
+        </Link>
         <div className="championlist__info">
           <Link
             to={`/champion/${champ.championId}`}

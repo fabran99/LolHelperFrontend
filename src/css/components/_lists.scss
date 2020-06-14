@@ -1,6 +1,6 @@
 .list_wrapper {
   height: 570px;
-  padding-right: 4px;
+  padding-right: 1px;
   transition: width 0.2s ease;
   overflow-y: auto;
   overflow-x: hidden;
@@ -9,7 +9,8 @@
   .empty {
     text-align: center;
     text-transform: uppercase;
-    margin-top: 1em;
+    margin-top: 10em;
+    font-family: $bolderFont;
   }
 }
 
@@ -81,7 +82,7 @@
       padding: 0.5em;
       border: 1px solid $card_border_color;
       width: 35%;
-      // background: darken($content_background, 1%);
+      background: $input_background;
 
       input {
         background: none;
@@ -113,13 +114,11 @@
     &__select {
       width: 23.3%;
       padding-left: 1em;
-      background: $content_background;
       select {
         width: 100%;
         display: block;
         text-indent: 5px;
-
-        background: none;
+        background: $input_background;
         font-family: "Source Sans Pro";
         color: lighten(rgba($gold, 0.5), 30%);
         border: none;
@@ -129,7 +128,7 @@
         border: 1px solid $card_border_color;
 
         option {
-          background: $content_background;
+          background: $input_background;
           line-height: 3em;
           border-bottom: 1px solid grey;
           font-weight: lighter;
@@ -155,7 +154,7 @@
       margin: 1em auto;
       width: 100%;
       border: 1px solid $card_border_color;
-      padding: 0.8em 1em;
+      padding: 0.7em 1em;
       position: relative;
       background: rgba(0, 0, 0, 0.2);
       height: 115px;
@@ -165,6 +164,7 @@
       color: rgba(lighten($gold, 25%), 0.9);
       text-align: left;
       box-shadow: 0 0 15px 10px rgba(0, 0, 0, 0.13);
+      line-height: 1.7em;
     }
   }
   //   Listado
@@ -180,44 +180,45 @@
     color: white;
     margin: 0 auto;
     display: flex;
-    border-bottom: 1px solid rgba($ranking_border_color, 0.5);
+    border-bottom: 1px solid $card_border_color;
     padding: 0.5em;
     align-items: center;
     border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
     position: relative;
     border-top: 1px solid transparent;
-    cursor: pointer;
 
     &:after {
       position: absolute;
-      left: 0;
+      left: 1px;
       bottom: 0;
       content: "";
       padding: 2px;
-      border: 1px solid rgba($ranking_border_color, 0.5);
+      border: 1px solid $card_border_color;
       transform: translateY(50%) translateX(-50%) rotate(45deg);
       background: $content_background;
       z-index: 3;
     }
     &:before {
       position: absolute;
-      right: 0;
+      right: 0px;
       bottom: 0;
       content: "";
       padding: 2px;
-      border: 1px solid rgba($ranking_border_color, 0.5);
+      border: 1px solid $card_border_color;
       transform: translateY(50%) translateX(50%) rotate(45deg);
       background: $content_background;
       z-index: 3;
     }
 
-    &:not(.championlist__element--active):nth-child(even) {
-      background: rgba($skyblue, 0.03);
+    &:hover {
+      background: rgba($skyblue, 0.02);
     }
-
-    &--active {
-      background: rgba($skyblue, 0.1);
-      border-left-color: darken($blue_accent, 15%);
+    &--active,
+    &--active:hover {
+      background: rgba($skyblue, 0.05);
+      border-left-color: darken($blue_accent, 24%);
+      border-right-color: darken($blue_accent, 24%);
     }
   }
 
@@ -255,17 +256,19 @@
   &__info {
     text-align: left;
     margin: 0 1em;
-    font-family: "Beautifort-Bold";
+    font-weight: 600;
     width: 180px;
   }
 
   &__name {
     font-size: 1.2em;
-    text-transform: uppercase;
-    color: lighten($gold, 25%);
+    // text-transform: uppercase;
+    font-weight: bolder;
+    color: rgba(lighten($gold, 25%), 0.8);
     text-decoration: none;
+    font-family: $bolderFont;
     &:hover {
-      text-decoration: underline;
+      color: rgba(lighten($gold, 25%), 1);
     }
   }
 
@@ -307,7 +310,7 @@
       width: 100%;
       height: 15px;
       top: 10px;
-      background: lighten($background, 3%);
+      background: lighten($background, 1%);
       display: flex;
       position: relative;
       border-radius: 10px;
@@ -328,16 +331,16 @@
       position: relative;
       overflow-x: hidden;
 
-      &:after {
-        content: "";
-        position: absolute;
-        right: 3px;
-        border-radius: 50%;
-        top: 50%;
-        transform: translateY(-50%);
-        padding: 3px;
-        background: rgba(0, 0, 0, 0.479);
-      }
+      // &:after {
+      //   content: "";
+      //   position: absolute;
+      //   right: 3px;
+      //   border-radius: 50%;
+      //   top: 50%;
+      //   transform: translateY(-50%);
+      //   padding: 3px;
+      //   background: rgba(0, 0, 0, 0.479);
+      // }
 
       &--pink {
         background: $pink;

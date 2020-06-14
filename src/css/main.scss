@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap");
 @import "colors";
 @import "config";
 @import "animations";
@@ -8,15 +9,6 @@
 @import "./components/lists";
 @import "./components/runes";
 @import "./components/ingame";
-
-@font-face {
-  font-family: "Beautifort-Bold";
-  src: url("./Beaufort\ for\ LOL\ Bold.ttf");
-}
-@font-face {
-  font-family: "Beautifort";
-  src: url("./BeaufortMedium.ttf");
-}
 
 * {
   box-sizing: border-box;
@@ -29,7 +21,7 @@ html {
 }
 
 body {
-  font-family: "Beautifort";
+  font-family: "Source Sans Pro";
   overflow: hidden;
   border-radius: $border_radius;
   min-height: 750px;
@@ -55,7 +47,7 @@ body {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: rgb(36, 41, 44);
+  background-color: rgb(42, 50, 54);
 }
 
 .App {
@@ -64,7 +56,6 @@ body {
 
   #tsparticles canvas {
     display: block;
-    vertical-align: bottom;
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     transform: scale(1);
@@ -77,12 +68,13 @@ body {
     height: 100%;
     position: fixed;
     top: 0;
-    z-index: -10;
+    z-index: 0;
     left: 0;
     opacity: 0.7;
   }
 }
 .app_wrapper {
+  z-index: 10;
   .app_content {
     width: 100vw;
     height: calc(100vh - 39px);

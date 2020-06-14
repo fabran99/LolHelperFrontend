@@ -56,14 +56,18 @@ export class TopBar extends Component {
           </Link>
         </div>
 
-        <div className="navbar_toggle">
-          {/* <i className="fas fa-bars"></i> */}
+        <div className="navbar_logo">
           <img src={logo} alt="" />
         </div>
 
         <div className="icons">
-          <i className="fas fa-window-minimize" onClick={this.minimize}></i>
-          <i className="fas fa-times" onClick={this.close}></i>
+          <div className="minimize" onClick={this.minimize}>
+            <span></span>
+          </div>
+          <div className="close" onClick={this.close}>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </div>
     );
