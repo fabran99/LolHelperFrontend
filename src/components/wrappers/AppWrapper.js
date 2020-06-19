@@ -35,7 +35,7 @@ export class AppWrapper extends Component {
   }
 
   retryAssetsFast() {
-    toast.error("Error al actualizar los assets", {
+    toast.error("Error al conectar con el servidor", {
       position: "bottom-left",
       autoClose: 8000,
       hideProgressBar: false,
@@ -59,7 +59,7 @@ export class AppWrapper extends Component {
   }
 
   retryAssetsNormal() {
-    toast.info("Se actualizaron los assets correctamente!", {
+    toast.info("Conectado con el servidor correctamente!", {
       position: "bottom-left",
       autoClose: 5000,
       hideProgressBar: false,

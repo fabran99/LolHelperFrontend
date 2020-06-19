@@ -4,8 +4,8 @@ export const radarDatasetStylesAvg = {
 };
 
 export const radarDatasetStylesSelected = {
-  backgroundColor: "rgba(20, 163, 230, 0.6)",
-  borderColor: "rgba(20, 163, 230, 0.7)",
+  backgroundColor: "rgba(20, 163, 230, 0.7)",
+  borderColor: "rgba(20, 163, 230, 0.8)",
 };
 
 export const radarPointStylesAvg = {
@@ -30,13 +30,45 @@ export const radarOptions = {
       color: "rgba(255,255,255,0.1)",
     },
     pointLabels: {
-      fontSize: 13,
+      fontSize: 11,
     },
   },
   legend: {
-    labels: { fontColor: "rgba(255,255,255,0.5)", fontSize: 14 },
+    labels: {
+      fontColor: "rgba(255,255,255,0.5)",
+      fontSize: 12,
+      usePointStyle: true,
+      boxWidth: 5,
+    },
+    position: "bottom",
   },
   tooltips: {
     enabled: false,
   },
+};
+
+export const doughnutOptions = {
+  rotation: -Math.PI,
+  legend: {
+    labels: {
+      fontColor: "rgba(255,255,255,0.5)",
+      fontSize: 12,
+      usePointStyle: true,
+      boxWidth: 5,
+    },
+    position: "bottom",
+  },
+  layout: {
+    padding: {
+      left: 110,
+      right: 110,
+    },
+  },
+  circumference: Math.PI,
+};
+
+export const doughnutDatasetStyles = {
+  borderWidth: 0,
+  borderColor: "rgba(200, 200,200,0.4)",
+  backgroundColor: ["#f13242", "#14a3e6", "#69fd89"],
 };

@@ -11,3 +11,55 @@
     line-height: 1.4em;
   }
 }
+
+.three_columns {
+  display: flex;
+  flex-wrap: wrap;
+
+  .column {
+    display: flex;
+    width: 50%;
+    text-align: center;
+
+    &:nth-child(1) {
+      width: 25%;
+      padding-right: 1em;
+    }
+    &:nth-child(2) {
+      padding: 0 1em;
+    }
+    &:nth-child(3) {
+      width: 25%;
+      padding-left: 1em;
+    }
+
+    & > div {
+      width: 100%;
+    }
+  }
+}
+
+.champSelect {
+  z-index: 10;
+  &__image {
+    width: 100%;
+
+    .detailcard {
+      height: 415px;
+
+      &__background {
+        img {
+          top: 58%;
+        }
+      }
+    }
+  }
+
+  &__stats {
+    margin-top: 1em;
+  }
+
+  .lolButton {
+    margin-top: 3.2em;
+  }
+}

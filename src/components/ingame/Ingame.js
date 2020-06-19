@@ -13,7 +13,7 @@ export class Ingame extends Component {
         {/*  */}
         {/* {gameSession.phase == "ChampSelect" && <ChampSelect />}
         {gameSession.phase == "None" && <NotIngame />} */}
-        {/* <ChampSelect /> */}
+        <ChampSelect />
       </AppContent>
     );
   }

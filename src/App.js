@@ -21,20 +21,19 @@ import TopBar from "./components/navigation/TopBar";
 
 // css
 import "./css/main.css";
+import "./css/bootstrap-grid.min.css";
 
 import bg from "./img/universe-bg.jpg";
 
 export class App extends Component {
+  componentDidMount() {
+    document.body.style.backgroundImage = `url(${bg})`;
+  }
   render() {
     return (
       <Provider store={store}>
         <Router>
-          <div
-            className="App"
-            style={{
-              backgroundImage: `url(${bg})`,
-            }}
-          >
+          <div className="App">
             <ToastContainer />
             <Particles params={particles_config} />
             <TopBar />

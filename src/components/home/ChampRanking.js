@@ -29,6 +29,7 @@ export class ChampRanking extends Component {
             }
             return (
               <Link
+                key={key}
                 to={`/champions/${ranking[key].championId}`}
                 className="detailcard"
               >
