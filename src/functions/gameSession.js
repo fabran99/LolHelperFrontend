@@ -1,4 +1,7 @@
 export const getGameName = (gameSession) => {
+  if (!gameSession || !gameSession.gameData) {
+    return "";
+  }
   var isCustom = gameSession.gameData.isCustomGame;
   var queuename = isCustom ? "Custom" : gameSession.gameData.queue.description;
   return `${queuename} - ${gameSession.map.name}`;
@@ -11,6 +14,9 @@ export const gameHasBans = (gameSession) => {
 };
 
 export const getCurrentPlayer = (champSelection) => {
+  if (!champSelection) {
+    return null;
+  }
   var cellId = champSelection.localPlayerCellId;
   if (cellId == -1) {
     return null;
@@ -64,6 +70,21 @@ export const getSelectedChamp = (champSelection) => {
   return null;
 };
 
+export const getSelectedChampByCellId = (champSelection, cellId) => {
+  var pickActions = champSelection.actions.filter((action) => {
+    return action.find((y) => y.actorCellId == cellId && y.type == "pick");
+  });
+
+  if (pickActions.length > 0) {
+    var lastAction = pickActions[pickActions.length - 1].find(
+      (item) => item.actorCellId == cellId
+    );
+    return lastAction.championId;
+  }
+
+  return null;
+};
+
 export const getCurrentPhase = (champSelection) => {
   var uncompleted_action = champSelection.actions.filter((action) => {
     return action.filter((y) => !y.completed).length > 0;
@@ -77,4 +98,18 @@ export const getCurrentPhase = (champSelection) => {
 
 export const isBaning = (champSelection) => {
   return getCurrentPhase(champSelection) == "ban";
+};
+
+export const getMyTeam = (champSelection) => {
+  var team = champSelection.myTeam.map((item, i) => {
+    return {
+      ...item,
+      isLocalPlayer: item.cellId == champSelection.localPlayerCellId,
+    };
+  });
+  return team;
+};
+
+export const getEnemyTeam = (champSelection) => {
+  return champSelection.theirTeam;
 };

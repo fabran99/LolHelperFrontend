@@ -6,8 +6,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: 100px;
-    margin-bottom: 1.5em;
+    height: 85px;
 
     &:after {
       content: "";
@@ -25,13 +24,13 @@
       display: inline-block;
       flex: 20%;
       position: relative;
-      height: 55px;
-      width: 55px;
+      height: 40px;
+      width: 40px;
 
       &:first-child {
         .image {
           img {
-            width: 75%;
+            width: 70%;
           }
         }
       }
@@ -39,15 +38,19 @@
       .title {
         position: absolute;
         @extend %abs_center;
-        top: -20px;
+        top: -15px;
+        font-size: 0.9em;
         text-transform: uppercase;
         color: $gold;
         font-weight: bolder;
+        text-align: left;
+        width: 100px;
+        left: 55px;
       }
 
       .image {
-        width: 55px;
-        height: 55px;
+        width: 40px;
+        height: 40px;
         position: absolute;
         overflow: hidden;
         border-radius: 50%;
@@ -75,19 +78,19 @@
         font-size: 0.9em;
         text-align: center;
         color: lighten($ranking_border_color, 15%);
-        // display: none;
+        display: none;
       }
     }
 
     .perk {
-      width: 35px;
-      height: 35px;
+      width: 27px;
+      height: 27px;
 
       .image {
-        width: 35px;
-        height: 35px;
+        width: 27px;
+        height: 27px;
         img {
-          width: 75%;
+          width: 80%;
         }
       }
     }
@@ -165,14 +168,14 @@
       display: flex;
     }
     .runeList__perks {
-      width: 34%;
-      margin-left: 1em;
+      width: 37%;
+      margin-left: 5px;
       display: flex;
     }
 
     .runeList__bonus {
       position: absolute;
-      // display: none;
+      display: none;
       right: 0;
       text-align: left;
       font-size: 0.9em;
@@ -195,7 +198,7 @@
 }
 
 .lolButton {
-  padding: 9px 21px;
+  padding: 8px 16px;
   font-family: inherit;
   text-transform: uppercase;
   cursor: pointer;
@@ -205,7 +208,7 @@
   background: $lolbutton_background;
   position: relative;
   display: inline-block;
-  font-size: 1em;
+  font-size: 0.85em;
   user-select: none;
 
   &:not(.disabled):hover {
@@ -240,10 +243,9 @@
 
 .build {
   text-align: left;
-  padding: 0 2em;
-  // display: none;
+  padding: 1em;
   &__section {
-    margin-bottom: 1em;
+    margin-bottom: 1.4em;
   }
 
   .buildrow {
@@ -257,15 +259,17 @@
   }
 
   &__title {
-    margin-bottom: 1em;
+    margin-bottom: 0.3em;
     text-transform: uppercase;
-    color: #3c6a96;
+    color: darken($skyblue, 5%);
     font-weight: bolder;
+    font-size: 0.9em;
   }
 
   &__list {
-    display: inline-block;
+    display: flex;
     position: relative;
+    width: 100%;
     &:after {
       content: "";
       @extend %abs_center;
@@ -280,27 +284,30 @@
 
   &__item {
     display: inline-block;
-    width: 50px;
-    height: 50px;
+    flex: 20% 1;
+    width: 40px;
+    height: 40px;
     position: relative;
-    overflow: hidden;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid darken($back_bar, 1%);
-    background: radial-gradient(
-      circle,
-      lighten($content_background, 5%) 0%,
-      $content_background 90%
-    );
 
-    &:not(:last-child) {
-      margin-right: 1em;
-    }
-
-    img {
+    &__container {
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid darken($back_bar, 1%);
+      background: radial-gradient(
+        circle,
+        lighten($content_background, 5%) 0%,
+        $content_background 90%
+      );
       position: absolute;
-      @extend %abs_center;
-      width: 100%;
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
+
+      img {
+        position: absolute;
+        @extend %abs_center;
+        width: 100%;
+      }
     }
   }
 }
@@ -317,6 +324,7 @@
     transparent
   );
 }
+
 .randomBoton {
   position: absolute;
   top: 50px;

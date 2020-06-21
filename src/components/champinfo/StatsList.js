@@ -95,7 +95,7 @@ export class StatsList extends Component {
           <ListStat value={champ.banRate} title={"Banrate"} color="pink" />
           <ListStat value={champ.pickRate} title={"Pickrate"} color="green" />
         </div>
-        <div className="chartjscontainer mt-3">
+        <div className="chartjscontainer mt-4">
           <div className="chartjscontainer__box">
             <Radar data={radarData} options={optionsRadar} />
           </div>

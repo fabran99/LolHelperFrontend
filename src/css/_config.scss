@@ -7,7 +7,7 @@ $border_radius: 3px;
   position: absolute;
 }
 
-$spaceamounts: (0, 1, 2, 3, 4, 5);
+$spaceamounts: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
 @each $space in $spaceamounts {
   // Margin
@@ -60,6 +60,21 @@ $spaceamounts: (0, 1, 2, 3, 4, 5);
 
 .d-none {
   display: none !important;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+$spaceamounts: (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+$col_width: 8.3333333%;
+@each $space in $spaceamounts {
+  .col-#{$space} {
+    -ms-flex: 0 0 #{$space * $col_width};
+    flex: 0 0 #{$space * $col_width};
+    max-width: #{$space * $col_width};
+  }
 }
 
 $bolderFont: "Lora";

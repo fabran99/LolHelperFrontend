@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Tooltip from "@material-ui/core/Tooltip";
+import CustomTooltip from "../utility/CustomTooltip";
 import { runesFromChamp } from "../../functions/assetParser";
 
 export class RuneList extends Component {
@@ -22,14 +22,13 @@ export class RuneList extends Component {
           </div>
           {working_runes.primaryPerks.map((perk, i) => {
             return (
-              <Tooltip
+              <CustomTooltip
                 key={perk.id}
-                arrow
                 placement="top"
                 title={
-                  <div className="runetooltip">
-                    <div className="runetooltip__name">{perk.name}</div>
-                    <div className="runetooltip__desc">{perk.description}</div>
+                  <div className="tooltip">
+                    <div className="tooltip__title">{perk.name}</div>
+                    <div className="tooltip__content">{perk.description}</div>
                   </div>
                 }
               >
@@ -37,9 +36,9 @@ export class RuneList extends Component {
                   <div className="image">
                     <img src={perk.image} alt="" />
                   </div>
-                  <div className="name">{perk.name}</div>
+                  {/* <div className="name">{perk.name}</div> */}
                 </div>
-              </Tooltip>
+              </CustomTooltip>
             );
           })}
         </div>
@@ -56,16 +55,13 @@ export class RuneList extends Component {
 
             {working_runes.secondaryPerks.map((perk, i) => {
               return (
-                <Tooltip
+                <CustomTooltip
                   key={perk.id}
-                  arrow
                   placement="top"
                   title={
-                    <div className="runetooltip">
-                      <div className="runetooltip__name">{perk.name}</div>
-                      <div className="runetooltip__desc">
-                        {perk.description}
-                      </div>
+                    <div className="tooltip">
+                      <div className="tooltip__title">{perk.name}</div>
+                      <div className="tooltip__content">{perk.description}</div>
                     </div>
                   }
                 >
@@ -73,23 +69,20 @@ export class RuneList extends Component {
                     <div className="image">
                       <img src={perk.image} alt="" />
                     </div>
-                    <div className="name">{perk.name}</div>
+                    {/* <div className="name">{perk.name}</div> */}
                   </div>
-                </Tooltip>
+                </CustomTooltip>
               );
             })}
           </div>
           <div className="runeList runeList__perks">
             {working_runes.perkList.map((perk, i) => {
               return (
-                <Tooltip
-                  arrow
+                <CustomTooltip
                   key={`${perk.id}_${i}`}
                   title={
-                    <div className="runetooltip">
-                      <div className="runetooltip__name">
-                        {perk.description}
-                      </div>
+                    <div className="tooltip">
+                      <div className="tooltip__content">{perk.description}</div>
                     </div>
                   }
                   placement="top"
@@ -99,11 +92,11 @@ export class RuneList extends Component {
                       <img src={perk.image} alt="" />
                     </div>
                   </div>
-                </Tooltip>
+                </CustomTooltip>
               );
             })}
           </div>
-          <div className="runeList__bonus">
+          {/* <div className="runeList__bonus">
             <div className="bonustitle">Perks:</div>
             {working_runes.perkList.map((perk, i) => {
               return (
@@ -112,7 +105,7 @@ export class RuneList extends Component {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
       </div>
     );

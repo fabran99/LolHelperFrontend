@@ -1,6 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap");
 @import "colors";
+@import "fonts";
 @import "config";
 @import "animations";
 @import "./components/navigation";
@@ -31,6 +30,7 @@ body {
     $content_background,
     darken($content_background, 1%)
   );
+  background-size: cover;
 }
 
 ::-webkit-scrollbar-track {
@@ -53,6 +53,7 @@ body {
 .App {
   width: 100vw;
   height: 100vh;
+  user-select: none;
 
   #tsparticles canvas {
     display: block;
@@ -70,7 +71,7 @@ body {
     top: 0;
     z-index: -1;
     left: 0;
-    opacity: 0.7;
+    opacity: 0.5;
   }
 }
 .app_wrapper {

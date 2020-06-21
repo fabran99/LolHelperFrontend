@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Tooltip from "@material-ui/core/Tooltip";
-import { Link } from "react-router-dom";
 
 import {
   getGameName,
@@ -11,19 +9,36 @@ import {
   playerHasConfirmedPick,
   getCurrentPhase,
 } from "../../functions/gameSession";
-import img_placeholder from "../../img/placeholder.svg";
-import { getLoading, getSquare } from "../../helpers/getImgLinks";
 
 import ItemList from "../champinfo/ItemList";
 import RuneList from "../champinfo/RuneList";
 import StatsList from "../champinfo/StatsList";
+import ChampImage from "../champinfo/ChampImage";
+import TeamsList from "../champinfo/TeamsList";
+import classnames from "classnames";
+
+import { updateRunePage } from "../../functions/runePage";
 
 export class ChampSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
       champ: 127,
+      runesApplied: false,
+      runeButtonDisabled: false,
     };
+  }
+
+  stateChanger = (data) => {
+    try {
+      this.setState({ ...data });
+    } catch {
+      console.log("hubo un error");
+    }
+  };
+
+  componentWillUmount() {
+    this.stateChanger = (data) => {};
   }
 
   getGameName() {
@@ -61,6 +76,23 @@ export class ChampSelect extends Component {
     return champ;
   }
 
+  applyRunes() {
+    var champ = this.getChampInfo(this.getSelectedChamp());
+    if (!champ || this.state.runeButtonDisabled) {
+      return;
+    }
+    this.setState({
+      runeButtonDisabled: true,
+    });
+
+    updateRunePage(
+      champ.runes,
+      champ.name,
+      this.props.connection,
+      this.stateChanger.bind(this)
+    );
+  }
+
   changeChamp() {
     const { assets } = this.props;
     var random =
@@ -73,9 +105,11 @@ export class ChampSelect extends Component {
 
   render() {
     const { champSelect, gameSession, assets } = this.props;
-    // if (!champSelect) {
-    //   return null;
-    // }
+    if (!champSelect) {
+      return null;
+    }
+
+    const { runeButtonDisabled } = this.state;
 
     // console.log("GameName");
     // console.log(this.getGameName());
@@ -88,149 +122,59 @@ export class ChampSelect extends Component {
 
     console.log("currentchamp");
     // this.getSelectedChamp()
-    var champ = this.getChampInfo(this.state.champ);
-    // var champ = this.getChampInfo(this.getSelectedChamp());
+    // var champ = this.getChampInfo(this.state.champ);
+    var champ = this.getChampInfo(this.getSelectedChamp());
     // console.log("current phase");
     // console.log(this.getCurrentPhase());
 
     return (
       <div className="champSelect">
         <div className="header_text header_text--long">
-          Seleccionando - Grieta del invocador
+          {this.getGameName()}
         </div>
-        <button onClick={this.changeChamp.bind(this)} className="randomBoton">
-          {" "}
+        {/* <button onClick={this.changeChamp.bind(this)} className="randomBoton">
           click
-        </button>
+        </button> */}
         <div className="three_columns">
           {/* Imagen */}
           <div className="column column--image">
             <div className="champSelect__image">
-              {champ ? (
-                <div className="champSelectImageContainer">
-                  <Link to={`/champion/${champ.key}`} className="detailcard">
-                    <div className="detailcard__border"></div>
-                    <div className="detailcard__background">
-                      <img
-                        src={getLoading(assets.img_links, champ.key)}
-                        alt=""
-                      />
-                    </div>
-                    <div className="detailcard__overlay"></div>
-
-                    <div className="detailcard__text">
-                      <div className="name">{champ.name}</div>
-                      <div className="title">{champ.title}</div>
-                    </div>
-                  </Link>
-
-                  <div className="counters">
-                    <div className="counters__section">
-                      <div className="counters__title">Fuerte contra</div>
-                      <div className="counters__list">
-                        {champ.strongAgainst.map((enemy, i) => {
-                          var enemyInfo = this.getChampInfo(enemy);
-                          return (
-                            <div
-                              className="counters__list__champ"
-                              key={enemyInfo.key}
-                            >
-                              <Tooltip
-                                arrow
-                                placement="top"
-                                title={enemyInfo.name}
-                              >
-                                <Link
-                                  className="image"
-                                  to={`/champion/${enemy.championId}`}
-                                >
-                                  <img
-                                    src={getSquare(
-                                      assets.img_links,
-                                      enemyInfo.key
-                                    )}
-                                  />
-                                </Link>
-                              </Tooltip>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <div className="counters__section">
-                      <div className="counters__title">Debil contra</div>
-                      <div className="counters__list">
-                        {champ.weakAgainst.map((enemy, i) => {
-                          var enemyInfo = this.getChampInfo(enemy);
-                          return (
-                            <div
-                              className="counters__list__champ"
-                              key={enemyInfo.key}
-                            >
-                              <Tooltip
-                                arrow
-                                placement="top"
-                                title={enemyInfo.name}
-                              >
-                                <Link
-                                  className="image"
-                                  to={`/champion/${enemy.championId}`}
-                                >
-                                  <img
-                                    src={getSquare(
-                                      assets.img_links,
-                                      enemyInfo.key
-                                    )}
-                                  />
-                                </Link>
-                              </Tooltip>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="detailcard">
-                  <div className="detailcard__background">
-                    <img src={img_placeholder} style={{ width: "485px" }} />
-                  </div>
-                </div>
-              )}
+              {champ && <ChampImage champ={champ} />}
             </div>
           </div>
 
           {/* Build */}
           <div className="column">
-            {champ ? (
+            <TeamsList alone={!champ} />
+            {champ && (
               <div className="champSelect__build">
-                <ItemList champ={champ} />
-
-                {/* <div className="separator"></div> */}
-                <RuneList champ={champ} />
-
-                <div className="lolButton">
-                  <div className="lolButton__border"></div>
-                  Aplicar runas
+                <div className="row">
+                  <div className="col-6">
+                    <ItemList champ={champ} />
+                  </div>
+                  <div className="col-6">
+                    {/* <div className="separator"></div> */}
+                    <RuneList champ={champ} />
+                    <div
+                      className={classnames("lolButton", {
+                        disabled: runeButtonDisabled,
+                      })}
+                      onClick={this.applyRunes.bind(this)}
+                    >
+                      <div className="lolButton__border"></div>
+                      Aplicar runas
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="noChampSelected">
-                <div className="icon">?</div>
               </div>
             )}
           </div>
 
           {/* Stats */}
           <div className="column">
-            {champ ? (
+            {champ && (
               <div className="champSelect__stats">
                 <StatsList champ={champ} />
-              </div>
-            ) : (
-              <div className="noChampSelected">
-                <div className="icon">?</div>
               </div>
             )}
           </div>

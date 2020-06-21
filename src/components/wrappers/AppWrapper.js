@@ -149,6 +149,19 @@ export class AppWrapper extends Component {
         draggable: true,
       });
     }
+
+    // Si entro en partida, redirijo a ingame
+    var prevPhase = prevProps.lcuConnector.gameSession.phase;
+    var currentPhase = this.props.lcuConnector.gameSession.phase;
+    var notIngamePhases = ["None", "Lobby", "Matchmaking", "ReadyCheck"];
+    var ingamePhases = ["ChampSelect"];
+    if (
+      notIngamePhases.indexOf(prevPhase) != -1 &&
+      ingamePhases.indexOf(currentPhase) != -1 &&
+      this.props.history.location != "/ingame"
+    ) {
+      this.props.history.push("/ingame");
+    }
   }
 
   render() {
@@ -162,6 +175,7 @@ export class AppWrapper extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
+  lcuConnector: state.lcuConnector,
 });
 
 export default connect(mapStateToProps, {

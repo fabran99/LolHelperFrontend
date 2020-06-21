@@ -11,9 +11,9 @@ export class Ingame extends Component {
     return (
       <AppContent>
         {/*  */}
-        {/* {gameSession.phase == "ChampSelect" && <ChampSelect />}
-        {gameSession.phase == "None" && <NotIngame />} */}
-        <ChampSelect />
+        {gameSession.phase == "ChampSelect" && <ChampSelect />}
+        {gameSession.phase == "None" && <NotIngame />}
+        {/* <ChampSelect /> */}
       </AppContent>
     );
   }

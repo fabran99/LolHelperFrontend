@@ -16,9 +16,15 @@ export class TopBar extends Component {
   };
 
   render() {
+    const { location, lcuConnector } = this.props;
+
     const isActive = (path) => {
-      return this.props.location.pathname == path;
+      return location.pathname == path;
     };
+
+    const showIngame =
+      lcuConnector.connected || process.env.NODE_ENV == "development";
+
     return (
       <div className="top_bar">
         <div className="links">
@@ -30,14 +36,16 @@ export class TopBar extends Component {
           >
             Inicio
           </Link>
-          <Link
-            to="/ingame"
-            className={classnames({
-              active: isActive("/ingame"),
-            })}
-          >
-            InGame
-          </Link>
+          {showIngame && (
+            <Link
+              to="/ingame"
+              className={classnames({
+                active: isActive("/ingame"),
+              })}
+            >
+              InGame
+            </Link>
+          )}
           <Link
             to="/profile"
             className={classnames({
@@ -76,6 +84,7 @@ export class TopBar extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
+  lcuConnector: state.lcuConnector,
 });
 
 export default connect(mapStateToProps, null)(withRouter(TopBar));

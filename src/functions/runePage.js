@@ -1,10 +1,10 @@
 import { url_champ_runes } from "../endpoints/stats";
 import axios from "axios";
-// import { request } from "../helpers/lcuConnect";
+import { league_connect } from "../helpers/outsideObjects";
+const { request } = league_connect;
 
 export const parseRunepage = (runepage, champName, make_current) => {
   make_current = make_current || false;
-  console.log(runepage);
 
   var edited = {
     primaryStyleId: runepage.primary.main,
@@ -27,12 +27,19 @@ export const parseRunepage = (runepage, champName, make_current) => {
     edited.isActive = true;
   }
 
-  // edited.name = `Auto Runes for ${champName}`;
+  edited.name = `${champName}`;
 
   return edited;
 };
 
-export const updateRunePage = (index, runepage, connection) => {
+export const updateRunePage = (
+  runepage,
+  champName,
+  connection,
+  stateChanger
+) => {
+  var rpage = parseRunepage(runepage, champName, true);
+
   request(
     {
       url: "/lol-perks/v1/pages",
@@ -43,49 +50,68 @@ export const updateRunePage = (index, runepage, connection) => {
     .then((res) => {
       res.json().then((rlist) => {
         //  Edito la pagina actual con los valores nuevos
-        console.log(rlist);
-        var edited = rlist.find((item) => {
+        var editable = rlist.filter((item) => {
           return item.isEditable;
         });
-        edited = { ...runepage, id: edited.id, name: edited.name };
-        console.log(edited);
-        // Mando a actualizar
-        request({
-          url: `/lol-perks/v1/pages/${edited.id}`,
-          method: "PUT",
-          body: edited,
-        })
-          .then((ed) => {
-            // request({
-            //   url: `/lol-perks/v1/pages`,
-            //   method: "POST",
-            //   body: edited,
-            // }).then((ed) => {
-            console.log(ed);
-            // });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+
+        // Si no encuentro una intento crearla
+        if (!editable.length) {
+          request(
+            {
+              url: `/lol-perks/v1/pages`,
+              method: "POST",
+              body: rpage,
+            },
+            connection
+          )
+            .then((ed) => {
+              stateChanger({
+                runeButtonDisabled: false,
+                runesApplied: true,
+              });
+            })
+            .catch((err) => {
+              stateChanger({
+                runeButtonDisabled: false,
+              });
+            });
+        } else {
+          // Reviso si alguna de las editables esta activa
+          var editable_and_active = editable.find((x) => x.isActive);
+          var to_edit = editable_and_active ? editable_and_active : editable[0];
+
+          to_edit = { ...rpage, id: to_edit.id };
+          // Mando a actualizar
+          request(
+            {
+              url: `/lol-perks/v1/pages/${to_edit.id}`,
+              method: "DELETE",
+              body: to_edit,
+            },
+            connection
+          )
+            .then((ed) => {
+              request(
+                {
+                  url: `/lol-perks/v1/pages`,
+                  method: "POST",
+                  body: to_edit,
+                },
+                connection
+              ).then((ed) => {
+                stateChanger({
+                  runeButtonDisabled: false,
+                  runesApplied: false,
+                });
+              });
+            })
+            .catch((err) => {
+              stateChanger({
+                runeButtonDisabled: false,
+              });
+            });
+        }
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-export const updateFirstRunepageByChampStats = (connection, champ, elo) => {
-  elo = elo || "high_elo";
-  // Solicito runas
-
-  axios
-    .get(url_champ_runes(champ, elo))
-    .then((res) => {
-      if (res.status == 200) {
-        var rpage = parseRunepage(res.data.runes, res.data.champName, true);
-        console.log(rpage);
-        updateRunePage(0, rpage, connection);
-      }
     })
     .catch((err) => {
       console.log(err);

@@ -20,6 +20,7 @@
     display: flex;
     width: 50%;
     text-align: center;
+    flex-wrap: wrap;
 
     &:nth-child(1) {
       width: 25%;
@@ -41,6 +42,15 @@
 
 .champSelect {
   z-index: 10;
+
+  &__build {
+    display: block;
+    width: 100%;
+  }
+
+  .col-6 {
+    padding: 0 0;
+  }
   &__image {
     width: 100%;
 
@@ -55,11 +65,7 @@
     }
   }
 
-  &__stats {
-    margin-top: 1em;
-  }
-
   .lolButton {
-    margin-top: 3.2em;
+    margin-top: 0.5em;
   }
 }
