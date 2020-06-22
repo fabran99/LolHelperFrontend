@@ -18,6 +18,7 @@ import TeamsList from "../champinfo/TeamsList";
 import classnames from "classnames";
 
 import { updateRunePage } from "../../functions/runePage";
+import { electron } from "../../helpers/outsideObjects";
 
 export class ChampSelect extends Component {
   constructor(props) {
@@ -27,18 +28,6 @@ export class ChampSelect extends Component {
       runesApplied: false,
       runeButtonDisabled: false,
     };
-  }
-
-  stateChanger = (data) => {
-    try {
-      this.setState({ ...data });
-    } catch {
-      console.log("hubo un error");
-    }
-  };
-
-  componentWillUmount() {
-    this.stateChanger = (data) => {};
   }
 
   getGameName() {
@@ -81,16 +70,30 @@ export class ChampSelect extends Component {
     if (!champ || this.state.runeButtonDisabled) {
       return;
     }
-    this.setState({
-      runeButtonDisabled: true,
-    });
-
-    updateRunePage(
-      champ.runes,
-      champ.name,
-      this.props.connection,
-      this.stateChanger.bind(this)
+    this.setState(
+      {
+        runeButtonDisabled: true,
+      },
+      () => {
+        var obj = {
+          runePage: champ.runes,
+          champName: champ.name,
+          connection: this.props.connection,
+        };
+        electron.ipcRenderer.send("CHANGE_RUNES", JSON.stringify(obj));
+      }
     );
+  }
+
+  componentDidMount() {
+    this.runesChanged = (event, data) => {
+      this.setState(data);
+    };
+    electron.ipcRenderer.on("RUNES_UPDATED", this.runesChanged);
+  }
+
+  componentWillUnmount() {
+    electron.ipcRenderer.removeListener("RUNES_UPDATED", this.runesChanged);
   }
 
   changeChamp() {
@@ -120,7 +123,6 @@ export class ChampSelect extends Component {
     // console.log("has confirmed pick");
     // console.log(this.playerHasConfirmedPick());
 
-    console.log("currentchamp");
     // this.getSelectedChamp()
     // var champ = this.getChampInfo(this.state.champ);
     var champ = this.getChampInfo(this.getSelectedChamp());

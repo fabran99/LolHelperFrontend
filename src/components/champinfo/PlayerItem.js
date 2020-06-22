@@ -3,9 +3,10 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { league_connect } from "../../helpers/outsideObjects";
 import CustomTooltip from "../utility/CustomTooltip";
-import { getSquare, getIcon } from "../../helpers/getImgLinks";
+import { getSquare } from "../../helpers/getImgLinks";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { getSelectedChampByCellId } from "../../functions/gameSession";
+import { electron } from "../../helpers/outsideObjects";
 
 const positions_dict = {
   utility: "Support",
@@ -30,8 +31,6 @@ export class PlayerItem extends Component {
       wins: null,
       isInPromo: null,
       bestChamps: null,
-      retrys: 0,
-      retrysRank: 0,
     };
   }
 
@@ -51,15 +50,6 @@ export class PlayerItem extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.player.summonerId != this.props.player.summonerId &&
-      this.props.player.summonerId
-    ) {
-      this.getPlayerInfo();
-    }
-  }
-
   getSelectedChamp() {
     const { champSelect, player } = this.props;
     return getSelectedChampByCellId(champSelect, player.cellId);
@@ -68,117 +58,90 @@ export class PlayerItem extends Component {
   getPlayerInfo() {
     const { player, connection } = this.props;
     const { summonerId } = player;
-    if (this.state.retrys > 5) {
-      return;
-    }
+    // if (this.state.retrys > 5) {
+    //   return;
+    // }
     this.setState({
       summonerId,
     });
     console.log(summonerId);
 
     // Solicito info general del jugador
-    league_connect
-      .request(
-        {
-          url: `/lol-summoner/v1/summoners/${summonerId}`,
-          method: "GET",
-          json: true,
-        },
-        connection
+
+    electron.ipcRenderer
+      .invoke(
+        "GET_SUMMONER_INFO_BY_ID",
+        JSON.stringify({ connection, summonerId })
       )
       .then((res) => {
-        res.json().then((res) => {
-          console.log(res);
-          const {
+        const {
+          puuid,
+          displayName,
+          accountId,
+          summonerLevel,
+          profileIconId,
+        } = res;
+
+        this.setState(
+          {
             puuid,
             displayName,
             accountId,
             summonerLevel,
             profileIconId,
-          } = res;
-
-          this.setState(
-            {
-              puuid,
-              displayName,
-              accountId,
-              summonerLevel,
-              profileIconId,
-              retrys: 0,
-            },
-            () => {
-              this.getPlayerRankData();
-            }
-          );
-        });
+            retrys: 0,
+          },
+          () => {
+            this.getPlayerRankData();
+          }
+        );
       })
       .catch((err) => {
-        this.setState({
-          retrys: this.state.retrys + 1,
-        });
-        this.getPlayerInfo();
+        console.log(err);
       });
 
     //   Info de mejores champs del jugador
-    league_connect
-      .request(
-        {
-          url: `/lol-collections/v1/inventories/${summonerId}/champion-mastery/top?limit=3`,
-          method: "GET",
-          json: true,
-        },
-        connection
+    electron.ipcRenderer
+      .invoke(
+        "GET_BEST_CHAMPS_BY_ID",
+        JSON.stringify({ connection, summonerId })
       )
       .then((res) => {
-        res.json().then((res) => {
-          var bestChamps = res.masteries.map((champ) => {
-            const { championId, championPoints } = champ;
-            return { championId, championPoints };
-          });
-          this.setState({ bestChamps, retrys: 0 });
+        var bestChamps = res.masteries.map((champ) => {
+          const { championId, championPoints } = champ;
+          return { championId, championPoints };
         });
+        this.setState({ bestChamps });
       })
       .catch((err) => {
-        this.setState({
-          retrys: this.state.retrys + 1,
-        });
-        this.getPlayerInfo();
+        console.log(err);
       });
   }
 
   getPlayerRankData() {
     const { connection } = this.props;
-    const { puuid, retrysRank } = this.state;
-    if (retrysRank > 5) {
-      return null;
-    }
+    const { puuid } = this.state;
+
     // Solicito info de las ranked del jugador
-    league_connect
-      .request(
-        {
-          url: `/lol-ranked/v1/ranked-stats?puuids=["${puuid}"]`,
-          method: "GET",
-          json: true,
-        },
-        connection
+    electron.ipcRenderer
+      .invoke(
+        "GET_RANKED_STATS_BY_PUUID",
+        JSON.stringify({ connection, puuid })
       )
       .then((res) => {
-        res.json().then((res) => {
-          var key = puuid || Object.keys(res)[0];
-          var data = res[key].queueMap["RANKED_SOLO_5x5"];
-          var { tier, wins, division } = data;
-          var isInPromo = data.miniSeriesProgress != "";
-          this.setState({
-            tier,
-            wins,
-            division,
-            isInPromo,
-            retrysRank: 0,
-          });
+        var key = puuid || Object.keys(res)[0];
+        var data = res[key].queueMap["RANKED_SOLO_5x5"];
+        var { tier, wins, division } = data;
+        var isInPromo = data.miniSeriesProgress != "";
+        this.setState({
+          tier,
+          wins,
+          division,
+          isInPromo,
         });
       })
       .catch((err) => {
-        this.setState({ retrysRank: this.state.retrysRank + 1 });
+        console.log(err);
       });
   }
 

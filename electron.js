@@ -15,6 +15,12 @@ const {
   handleChampSelect,
   handleGameSession,
 } = require("./electron_related/lcuSockets");
+const {
+  updateRunePage,
+  getSummonerInfoById,
+  getBestChampsBySummoner,
+  getRankedStatsByPuuid,
+} = require("./electron_related/gameRequests");
 
 let mainWindow;
 let socket;
@@ -101,6 +107,19 @@ ipc.on("WORKING", () => {
   connector.start();
 });
 
+// Requests al launcher
+
+ipc.on("CHANGE_RUNES", (event, data) => {
+  var data = JSON.parse(data);
+  const { runePage, champName, connection } = data;
+  updateRunePage(mainWindow, runePage, champName, connection);
+});
+
+ipc.handle("GET_SUMMONER_INFO_BY_ID", getSummonerInfoById);
+ipc.handle("GET_BEST_CHAMPS_BY_ID", getBestChampsBySummoner);
+ipc.handle("GET_RANKED_STATS_BY_PUUID", getRankedStatsByPuuid);
+
+// Listeners del juego
 const startListeners = (auth_data) => {
   setTimeout(() => {
     connect(auth_data).then((lcusocket) => {

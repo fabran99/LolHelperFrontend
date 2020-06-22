@@ -1,11 +1,8 @@
-import { url_champ_runes } from "../endpoints/stats";
-import axios from "axios";
-import { league_connect } from "../helpers/outsideObjects";
-const { request } = league_connect;
+const { request } = require("league-connect");
 
-export const parseRunepage = (runepage, champName, make_current) => {
+// Runes
+const parseRunepage = (runepage, champName, make_current) => {
   make_current = make_current || false;
-  console.log(runepage);
 
   var edited = {
     primaryStyleId: runepage.primary.main,
@@ -33,12 +30,7 @@ export const parseRunepage = (runepage, champName, make_current) => {
   return edited;
 };
 
-export const updateRunePage = (
-  runepage,
-  champName,
-  connection,
-  stateChanger
-) => {
+const updateRunePage = (currentWindow, runepage, champName, connection) => {
   var rpage = parseRunepage(runepage, champName, true);
 
   request(
@@ -51,7 +43,6 @@ export const updateRunePage = (
     .then((res) => {
       res.json().then((rlist) => {
         //  Edito la pagina actual con los valores nuevos
-        console.log(rlist);
         var editable = rlist.filter((item) => {
           return item.isEditable;
         });
@@ -67,17 +58,13 @@ export const updateRunePage = (
             connection
           )
             .then((ed) => {
-              console.log(ed);
-              ed.json().then((res) => {
-                console.log(res);
-              });
-              stateChanger({
+              currentWindow.webContents.send("RUNES_UPDATED", {
                 runeButtonDisabled: false,
                 runesApplied: true,
               });
             })
             .catch((err) => {
-              stateChanger({
+              currentWindow.webContents.send("RUNES_UPDATED", {
                 runeButtonDisabled: false,
               });
             });
@@ -105,14 +92,14 @@ export const updateRunePage = (
                 },
                 connection
               ).then((ed) => {
-                stateChanger({
+                currentWindow.webContents.send("RUNES_UPDATED", {
                   runeButtonDisabled: false,
                   runesApplied: false,
                 });
               });
             })
             .catch((err) => {
-              stateChanger({
+              currentWindow.webContents.send("RUNES_UPDATED", {
                 runeButtonDisabled: false,
               });
             });
@@ -124,20 +111,56 @@ export const updateRunePage = (
     });
 };
 
-export const updateFirstRunepageByChampStats = (connection, champ, elo) => {
-  elo = elo || "high_elo";
-  // Solicito runas
+// Player info
+const getSummonerInfoById = async (event, data) => {
+  const { summonerId, connection } = JSON.parse(data);
+  var result = await request(
+    {
+      url: `/lol-summoner/v1/summoners/${summonerId}`,
+      method: "GET",
+      json: true,
+    },
+    connection
+  );
 
-  axios
-    .get(url_champ_runes(champ, elo))
-    .then((res) => {
-      if (res.status == 200) {
-        var rpage = parseRunepage(res.data.runes, res.data.champName, true);
-        console.log(rpage);
-        updateRunePage(0, rpage, connection);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  var parsedResult = await result.json();
+  return parsedResult;
+};
+
+const getBestChampsBySummoner = async (event, data) => {
+  const { summonerId, connection } = JSON.parse(data);
+  var result = await request(
+    {
+      url: `/lol-collections/v1/inventories/${summonerId}/champion-mastery/top?limit=3`,
+      method: "GET",
+      json: true,
+    },
+    connection
+  );
+
+  var parsedResult = await result.json();
+  return parsedResult;
+};
+
+const getRankedStatsByPuuid = async (event, data) => {
+  const { puuid, connection } = JSON.parse(data);
+  var result = await request(
+    {
+      url: `/lol-ranked/v1/ranked-stats?puuids=["${puuid}"]`,
+      method: "GET",
+      json: true,
+    },
+    connection
+  );
+
+  var parsedResult = await result.json();
+  return parsedResult;
+};
+
+module.exports = {
+  parseRunepage,
+  updateRunePage,
+  getSummonerInfoById,
+  getBestChampsBySummoner,
+  getRankedStatsByPuuid,
 };
