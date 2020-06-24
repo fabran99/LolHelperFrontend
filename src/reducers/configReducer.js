@@ -13,6 +13,7 @@ var cached_config = window.localStorage.getItem("config");
 
 if (cached_config) {
   initialState = { ...initialState, ...JSON.parse(cached_config) };
+  initialState.autoAskLane = "";
 } else {
   window.localStorage.setItem("config", JSON.stringify(initialState));
 }

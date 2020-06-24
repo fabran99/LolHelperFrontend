@@ -176,7 +176,6 @@ export class ChampSelect extends Component {
                             <div className="tooltip">
                               <div className="tooltip__content mb-0">
                                 {noAutoRunes ? "Activar " : "Desactivar "}
-                                AutoImport
                               </div>
                             </div>
                           }

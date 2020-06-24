@@ -135,7 +135,7 @@ export class AppWrapper extends Component {
   }
 
   askLane(data, counter, retrys) {
-    if (retrys > 10) {
+    if (retrys > 30) {
       return;
     }
     electron.ipcRenderer.invoke("ASK_FOR_LANE", data).then((res) => {

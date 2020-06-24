@@ -4,7 +4,7 @@
   "private": true,
   "description": "Lol app",
   "author": "fabran99",
-  "main": "./electron.js",
+  "main": "./public/electron.js",
   "build": {
     "appId": "lol.app",
     "win": {
