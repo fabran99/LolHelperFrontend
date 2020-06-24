@@ -1,0 +1,27 @@
+.configuration {
+  &__section {
+    margin-bottom: 2px;
+  }
+  &__title {
+    text-transform: uppercase;
+    font-weight: bolder;
+    color: lighten($gold, 20%);
+    font-size: 1.1em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.123);
+    padding-bottom: 0.5em;
+  }
+
+  &__element {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+    &__name {
+      display: inline-block;
+      font-size: 0.85em;
+      margin-left: 1em;
+      color: lighten($gold, 25%);
+      opacity: 0.9;
+    }
+  }
+}

@@ -9,6 +9,7 @@ import {
   playerHasConfirmedPick,
   getCurrentPhase,
 } from "../../functions/gameSession";
+import { updateConfig } from "../../actions/configActions";
 
 import ItemList from "../champinfo/ItemList";
 import RuneList from "../champinfo/RuneList";
@@ -17,14 +18,14 @@ import ChampImage from "../champinfo/ChampImage";
 import TeamsList from "../champinfo/TeamsList";
 import classnames from "classnames";
 
-import { updateRunePage } from "../../functions/runePage";
 import { electron } from "../../helpers/outsideObjects";
+import CustomTooltip from "../utility/CustomTooltip";
+import Loading from "../utility/Loading";
 
 export class ChampSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      champ: 127,
       runesApplied: false,
       runeButtonDisabled: false,
     };
@@ -67,7 +68,11 @@ export class ChampSelect extends Component {
 
   applyRunes() {
     var champ = this.getChampInfo(this.getSelectedChamp());
-    if (!champ || this.state.runeButtonDisabled) {
+    if (
+      !champ ||
+      this.state.runeButtonDisabled ||
+      this.props.configuration.changingRunes
+    ) {
       return;
     }
     this.setState(
@@ -80,36 +85,41 @@ export class ChampSelect extends Component {
           champName: champ.name,
           connection: this.props.connection,
         };
-        electron.ipcRenderer.send("CHANGE_RUNES", JSON.stringify(obj));
+        electron.ipcRenderer
+          .invoke("CHANGE_RUNES", JSON.stringify(obj))
+          .then((res) => {
+            this.setState({
+              runeButtonDisabled: false,
+              runesApplied: true,
+            });
+          })
+          .catch((err) => {
+            this.setState({
+              runeButtonDisabled: false,
+              runesApplied: false,
+            });
+          });
       }
     );
   }
 
-  componentDidMount() {
-    this.runesChanged = (event, data) => {
-      this.setState(data);
-    };
-    electron.ipcRenderer.on("RUNES_UPDATED", this.runesChanged);
-  }
-
   componentWillUnmount() {
-    electron.ipcRenderer.removeListener("RUNES_UPDATED", this.runesChanged);
+    const { configuration, updateConfig } = this.props;
+    if (configuration.autoImportRunes && configuration.dontAutoImportRunesNow) {
+      updateConfig({ dontAutoImportRunesNow: false });
+    }
   }
 
-  changeChamp() {
-    const { assets } = this.props;
-    var random =
-      assets.champions[Math.floor(Math.random() * assets.champions.length)];
-    console.log(random.championId);
-    this.setState({
-      champ: random.championId,
+  toggleAutoImport() {
+    this.props.updateConfig({
+      dontAutoImportRunesNow: !this.props.configuration.dontAutoImportRunesNow,
     });
   }
 
   render() {
-    const { champSelect, gameSession, assets } = this.props;
+    const { champSelect, configuration } = this.props;
     if (!champSelect) {
-      return null;
+      return <Loading />;
     }
 
     const { runeButtonDisabled } = this.state;
@@ -128,6 +138,8 @@ export class ChampSelect extends Component {
     var champ = this.getChampInfo(this.getSelectedChamp());
     // console.log("current phase");
     // console.log(this.getCurrentPhase());
+
+    var noAutoRunes = configuration.dontAutoImportRunesNow;
 
     return (
       <div className="champSelect">
@@ -149,22 +161,54 @@ export class ChampSelect extends Component {
           <div className="column">
             <TeamsList alone={!champ} />
             {champ && (
-              <div className="champSelect__build">
+              <div className="champSelect__build fadeIn">
                 <div className="row">
                   <div className="col-6">
                     <ItemList champ={champ} />
                   </div>
                   <div className="col-6">
-                    {/* <div className="separator"></div> */}
                     <RuneList champ={champ} />
-                    <div
-                      className={classnames("lolButton", {
-                        disabled: runeButtonDisabled,
-                      })}
-                      onClick={this.applyRunes.bind(this)}
-                    >
-                      <div className="lolButton__border"></div>
-                      Aplicar runas
+                    <div className="apply_runes">
+                      {configuration.autoImportRunes && (
+                        <CustomTooltip
+                          placement="top"
+                          title={
+                            <div className="tooltip">
+                              <div className="tooltip__content mb-0">
+                                {noAutoRunes ? "Activar " : "Desactivar "}
+                                AutoImport
+                              </div>
+                            </div>
+                          }
+                        >
+                          <div
+                            className="apply_runes__autoimport"
+                            onClick={this.toggleAutoImport.bind(this)}
+                          >
+                            {noAutoRunes ? (
+                              <span>
+                                AutoImportar desactivado
+                                <i className="fas fa-times"></i>
+                              </span>
+                            ) : (
+                              <span>
+                                AutoImportar activado
+                                <i className="fas fa-check-circle"></i>
+                              </span>
+                            )}
+                          </div>
+                        </CustomTooltip>
+                      )}
+                      <div
+                        className={classnames("lolButton", {
+                          disabled:
+                            runeButtonDisabled || configuration.changingRunes,
+                        })}
+                        onClick={this.applyRunes.bind(this)}
+                      >
+                        <div className="lolButton__border"></div>
+                        Aplicar runas
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -175,7 +219,7 @@ export class ChampSelect extends Component {
           {/* Stats */}
           <div className="column">
             {champ && (
-              <div className="champSelect__stats">
+              <div className="champSelect__stats fadeIn">
                 <StatsList champ={champ} />
               </div>
             )}
@@ -190,6 +234,7 @@ const mapStateToProps = (state) => ({
   champSelect: state.lcuConnector.champSelect,
   gameSession: state.lcuConnector.gameSession,
   assets: state.assets,
+  configuration: state.configuration,
 });
 
-export default connect(mapStateToProps, null)(ChampSelect);
+export default connect(mapStateToProps, { updateConfig })(ChampSelect);

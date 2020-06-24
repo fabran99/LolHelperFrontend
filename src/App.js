@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AppWrapper from "./components/wrappers/AppWrapper";
 import Home from "./components/home/Home";
 import Ingame from "./components/ingame/Ingame";
+import Configuration from "./components/configuration/Configuration";
 
 // Navegacion
 import TopBar from "./components/navigation/TopBar";
@@ -46,6 +47,12 @@ export class App extends Component {
                     exact
                     path="/ingame"
                     render={(props) => <Ingame {...props} />}
+                  />
+                  {/* Configuration */}
+                  <Route
+                    exact
+                    path="/configuration"
+                    render={(props) => <Configuration {...props} />}
                   />
 
                   {/* 404 */}

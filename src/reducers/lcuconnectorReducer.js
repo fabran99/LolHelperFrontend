@@ -1,9 +1,9 @@
 import {
   LCU_CONNECT,
   LCU_DISCONNECT,
-  GAMEFLOW_CHANGE,
   CHAMPSELECT_CHANGE,
   GAMESESSION_CHANGE,
+  LOBBY_CHANGE,
 } from "../actions/types";
 
 const initialState = {
@@ -13,6 +13,7 @@ const initialState = {
   gameSession: {
     phase: "None",
   },
+  lobby: null,
 };
 
 export default (state = initialState, action) => {
@@ -37,6 +38,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gameSession: action.payload.data,
+      };
+    case LOBBY_CHANGE:
+      return {
+        ...state,
+        lobby: action.payload.data,
       };
     default:
       return state;

@@ -16,7 +16,7 @@ export class TopBar extends Component {
   };
 
   render() {
-    const { location, lcuConnector } = this.props;
+    const { location, lcuConnector, assets } = this.props;
 
     const isActive = (path) => {
       return location.pathname == path;
@@ -27,43 +27,44 @@ export class TopBar extends Component {
 
     return (
       <div className="top_bar">
-        <div className="links">
-          <Link
-            to="/"
-            className={classnames({
-              active: isActive("/"),
-            })}
-          >
-            Inicio
-          </Link>
-          {showIngame && (
+        {assets.champions && (
+          <div className="links">
             <Link
-              to="/ingame"
+              to="/"
               className={classnames({
-                active: isActive("/ingame"),
+                active: isActive("/"),
               })}
             >
-              InGame
+              Inicio
             </Link>
-          )}
-          <Link
-            to="/profile"
-            className={classnames({
-              active: isActive("/profile"),
-            })}
-          >
-            Perfil
-          </Link>
-          <Link
-            to="/configuration"
-            className={classnames({
-              active: isActive("/configuration"),
-            })}
-          >
-            Configuración
-          </Link>
-        </div>
-
+            {showIngame && (
+              <Link
+                to="/ingame"
+                className={classnames({
+                  active: isActive("/ingame"),
+                })}
+              >
+                InGame
+              </Link>
+            )}
+            <Link
+              to="/profile"
+              className={classnames({
+                active: isActive("/profile"),
+              })}
+            >
+              Perfil
+            </Link>
+            <Link
+              to="/configuration"
+              className={classnames({
+                active: isActive("/configuration"),
+              })}
+            >
+              Configuración
+            </Link>
+          </div>
+        )}
         <div className="navbar_logo">
           <img src={logo} alt="" />
         </div>

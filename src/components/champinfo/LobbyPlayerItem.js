@@ -1,38 +1,28 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { electron } from "../../helpers/outsideObjects";
+import { getIcon, getSquare } from "../../helpers/getImgLinks";
 import classnames from "classnames";
 import CustomTooltip from "../utility/CustomTooltip";
-import { getSquare } from "../../helpers/getImgLinks";
 import imgPlaceholder from "../../img/placeholder.svg";
-import { getSelectedChampByCellId } from "../../functions/gameSession";
-import { electron } from "../../helpers/outsideObjects";
 
-const positions_dict = {
-  utility: "Support",
-  middle: "Mid",
-  top: "Top",
-  bottom: "ADC",
-  jungle: "Jungla",
-};
-
-export class PlayerItem extends Component {
+export class LobbyPlayerItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
       division: null,
       tier: null,
-      displayName: null,
+      summonerName: null,
       puuid: null,
       summonerId: null,
       summonerLevel: null,
       accountId: null,
-      profileIconId: null,
+      summonerIconId: null,
       wins: null,
       isInPromo: null,
       bestChamps: null,
     };
   }
-
   getChampInfo(id) {
     const { assets } = this.props;
     if (!id) {
@@ -49,50 +39,23 @@ export class PlayerItem extends Component {
     }
   }
 
-  getSelectedChamp() {
-    const { champSelect, player } = this.props;
-    return getSelectedChampByCellId(champSelect, player.cellId);
-  }
-
   getPlayerInfo() {
     const { player, connection } = this.props;
-    const { summonerId } = player;
+    const {
+      summonerId,
+      summonerIconId,
+      summonerLevel,
+      summonerName,
+      puuid,
+    } = player;
 
     this.setState({
       summonerId,
+      summonerIconId,
+      summonerLevel,
+      summonerName,
+      puuid,
     });
-
-    // Solicito info general del jugador
-    electron.ipcRenderer
-      .invoke(
-        "GET_SUMMONER_INFO_BY_ID",
-        JSON.stringify({ connection, summonerId })
-      )
-      .then((res) => {
-        const {
-          puuid,
-          displayName,
-          accountId,
-          summonerLevel,
-          profileIconId,
-        } = res;
-
-        this.setState(
-          {
-            puuid,
-            displayName,
-            accountId,
-            summonerLevel,
-            profileIconId,
-          },
-          () => {
-            this.getPlayerRankData();
-          }
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
 
     // Info de mejores champs del jugador
     electron.ipcRenderer
@@ -110,11 +73,6 @@ export class PlayerItem extends Component {
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  getPlayerRankData() {
-    const { connection } = this.props;
-    const { puuid } = this.state;
 
     // Solicito info de las ranked del jugador
     electron.ipcRenderer
@@ -140,28 +98,22 @@ export class PlayerItem extends Component {
   }
 
   render() {
-    const { player, assets } = this.props;
+    const { player, isLocalPlayer, assets } = this.props;
+    const { summonerId } = player;
     const {
-      division,
-      tier,
-      displayName,
       summonerLevel,
+      summonerIconId,
+      summonerName,
+      bestChamps,
+      tier,
+      division,
       wins,
       isInPromo,
-      bestChamps,
-      profileIconId,
     } = this.state;
-    var selectedChamp = this.getChampInfo(this.getSelectedChamp());
 
     const playerData = () => {
       return (
         <div className="tooltip">
-          <div className="tooltip__title">{displayName}</div>
-          {summonerLevel && (
-            <div className="tooltip__content">
-              Nivel: <div className="value">{summonerLevel}</div>
-            </div>
-          )}
           {!!tier && !!division && !!wins && (
             <div className="tooltip__content">
               Division:{" "}
@@ -190,45 +142,35 @@ export class PlayerItem extends Component {
 
     return (
       <div className="player">
-        <div className="player__data">
-          {!!player.assignedPosition && (
-            <div className="player__lane">
-              {positions_dict[player.assignedPosition]}
-            </div>
-          )}
-          {!!player.summonerId ? (
-            <CustomTooltip placement="top" title={playerData()}>
+        {!!player.summonerId ? (
+          <CustomTooltip placement="bottom" title={playerData()}>
+            <div className="player__data">
+              <div className="player__level">{summonerLevel}</div>
               <div
                 className={classnames("player__image", {
-                  "player__image--local": player.isLocalPlayer,
+                  "player__image--local": isLocalPlayer,
                 })}
               >
                 <img src={imgPlaceholder} alt="" />
-                {selectedChamp && (
-                  <img
-                    src={getSquare(assets.img_links, selectedChamp.key)}
-                    alt=""
-                  />
-                )}
+                <img src={getIcon(assets.img_links, summonerIconId)} alt="" />
               </div>
-            </CustomTooltip>
-          ) : (
+              <div className="player__name">{summonerName || "?"}</div>
+            </div>
+          </CustomTooltip>
+        ) : (
+          <div className="player__data">
+            <div className="player__level">{summonerLevel}</div>
             <div
               className={classnames("player__image", {
-                "player__image--local": player.isLocalPlayer,
+                "player__image--local": isLocalPlayer,
               })}
             >
               <img src={imgPlaceholder} alt="" />
-              {selectedChamp && (
-                <img
-                  src={getSquare(assets.img_links, selectedChamp.key)}
-                  alt=""
-                />
-              )}
+              <img src={getIcon(assets.img_links, summonerIconId)} alt="" />
             </div>
-          )}
-          <div className="player__name">{displayName || "?"}</div>
-        </div>
+            <div className="player__name">{summonerName || "?"}</div>
+          </div>
+        )}
       </div>
     );
   }
@@ -236,8 +178,6 @@ export class PlayerItem extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
-  champSelect: state.lcuConnector.champSelect,
-  connection: state.lcuConnector.connection,
 });
 
-export default connect(mapStateToProps, null)(PlayerItem);
+export default connect(mapStateToProps, null)(LobbyPlayerItem);

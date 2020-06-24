@@ -9,9 +9,15 @@
 
 @keyframes loading {
   0% {
-    width: 0%;
+    @extend %abs_center;
+    transform: translateX(-50%) translateY(-50%) rotate(0deg);
   }
   100% {
-    width: 100%;
+    @extend %abs_center;
+    transform: translateX(-50%) translateY(-50%) rotate(360deg);
   }
+}
+
+.fadeIn {
+  animation: fadeIn 0.4s ease;
 }

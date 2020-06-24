@@ -3,6 +3,7 @@
 @import "config";
 @import "animations";
 @import "./components/navigation";
+@import "./components/configuration";
 @import "./components/home";
 @import "./components/elements";
 @import "./components/lists";
@@ -96,43 +97,21 @@ body {
   .loading {
     @extend %abs_center;
     color: white;
-    font-size: 3em;
+    font-size: 1.5em;
     color: lighten($gold, 20%);
     text-align: center;
+    text-transform: uppercase;
+    font-family: $bolderFont;
 
-    &__bar {
-      width: 300px;
-      height: 14px;
-      border-radius: 10px;
-      background: lighten($content_background, 5%);
-      margin: 10px auto;
-      padding: 3px;
-    }
-
-    &__fill {
-      height: 100%;
-      background: $blue_accent;
-      background: linear-gradient(
-        to right,
-        lighten($blue_accent, 5%),
-        darken($blue_accent, 15%)
-      );
-      z-index: 10;
-      border-radius: 10px;
-      position: relative;
-      overflow-x: hidden;
-      animation: loading 3s ease;
-
-      &:after {
-        content: "";
-        position: absolute;
-        right: 3px;
-        border-radius: 50%;
-        top: 50%;
-        transform: translateY(-50%);
-        padding: 3px;
-        background: rgba(0, 0, 0, 0.479);
-      }
+    &__circle {
+      animation: loading 2s linear infinite;
+      border: 2px solid lighten($gold, 10%);
+      @extend %abs_center;
+      background: rgba(0, 0, 0, 0.11);
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      border-bottom-color: rgba($gold, 0.2);
     }
   }
 }

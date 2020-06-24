@@ -1,3 +1,13 @@
+import Emblem_Bronze from "../img/emblems/Emblem_Bronze.png";
+import Emblem_Challenger from "../img/emblems/Emblem_Challenger.png";
+import Emblem_Diamond from "../img/emblems/Emblem_Diamond.png";
+import Emblem_Gold from "../img/emblems/Emblem_Gold.png";
+import Emblem_Iron from "../img/emblems/Emblem_Iron.png";
+import Emblem_Master from "../img/emblems/Emblem_Master.png";
+import Emblem_Platinum from "../img/emblems/Emblem_Platinum.png";
+import Emblem_Silver from "../img/emblems/Emblem_Silver.png";
+import Emblem_Grandmaster from "../img/emblems/Emblem_Grandmaster.png";
+
 export const runesFromChamp = (champ_data, assets) => {
   var runes = assets.runes;
   var perks = assets.perks;
@@ -105,4 +115,16 @@ export const spellsFromChamp = (champ_data, assets) => {
   });
 
   return spells;
+};
+
+export const emblems = {
+  DIAMOND: Emblem_Diamond,
+  BRONZE: Emblem_Bronze,
+  GOLD: Emblem_Gold,
+  IRON: Emblem_Iron,
+  SILVER: Emblem_Silver,
+  PLATINUM: Emblem_Platinum,
+  GRANDMASTER: Emblem_Grandmaster,
+  CHALLENGER: Emblem_Challenger,
+  Master: Emblem_Master,
 };

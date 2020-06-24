@@ -30,85 +30,67 @@ const parseRunepage = (runepage, champName, make_current) => {
   return edited;
 };
 
-const updateRunePage = (currentWindow, runepage, champName, connection) => {
-  var rpage = parseRunepage(runepage, champName, true);
+const updateRunePage = async (event, data) => {
+  var data = JSON.parse(data);
+  const { runePage, champName, connection } = data;
 
-  request(
+  var rpage = parseRunepage(runePage, champName, true);
+
+  var pageList = await request(
     {
       url: "/lol-perks/v1/pages",
       method: "GET",
     },
     connection
-  )
-    .then((res) => {
-      res.json().then((rlist) => {
-        //  Edito la pagina actual con los valores nuevos
-        var editable = rlist.filter((item) => {
-          return item.isEditable;
-        });
+  );
 
-        // Si no encuentro una intento crearla
-        if (!editable.length) {
-          request(
-            {
-              url: `/lol-perks/v1/pages`,
-              method: "POST",
-              body: rpage,
-            },
-            connection
-          )
-            .then((ed) => {
-              currentWindow.webContents.send("RUNES_UPDATED", {
-                runeButtonDisabled: false,
-                runesApplied: true,
-              });
-            })
-            .catch((err) => {
-              currentWindow.webContents.send("RUNES_UPDATED", {
-                runeButtonDisabled: false,
-              });
-            });
-        } else {
-          // Reviso si alguna de las editables esta activa
-          var editable_and_active = editable.find((x) => x.isActive);
-          var to_edit = editable_and_active ? editable_and_active : editable[0];
+  pageList = await pageList.json();
+  var editable = pageList.filter((item) => {
+    return item.isEditable;
+  });
 
-          to_edit = { ...rpage, id: to_edit.id };
-          // Mando a actualizar
-          request(
-            {
-              url: `/lol-perks/v1/pages/${to_edit.id}`,
-              method: "DELETE",
-              body: to_edit,
-            },
-            connection
-          )
-            .then((ed) => {
-              request(
-                {
-                  url: `/lol-perks/v1/pages`,
-                  method: "POST",
-                  body: to_edit,
-                },
-                connection
-              ).then((ed) => {
-                currentWindow.webContents.send("RUNES_UPDATED", {
-                  runeButtonDisabled: false,
-                  runesApplied: false,
-                });
-              });
-            })
-            .catch((err) => {
-              currentWindow.webContents.send("RUNES_UPDATED", {
-                runeButtonDisabled: false,
-              });
-            });
-        }
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  if (!editable.length) {
+    var postPage = await request(
+      {
+        url: `/lol-perks/v1/pages`,
+        method: "POST",
+        body: rpage,
+      },
+      connection
+    );
+
+    postPage = await postPage.json();
+
+    return postPage;
+  } else {
+    // Reviso si alguna de las editables esta activa
+    var editable_and_active = editable.find((x) => x.isActive);
+    var to_edit = editable_and_active ? editable_and_active : editable[0];
+
+    to_edit = { ...rpage, id: to_edit.id };
+    // Mando a actualizar
+    var deletePage = await request(
+      {
+        url: `/lol-perks/v1/pages/${to_edit.id}`,
+        method: "DELETE",
+        body: to_edit,
+      },
+      connection
+    );
+
+    var postPage = await request(
+      {
+        url: `/lol-perks/v1/pages`,
+        method: "POST",
+        body: to_edit,
+      },
+      connection
+    );
+
+    postPage = await postPage.json();
+
+    return postPage;
+  }
 };
 
 // Player info
@@ -157,10 +139,50 @@ const getRankedStatsByPuuid = async (event, data) => {
   return parsedResult;
 };
 
+// launcher actions
+const checkReadyForMatch = async (event, data) => {
+  const { connection } = JSON.parse(data);
+  var result = await request(
+    {
+      url: `/lol-matchmaking/v1/ready-check/accept`,
+      method: "POST",
+      json: true,
+    },
+    connection
+  );
+
+  return result;
+};
+
+const AskLane = async (event, data) => {
+  const { connection, chatRoomName, lane } = JSON.parse(data);
+  var id = chatRoomName.split("@")[0];
+  console.log(id);
+  if (!id) {
+    return null;
+  }
+  var result = await request(
+    {
+      url: `/lol-chat/v1/conversations/${id}/messages`,
+      method: "POST",
+      json: true,
+      body: {
+        body: lane,
+      },
+    },
+    connection
+  );
+
+  result = await result.json();
+  return result;
+};
+
 module.exports = {
   parseRunepage,
   updateRunePage,
   getSummonerInfoById,
   getBestChampsBySummoner,
   getRankedStatsByPuuid,
+  checkReadyForMatch,
+  AskLane,
 };

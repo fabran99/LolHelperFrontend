@@ -74,7 +74,12 @@ $col_width: 8.3333333%;
     -ms-flex: 0 0 #{$space * $col_width};
     flex: 0 0 #{$space * $col_width};
     max-width: #{$space * $col_width};
+    padding: 0 15px;
   }
+}
+
+.t-center {
+  text-align: center !important;
 }
 
 $bolderFont: "Lora";

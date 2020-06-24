@@ -14,12 +14,15 @@ const { auth, connect } = require("league-connect");
 const {
   handleChampSelect,
   handleGameSession,
+  handleGameLobby,
 } = require("./electron_related/lcuSockets");
 const {
   updateRunePage,
   getSummonerInfoById,
   getBestChampsBySummoner,
   getRankedStatsByPuuid,
+  checkReadyForMatch,
+  AskLane,
 } = require("./electron_related/gameRequests");
 
 let mainWindow;
@@ -109,15 +112,12 @@ ipc.on("WORKING", () => {
 
 // Requests al launcher
 
-ipc.on("CHANGE_RUNES", (event, data) => {
-  var data = JSON.parse(data);
-  const { runePage, champName, connection } = data;
-  updateRunePage(mainWindow, runePage, champName, connection);
-});
-
+ipc.handle("CHANGE_RUNES", updateRunePage);
 ipc.handle("GET_SUMMONER_INFO_BY_ID", getSummonerInfoById);
 ipc.handle("GET_BEST_CHAMPS_BY_ID", getBestChampsBySummoner);
 ipc.handle("GET_RANKED_STATS_BY_PUUID", getRankedStatsByPuuid);
+ipc.handle("CHECK_READY_FOR_MATCH", checkReadyForMatch);
+ipc.handle("ASK_FOR_LANE", AskLane);
 
 // Listeners del juego
 const startListeners = (auth_data) => {
@@ -126,6 +126,7 @@ const startListeners = (auth_data) => {
       socket = lcusocket;
       handleChampSelect(mainWindow, auth_data, socket);
       handleGameSession(mainWindow, auth_data, socket);
+      handleGameLobby(mainWindow, auth_data, socket);
     });
   }, 5000);
 };

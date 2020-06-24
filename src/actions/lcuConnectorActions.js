@@ -1,7 +1,7 @@
 import {
   LCU_CONNECT,
   LCU_DISCONNECT,
-  GAMEFLOW_CHANGE,
+  LOBBY_CHANGE,
   CHAMPSELECT_CHANGE,
   GAMESESSION_CHANGE,
 } from "./types";
@@ -32,6 +32,14 @@ export const gamesessionChange = (data) => (dispatch) => {
   // Borra la info de conexion en redux
   dispatch({
     type: GAMESESSION_CHANGE,
+    payload: data,
+  });
+};
+
+export const lobbyChange = (data) => (dispatch) => {
+  // Borra la info de conexion en redux
+  dispatch({
+    type: LOBBY_CHANGE,
     payload: data,
   });
 };

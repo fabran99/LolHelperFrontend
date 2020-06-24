@@ -25,9 +25,21 @@ export const getCurrentPlayer = (champSelection) => {
 };
 
 export const playerHasConfirmedPick = (champSelection) => {
+  if (!champSelection) {
+    return false;
+  }
   var currentPlayer = getCurrentPlayer(champSelection);
   if (!currentPlayer) {
     return false;
+  }
+  // Reviso si es una seleccion automatica como aram
+  if (champSelection.actions.length == 0) {
+    var playerSelection = champSelection.myTeam.find((el) => {
+      return el.championId && el.cellId == currentPlayer.cellId;
+    });
+    if (playerSelection) {
+      return true;
+    }
   }
 
   var pickActions = champSelection.actions.filter((action) => {
@@ -36,7 +48,7 @@ export const playerHasConfirmedPick = (champSelection) => {
     );
   });
 
-  if (pickActions.length < 0) {
+  if (pickActions.length > 0) {
     var lastAction = pickActions[pickActions.length - 1].find(
       (item) => item.actorCellId == currentPlayer.cellId
     );
@@ -71,6 +83,17 @@ export const getSelectedChamp = (champSelection) => {
 };
 
 export const getSelectedChampByCellId = (champSelection, cellId) => {
+  // Reviso si es una seleccion automatica como aram
+  if (champSelection.actions.length == 0) {
+    var playerSelection = champSelection.myTeam.find((el) => {
+      return el.championId && el.cellId == cellId;
+    });
+    if (playerSelection) {
+      return playerSelection.championId;
+    }
+  }
+
+  // Sino reviso normalmente
   var pickActions = champSelection.actions.filter((action) => {
     return action.find((y) => y.actorCellId == cellId && y.type == "pick");
   });

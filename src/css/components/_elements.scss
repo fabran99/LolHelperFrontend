@@ -547,3 +547,210 @@
     }
   }
 }
+
+// Inputs
+.switch {
+  display: inline-block;
+  width: 45px;
+  height: 20px;
+  border-radius: 15px;
+  border: 2px solid rgba(darken($gold, 5%), 0.7);
+  position: relative;
+  background: linear-gradient(to bottom, darken($back_bar, 10%), $back_bar);
+  cursor: pointer;
+
+  &:hover {
+    .icon {
+      opacity: 1;
+    }
+  }
+
+  .icon {
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 15px;
+    border: 2px solid darken($gold, 10%);
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.568);
+    background: darken($card_top, 5%);
+    opacity: 0.8;
+    z-index: 2;
+    transition: left 0.3s ease;
+
+    span {
+      display: block;
+      @extend %abs_center;
+      width: 8px;
+      height: 2px;
+      background: white;
+      opacity: 0.5;
+      transition: all 0.4s ease;
+    }
+  }
+
+  &--checked {
+    .icon {
+      background: $ranking_border_color;
+      left: 20px;
+
+      span {
+        &:nth-child(1) {
+          transform: translateY(0px) translateX(-5px) rotate(25deg);
+          width: 4px;
+          opacity: 0.8;
+        }
+        &:nth-child(2) {
+          transform: translateY(-1px) translateX(-2px) rotate(-45deg);
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  input {
+    display: none;
+  }
+}
+
+// Lobby
+.lobbyContainer {
+  .lobby {
+    width: 100%;
+    align-self: center;
+    @extend %abs_center;
+    top: 52%;
+
+    &__list {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 2.5em;
+
+      .player {
+        display: flex;
+        flex: 20%;
+        width: 20%;
+        text-align: center;
+        position: relative;
+
+        &__data {
+          width: 190px;
+          text-align: center;
+          cursor: pointer;
+          margin: 0 auto;
+          background: black;
+          background: linear-gradient(
+            to bottom,
+            rgba($ranking_border_color, 0.2),
+            rgba($back_bar, 0.2)
+          );
+          padding: 1em;
+          height: 250px;
+          display: flex;
+          align-items: center;
+          position: relative;
+          box-shadow: 0px 3px 15px 7px rgba(0, 0, 0, 0.24);
+          border-radius: 2px;
+
+          &:hover {
+            background: linear-gradient(
+              to bottom,
+              rgba($ranking_border_color, 0.3),
+              rgba($back_bar, 0.3)
+            );
+          }
+        }
+
+        &__level {
+          @extend %abs_center;
+          top: 160px;
+          z-index: 2;
+          background: darken($back_bar, 10%);
+          padding: 0.2em 0.5em;
+          border-radius: 3px;
+          font-size: 0.8em;
+          animation: fadeIn 0.4s ease;
+        }
+
+        &__image {
+          width: 110px;
+          height: 110px;
+          margin: 0 auto;
+          overflow: hidden;
+          position: relative;
+          border-radius: 50%;
+          border: 3px solid lighten($back_bar, 5%);
+          transform: translateY(-20px);
+
+          &--local {
+            border-color: $gold;
+          }
+          img {
+            @extend %abs_center;
+            width: 105%;
+          }
+        }
+
+        &__name {
+          @extend %abs_center;
+          top: 100%;
+          font-size: 0.85em;
+          white-space: nowrap;
+          max-width: 150px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          transform: translateX(-50%) translateY(-60px);
+        }
+      }
+    }
+  }
+
+  .autoLaneSelector {
+    position: absolute;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    select {
+      font-size: 1.1em;
+      font-family: inherit;
+      padding: 0.5em 1em;
+      border: none;
+      color: white;
+      border-radius: 1px;
+      background: linear-gradient(
+        to bottom,
+        rgba($ranking_border_color, 0.2),
+        rgba($back_bar, 0.2)
+      );
+      outline: none;
+      cursor: pointer;
+      text-align: left;
+      width: 190px;
+      border: 2px solid rgba(66, 66, 66, 0.11);
+      transition: all 0.1s ease;
+
+      option {
+        background: darken($ranking_border_color, 10%);
+        color: white;
+      }
+
+      &:hover,
+      &:focus {
+        background: linear-gradient(
+          to bottom,
+          rgba($ranking_border_color, 0.3),
+          rgba($back_bar, 0.3)
+        );
+        border: 2px solid rgba(66, 66, 66, 0.301);
+      }
+
+      box-shadow: 0px 3px 15px 7px rgba(0, 0, 0, 0.24);
+    }
+  }
+}
