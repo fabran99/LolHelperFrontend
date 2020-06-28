@@ -35,8 +35,8 @@ var createWindow = () => {
   }
 
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 750,
+    width: 1024,
+    height: 640,
     icon: "",
     webPreferences: {
       nodeIntegration: true,

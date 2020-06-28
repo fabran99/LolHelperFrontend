@@ -173,11 +173,9 @@ export class ChampSelect extends Component {
                         <CustomTooltip
                           placement="top"
                           title={
-                            <div className="tooltip">
-                              <div className="tooltip__content mb-0">
-                                {noAutoRunes ? "Activar " : "Desactivar "}
-                              </div>
-                            </div>
+                            noAutoRunes
+                              ? "Reactivar"
+                              : "Desactivar por esta partida"
                           }
                         >
                           <div

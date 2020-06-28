@@ -157,7 +157,6 @@ const checkReadyForMatch = async (event, data) => {
 const AskLane = async (event, data) => {
   const { connection, chatRoomName, lane } = JSON.parse(data);
   var id = chatRoomName.split("@")[0];
-  console.log(id);
   if (!id) {
     return null;
   }

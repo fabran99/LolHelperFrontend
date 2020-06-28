@@ -1,12 +1,12 @@
 .runes {
   width: 100%;
-  padding: 1em;
+  padding: 0 1em;
 
   .runeList {
     position: relative;
     display: flex;
     align-items: center;
-    height: 85px;
+    height: 75px;
 
     &:after {
       content: "";
@@ -24,8 +24,8 @@
       display: inline-block;
       flex: 20%;
       position: relative;
-      height: 40px;
-      width: 40px;
+      height: 34px;
+      width: 34px;
 
       &:first-child {
         .image {
@@ -49,8 +49,8 @@
       }
 
       .image {
-        width: 40px;
-        height: 40px;
+        width: 34px;
+        height: 34px;
         position: absolute;
         overflow: hidden;
         border-radius: 50%;
@@ -83,12 +83,12 @@
     }
 
     .perk {
-      width: 27px;
-      height: 27px;
+      width: 23px;
+      height: 23px;
 
       .image {
-        width: 27px;
-        height: 27px;
+        width: 23px;
+        height: 23px;
         img {
           width: 80%;
         }
@@ -243,9 +243,9 @@
 
 .build {
   text-align: left;
-  padding: 1em;
+  padding: 0 1em;
   &__section {
-    margin-bottom: 1.4em;
+    margin-bottom: 0.6em;
   }
 
   .buildrow {
@@ -285,8 +285,8 @@
   &__item {
     display: inline-block;
     flex: 20% 1;
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     position: relative;
 
     &__container {
@@ -299,8 +299,8 @@
         $content_background 90%
       );
       position: absolute;
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       overflow: hidden;
 
       img {
@@ -315,8 +315,8 @@
 .apply_runes {
   &__autoimport {
     margin: 0 auto;
-    margin-bottom: 0.5em;
-    font-size: 0.8em;
+    margin-bottom: 0.2em;
+    font-size: 0.7em;
     cursor: pointer;
     background: rgba(90, 90, 90, 0.116);
     padding: 0.5em 1em;

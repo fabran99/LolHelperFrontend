@@ -144,7 +144,9 @@ export class AppWrapper extends Component {
         if (!counter) {
           this.props.updateConfig({ autoAskLane: "" });
         } else {
-          this.askLane(data, counter - 1, retrys);
+          setTimeout(() => {
+            this.askLane(data, counter - 1, retrys);
+          }, 250);
         }
       } else {
         this.askLane(data, counter, retrys + 1);
@@ -283,20 +285,24 @@ export class AppWrapper extends Component {
       updateConfig({ autoAskLane: "" });
     }
 
-    if (configuration.autoAskLane != "" && currentPhase == "ChampSelect") {
-      console.log("primera");
+    if (
+      configuration.autoAskLane != "" &&
+      currentPhase == "ChampSelect" &&
+      lcuConnector.champSelect
+    ) {
       if (
         lcuConnector.champSelect.chatDetails.chatRoomName != "" &&
         (prevPhase != "ChampSelect" ||
           prevProps.lcuConnector.champSelect.chatDetails.chatRoomName == "")
       ) {
-        console.log("segunda");
         var data = {
           lane: configuration.autoAskLane,
           connection: lcuConnector.connection,
           chatRoomName: lcuConnector.champSelect.chatDetails.chatRoomName,
         };
-        this.askLane(JSON.stringify(data), 3, 0);
+        setTimeout(() => {
+          this.askLane(JSON.stringify(data), 3, 0);
+        }, 1500);
       }
     }
   }

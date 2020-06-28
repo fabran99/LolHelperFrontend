@@ -5,7 +5,7 @@
 .header_text {
   position: relative;
   text-align: center;
-  font-size: 1.6em;
+  font-size: 1.45em;
   margin-bottom: 1em;
   color: lighten($gold, 22%);
   text-transform: uppercase;
@@ -47,7 +47,7 @@
 
 .detailcard {
   width: 100%;
-  height: 490px;
+  height: 400px;
   position: relative;
   display: block;
   overflow: hidden;
@@ -141,7 +141,7 @@
 
     .title {
       text-transform: uppercase;
-      font-size: 1.3em;
+      font-size: 1.1em;
       font-weight: bolder;
       color: lighten($gold, 20%);
       margin-bottom: 10px;
@@ -168,13 +168,13 @@
       &__icon {
         display: inline-block;
         background-color: $card_adc;
-        width: 28px;
-        height: 28px;
+        width: 25px;
+        height: 25px;
         position: relative;
 
         img {
           @extend %abs_center;
-          width: 20px;
+          width: 18px;
           filter: brightness(0) invert(1);
         }
 
@@ -197,7 +197,7 @@
         font-weight: 700;
         letter-spacing: 0.05em;
         line-height: 100%;
-        font-size: 12px;
+        font-size: 11px;
         color: rgb(160, 155, 140);
         text-overflow: ellipsis;
         text-transform: capitalize;
@@ -208,7 +208,7 @@
         border-image: initial;
         border-left: none;
         overflow: hidden;
-        padding: 6px 7px;
+        padding: 5px 6px;
         text-transform: uppercase;
       }
     }
@@ -222,8 +222,8 @@
         }
 
         .image {
-          height: 40px;
-          width: 40px;
+          height: 33px;
+          width: 33px;
           position: relative;
           cursor: pointer;
           overflow: hidden;
@@ -248,12 +248,17 @@
   width: 100%;
   text-align: center;
   position: relative;
-  height: 200px;
+  height: 160px;
 
   &__box {
-    width: 145%;
+    width: 135%;
     position: absolute;
-    right: -65px;
+    right: -49px;
+
+    &--doughnut {
+      width: 145%;
+      right: -60px;
+    }
   }
 }
 
@@ -331,7 +336,7 @@
 .counters {
   width: 100%;
   border: 1px solid $card_border_color;
-  padding: 0.35em 1em;
+  padding: 0.2em 1em;
   position: relative;
   background: linear-gradient(
     to bottom,
@@ -365,6 +370,7 @@
     color: lighten($gold, 15%);
     margin-bottom: 0.5em;
     font-family: $bolderFont;
+    font-size: 0.8em;
   }
 
   &__list {
@@ -380,8 +386,8 @@
 
       .image {
         cursor: pointer;
-        width: 50px;
-        height: 50px;
+        width: 35px;
+        height: 35px;
         margin: 0 auto;
         display: block;
         overflow: hidden;
@@ -473,19 +479,19 @@
   width: 100%;
   transition: all 0.4s ease;
   display: flex;
-  height: 320px;
+  height: 260px;
   flex-wrap: wrap;
   &--alone {
-    transform: translateY(100px);
+    transform: translateY(75px);
   }
 
   .team {
     width: 100%;
     align-self: center;
     &__title {
-      font-size: 1em;
+      font-size: 0.85em;
       color: lighten($gold, 20%);
-      margin-bottom: 1em;
+      margin-bottom: 1.2em;
       text-transform: uppercase;
       font-family: $bolderFont;
     }
@@ -494,7 +500,7 @@
       width: 100%;
       display: flex;
       flex-wrap: wrap;
-      margin-bottom: 2.5em;
+      margin-bottom: 2em;
 
       .player {
         display: flex;
@@ -510,15 +516,15 @@
         }
 
         &__data {
-          width: 70px;
+          width: 55px;
           text-align: center;
           cursor: pointer;
           margin: 0 auto;
           position: relative;
         }
         &__image {
-          width: 70px;
-          height: 70px;
+          width: 55px;
+          height: 55px;
           overflow: hidden;
           position: relative;
           border-radius: 50%;
@@ -529,16 +535,16 @@
           }
           img {
             @extend %abs_center;
-            width: 105%;
+            width: 110%;
           }
         }
 
         &__name {
           @extend %abs_center;
           top: 100%;
-          font-size: 0.8em;
+          font-size: 0.7em;
           white-space: nowrap;
-          max-width: 95px;
+          max-width: 91px;
           overflow: hidden;
           text-overflow: ellipsis;
           transform: translateX(-50%) translateY(5px);
@@ -622,7 +628,7 @@
     width: 100%;
     align-self: center;
     @extend %abs_center;
-    top: 52%;
+    top: 55%;
 
     &__list {
       width: 100%;
@@ -639,7 +645,7 @@
         position: relative;
 
         &__data {
-          width: 190px;
+          width: 150px;
           text-align: center;
           cursor: pointer;
           margin: 0 auto;
@@ -650,7 +656,7 @@
             rgba($back_bar, 0.2)
           );
           padding: 1em;
-          height: 250px;
+          height: 220px;
           display: flex;
           align-items: center;
           position: relative;
@@ -668,7 +674,7 @@
 
         &__level {
           @extend %abs_center;
-          top: 160px;
+          top: 130px;
           z-index: 2;
           background: darken($back_bar, 10%);
           padding: 0.2em 0.5em;
@@ -678,8 +684,8 @@
         }
 
         &__image {
-          width: 110px;
-          height: 110px;
+          width: 85px;
+          height: 85px;
           margin: 0 auto;
           overflow: hidden;
           position: relative;
@@ -701,7 +707,7 @@
           top: 100%;
           font-size: 0.85em;
           white-space: nowrap;
-          max-width: 150px;
+          max-width: 130px;
           overflow: hidden;
           text-overflow: ellipsis;
           transform: translateX(-50%) translateY(-60px);
@@ -717,9 +723,9 @@
     transform: translateX(-50%);
 
     select {
-      font-size: 1.1em;
+      font-size: 0.9em;
       font-family: inherit;
-      padding: 0.5em 1em;
+      padding: 0.6em 1em;
       border: none;
       color: white;
       border-radius: 1px;
@@ -731,8 +737,7 @@
       outline: none;
       cursor: pointer;
       text-align: left;
-      width: 190px;
-      border: 2px solid rgba(66, 66, 66, 0.11);
+      width: 150px;
       transition: all 0.1s ease;
 
       option {
@@ -747,7 +752,6 @@
           rgba($ranking_border_color, 0.3),
           rgba($back_bar, 0.3)
         );
-        border: 2px solid rgba(66, 66, 66, 0.301);
       }
 
       box-shadow: 0px 3px 15px 7px rgba(0, 0, 0, 0.24);

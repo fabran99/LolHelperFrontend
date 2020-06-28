@@ -1,5 +1,5 @@
 .list_wrapper {
-  height: 570px;
+  height: 470px;
   padding-right: 1px;
   transition: width 0.2s ease;
   overflow-y: auto;
@@ -30,7 +30,7 @@
   &__up {
     position: absolute;
     right: 25px;
-    bottom: 0;
+    bottom: 5px;
     font-size: 6em;
     z-index: 15;
     cursor: pointer;
@@ -144,10 +144,10 @@
     transition: width 0.2s ease;
     padding: 0 0;
     margin-right: 2em;
-    height: 615px;
+    height: 500px;
 
     .detailcard {
-      height: 485px;
+      height: 385px;
     }
 
     &__lore {
@@ -169,7 +169,7 @@
   }
   //   Listado
   &__container {
-    width: 74%;
+    width: 73.5%;
     &--full {
       width: 100%;
     }
@@ -231,8 +231,9 @@
   }
 
   &__icon {
-    width: 50px;
+    width: 60px;
     height: 50px;
+    display: block;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
@@ -257,11 +258,11 @@
     text-align: left;
     margin: 0 1em;
     font-weight: 600;
-    width: 180px;
+    width: 170px;
   }
 
   &__name {
-    font-size: 1.2em;
+    font-size: 1.1em;
     // text-transform: uppercase;
     font-weight: bolder;
     color: rgba(lighten($gold, 25%), 0.8);

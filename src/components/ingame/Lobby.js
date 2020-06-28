@@ -27,22 +27,39 @@ export class Lobby extends Component {
     }
     const { members, localMember } = lobby;
     var currentSummonerId = localMember.summonerId;
+
+    var showAutoPick = false;
+    try {
+      var gameModesToAutoPick = ["NORMAL", "BOT"];
+      if (
+        gameModesToAutoPick.indexOf(gameSession.gameData.queue.type) != -1 &&
+        gameSession.gameData.queue.gameMode == "CLASSIC" &&
+        gameSession.gameData.queue.gameTypeConfig.name ==
+          "GAME_CFG_TEAM_BUILDER_BLIND"
+      ) {
+        showAutoPick = true;
+      }
+    } catch {
+      showAutoPick = false;
+    }
     return (
       <div className="lobbyContainer">
-        <div className="autoLaneSelector">
-          <select
-            name="lane"
-            value={autoAskLane}
-            onChange={this.changeLane.bind(this)}
-          >
-            <option value="">No pedir línea</option>
-            <option value="MID">Pedir Mid</option>
-            <option value="SUPP">Pedir Support</option>
-            <option value="ADC">Pedir ADC</option>
-            <option value="TOP">Pedir Top</option>
-            <option value="JG"> Pedir Jungla</option>
-          </select>
-        </div>
+        {showAutoPick && (
+          <div className="autoLaneSelector">
+            <select
+              name="lane"
+              value={autoAskLane}
+              onChange={this.changeLane.bind(this)}
+            >
+              <option value="">No pedir línea</option>
+              <option value="MID">Pedir Mid</option>
+              <option value="SUPP">Pedir Support</option>
+              <option value="ADC">Pedir ADC</option>
+              <option value="TOP">Pedir Top</option>
+              <option value="JG"> Pedir Jungla</option>
+            </select>
+          </div>
+        )}
         <div className="header_text ">
           Lobby - {gameSession.map.gameModeShortName}
         </div>
