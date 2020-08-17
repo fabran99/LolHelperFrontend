@@ -38,6 +38,7 @@
     overflow: hidden;
     height: 55px;
     animation: fadeIn 0.5s ease;
+    display: none;
 
     svg {
       width: 55px;
@@ -79,7 +80,7 @@
     &__input {
       display: flex;
       flex-wrap: wrap;
-      padding: 0.5em;
+      padding: 0.3em 0.5em;
       border: 1px solid $card_border_color;
       width: 35%;
       background: $input_background;
@@ -101,13 +102,15 @@
 
     input,
     select {
-      font-size: 0.9em;
+      font-size: 0.8em;
     }
 
     &__icon {
       width: 30px;
-      padding-right: 10px;
+      padding-right: 7px;
       text-align: center;
+      font-size: 0.85em;
+      transform: translateY(3px);
       color: lighten(rgba($gold, 0.5), 20%);
     }
 
@@ -147,7 +150,13 @@
     height: 500px;
 
     .detailcard {
-      height: 385px;
+      height: 380px;
+      margin-bottom: 1em;
+      &__background {
+        img {
+          width: 110%;
+        }
+      }
     }
 
     &__lore {
@@ -188,37 +197,12 @@
     position: relative;
     border-top: 1px solid transparent;
 
-    &:after {
-      position: absolute;
-      left: 1px;
-      bottom: 0;
-      content: "";
-      padding: 2px;
-      border: 1px solid $card_border_color;
-      transform: translateY(50%) translateX(-50%) rotate(45deg);
-      background: $content_background;
-      z-index: 3;
-    }
-    &:before {
-      position: absolute;
-      right: 0px;
-      bottom: 0;
-      content: "";
-      padding: 2px;
-      border: 1px solid $card_border_color;
-      transform: translateY(50%) translateX(50%) rotate(45deg);
-      background: $content_background;
-      z-index: 3;
-    }
-
     &:hover {
       background: rgba($skyblue, 0.02);
     }
     &--active,
     &--active:hover {
-      background: rgba($skyblue, 0.05);
-      border-left-color: darken($blue_accent, 24%);
-      border-right-color: darken($blue_accent, 24%);
+      background: rgba($skyblue, 0.07);
     }
   }
 

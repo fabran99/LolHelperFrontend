@@ -13,14 +13,20 @@
 
   .navbar_logo {
     color: white;
-    cursor: pointer;
+    // cursor: pointer;
     display: inline-block;
     -webkit-app-region: no-drag;
-    transform: translateY(-50%);
+    transform: translateY(-50%) translateX(5px);
     position: absolute;
     top: 50%;
+
     img {
       width: 40px;
+    }
+
+    &__content {
+      font-size: 0.8em;
+      opacity: 0.5;
     }
   }
 

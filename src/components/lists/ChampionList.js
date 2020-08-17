@@ -141,20 +141,13 @@ export class ChampionList extends Component {
     if (!champ_data && list.length) {
       champ_data = list[0];
     }
-    var working_runes = champ_data ? runesFromChamp(champ_data, assets) : null;
     var build = champ_data ? itemsFromChamp(champ_data, assets) : null;
-    var spells = champ_data ? spellsFromChamp(champ_data, assets) : null;
 
     return (
       <div className="championlist">
         {/* Detalle */}
         {champ_data ? (
-          <ChampionDetail
-            working_runes={working_runes}
-            build={build}
-            champ_data={champ_data}
-            spells={spells}
-          />
+          <ChampionDetail build={build} champ_data={champ_data} />
         ) : (
           <div className="championdetail">
             <div className="detailcard">

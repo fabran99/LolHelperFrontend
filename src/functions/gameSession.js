@@ -123,6 +123,26 @@ export const isBaning = (champSelection) => {
   return getCurrentPhase(champSelection) == "ban";
 };
 
+export const getBanByCellId = (champSelection, cellId) => {
+  if (champSelection.actions.length == 0) {
+    return null;
+  }
+
+  // Sino reviso normalmente
+  var banActions = champSelection.actions.filter((action) => {
+    return action.find((y) => y.actorCellId == cellId && y.type == "ban");
+  });
+
+  if (banActions.length > 0) {
+    var lastAction = banActions[banActions.length - 1].find(
+      (item) => item.actorCellId == cellId
+    );
+    return lastAction.championId;
+  }
+
+  return null;
+};
+
 export const getMyTeam = (champSelection) => {
   var team = champSelection.myTeam.map((item, i) => {
     return {
@@ -133,6 +153,42 @@ export const getMyTeam = (champSelection) => {
   return team;
 };
 
+export const getMyTeamBans = (champSelection) => {
+  if (champSelection.bans.myTeamBans.length > 0) {
+    return champSelection.bans.myTeamBans;
+  }
+
+  var myTeam = champSelection.myTeam;
+
+  var bans = [];
+  myTeam.forEach((tmember) => {
+    var ban = getBanByCellId(champSelection, tmember.cellId);
+    if (ban) {
+      bans.push(ban);
+    }
+  });
+
+  return bans;
+};
+
 export const getEnemyTeam = (champSelection) => {
   return champSelection.theirTeam;
+};
+
+export const getEnemyBans = (champSelection) => {
+  if (champSelection.bans.theirTeamBans.length > 0) {
+    return champSelection.bans.theirTeamBans;
+  }
+
+  var enemyTeam = champSelection.theirTeam;
+
+  var bans = [];
+  enemyTeam.forEach((tmember) => {
+    var ban = getBanByCellId(champSelection, tmember.cellId);
+    if (ban) {
+      bans.push(ban);
+    }
+  });
+
+  return bans;
 };

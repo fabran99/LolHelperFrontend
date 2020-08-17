@@ -11,11 +11,11 @@ import {
 } from "../../functions/gameSession";
 import { updateConfig } from "../../actions/configActions";
 
-import ItemList from "../champinfo/ItemList";
-import RuneList from "../champinfo/RuneList";
-import StatsList from "../champinfo/StatsList";
-import ChampImage from "../champinfo/ChampImage";
-import TeamsList from "../champinfo/TeamsList";
+import ItemList from "../champSelectionElements/ItemList";
+import RuneList from "../champSelectionElements/RuneList";
+import StatsList from "../champSelectionElements/StatsList";
+import ChampImage from "../champSelectionElements/ChampImage";
+import TeamsList from "../champSelectionElements/TeamsList";
 import classnames from "classnames";
 
 import { electron } from "../../helpers/outsideObjects";
@@ -149,18 +149,18 @@ export class ChampSelect extends Component {
         {/* <button onClick={this.changeChamp.bind(this)} className="randomBoton">
           click
         </button> */}
-        <div className="three_columns">
+        <div className="row">
           {/* Imagen */}
-          <div className="column column--image">
+          <div className="col-3">
             <div className="champSelect__image">
-              {champ && <ChampImage champ={champ} />}
+              <ChampImage champ={champ} />
             </div>
           </div>
 
           {/* Build */}
-          <div className="column">
+          <div className="col-9">
             <TeamsList alone={!champ} />
-            {champ && (
+            {/* {champ && (
               <div className="champSelect__build fadeIn">
                 <div className="row">
                   <div className="col-6">
@@ -210,16 +210,7 @@ export class ChampSelect extends Component {
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-
-          {/* Stats */}
-          <div className="column">
-            {champ && (
-              <div className="champSelect__stats fadeIn">
-                <StatsList champ={champ} />
-              </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

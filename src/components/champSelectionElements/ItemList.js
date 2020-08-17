@@ -10,7 +10,7 @@ export class ItemList extends Component {
     return (
       <div className="build">
         <div className="build__section">
-          <div className="build__title">Objectos principales</div>
+          <div className="build__title">principales</div>
           <div className="build__list">
             {champ.build.items.map((item, i) => {
               var itemInfo = assets.items.find((x) => x.id == item);
@@ -45,8 +45,8 @@ export class ItemList extends Component {
           </div>
         </div>
 
-        <div className="build__section">
-          <div className="build__title">Objectos Secundarios</div>
+        <div className="build__section d-none">
+          <div className="build__title">Secundarios</div>
           <div className="build__list">
             {champ.build.secondary.map((item, i) => {
               var itemInfo = assets.items.find((x) => x.id == item);

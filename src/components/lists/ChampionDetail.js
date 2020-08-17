@@ -6,7 +6,7 @@ import { icon_dict } from "../../helpers/iconDict";
 
 export class ChampionDetail extends Component {
   render() {
-    const { champ_data, assets, build, working_runes, spells } = this.props;
+    const { champ_data, assets, build } = this.props;
     const { img_links } = assets;
 
     return (
@@ -31,7 +31,6 @@ export class ChampionDetail extends Component {
             </div>
           </div>
         </Link>
-
         <div className="championdetail__lore">{champ_data.lore}</div>
       </div>
     );

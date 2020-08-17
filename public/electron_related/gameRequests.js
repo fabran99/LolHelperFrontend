@@ -63,8 +63,12 @@ const updateRunePage = async (event, data) => {
 
     return postPage;
   } else {
-    // Reviso si alguna de las editables esta activa
-    var editable_and_active = editable.find((x) => x.isActive);
+    // Busco una runa con el nombre del champ
+    var editable_and_active = editable.find((x) => x.name == champName);
+    if (!editable_and_active) {
+      // Reviso si alguna de las editables esta activa
+      editable_and_active = editable.find((x) => x.isActive);
+    }
     var to_edit = editable_and_active ? editable_and_active : editable[0];
 
     to_edit = { ...rpage, id: to_edit.id };
@@ -99,6 +103,22 @@ const getSummonerInfoById = async (event, data) => {
   var result = await request(
     {
       url: `/lol-summoner/v1/summoners/${summonerId}`,
+      method: "GET",
+      json: true,
+    },
+    connection
+  );
+
+  var parsedResult = await result.json();
+  return parsedResult;
+};
+
+const getSummonerMasteries = async (event, data) => {
+  const { summonerId, connection } = JSON.parse(data);
+
+  var result = await request(
+    {
+      url: `/lol-collections/v1/inventories/${summonerId}/champion-mastery/`,
       method: "GET",
       json: true,
     },
@@ -184,4 +204,5 @@ module.exports = {
   getRankedStatsByPuuid,
   checkReadyForMatch,
   AskLane,
+  getSummonerMasteries,
 };

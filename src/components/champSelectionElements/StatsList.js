@@ -88,6 +88,7 @@ export class StatsList extends Component {
     var optionsRadar = {
       ...radarOptions,
     };
+
     return (
       <div className="statlist">
         <div className="stats">

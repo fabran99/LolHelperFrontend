@@ -1,12 +1,13 @@
 .runes {
   width: 100%;
-  padding: 0 1em;
+  padding: 0 0.5em;
+  margin-top: 1em;
 
   .runeList {
     position: relative;
     display: flex;
     align-items: center;
-    height: 75px;
+    height: 70px;
 
     &:after {
       content: "";
@@ -24,8 +25,8 @@
       display: inline-block;
       flex: 20%;
       position: relative;
-      height: 34px;
-      width: 34px;
+      height: 31px;
+      width: 31px;
 
       &:first-child {
         .image {
@@ -39,7 +40,7 @@
         position: absolute;
         @extend %abs_center;
         top: -15px;
-        font-size: 0.9em;
+        font-size: 0.8em;
         text-transform: uppercase;
         color: $gold;
         font-weight: bolder;
@@ -49,8 +50,8 @@
       }
 
       .image {
-        width: 34px;
-        height: 34px;
+        width: 31px;
+        height: 31px;
         position: absolute;
         overflow: hidden;
         border-radius: 50%;
@@ -243,7 +244,8 @@
 
 .build {
   text-align: left;
-  padding: 0 1em;
+  padding: 0 0.7em;
+  margin-top: 0.8em;
   &__section {
     margin-bottom: 0.6em;
   }
@@ -261,9 +263,9 @@
   &__title {
     margin-bottom: 0.3em;
     text-transform: uppercase;
-    color: darken($skyblue, 5%);
+    color: $skyblue;
     font-weight: bolder;
-    font-size: 0.9em;
+    font-size: 0.8em;
   }
 
   &__list {
@@ -285,8 +287,8 @@
   &__item {
     display: inline-block;
     flex: 20% 1;
-    width: 38px;
-    height: 38px;
+    width: 37px;
+    height: 37px;
     position: relative;
 
     &__container {
@@ -299,8 +301,8 @@
         $content_background 90%
       );
       position: absolute;
-      width: 38px;
-      height: 38px;
+      width: 37px;
+      height: 37px;
       overflow: hidden;
 
       img {

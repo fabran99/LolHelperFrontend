@@ -139,7 +139,6 @@ export class AppWrapper extends Component {
       return;
     }
     electron.ipcRenderer.invoke("ASK_FOR_LANE", data).then((res) => {
-      console.log(res);
       if (!res.errorCode) {
         if (!counter) {
           this.props.updateConfig({ autoAskLane: "" });
@@ -234,7 +233,8 @@ export class AppWrapper extends Component {
 
       if (
         (!prevConfirmPick && currentConfirmPick) ||
-        (prevConfirmPick && currentConfirmPick && currentChamp != prevChamp)
+        (prevConfirmPick && currentConfirmPick && currentChamp != prevChamp) ||
+        (prevConfirmPick && currentConfirmPick && currentPhase != prevPhase)
       ) {
         if (currentChamp) {
           var champ = assets.champions.find(
@@ -265,6 +265,17 @@ export class AppWrapper extends Component {
             });
         }
       }
+    }
+
+    // Quito dontAutoImportRunesNow si salgo de champSelect
+    if (
+      dontAutoImportRunesNow &&
+      prevPhase == "ChampSelect" &&
+      currentPhase != "ChampSelect"
+    ) {
+      updateConfig({
+        dontAutoImportRunesNow: false,
+      });
     }
 
     // Auto pedir linea

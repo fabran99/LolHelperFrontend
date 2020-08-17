@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import LobbyPlayerItem from "../champinfo/LobbyPlayerItem";
+import LobbyPlayerItem from "../champSelectionElements/LobbyPlayerItem";
 import { getGameName } from "../../functions/gameSession";
 
 import { updateConfig } from "../../actions/configActions";

@@ -47,14 +47,14 @@ export class TopBar extends Component {
                 InGame
               </Link>
             )}
-            <Link
+            {/* <Link
               to="/profile"
               className={classnames({
                 active: isActive("/profile"),
               })}
             >
               Perfil
-            </Link>
+            </Link> */}
             <Link
               to="/configuration"
               className={classnames({
@@ -66,7 +66,10 @@ export class TopBar extends Component {
           </div>
         )}
         <div className="navbar_logo">
-          <img src={logo} alt="" />
+          {/* <img src={logo} alt="" /> */}
+          <div className="navbar_logo__content">
+            {process.env.REACT_APP_VERSION}
+          </div>
         </div>
 
         <div className="icons">

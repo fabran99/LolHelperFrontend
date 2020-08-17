@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import CustomTooltip from "../utility/CustomTooltip";
-import { getSquare } from "../../helpers/getImgLinks";
+import { getSquare, getSpell } from "../../helpers/getImgLinks";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { getSelectedChampByCellId } from "../../functions/gameSession";
 import { electron } from "../../helpers/outsideObjects";
+import moment from "moment";
+import { numberToDots } from "../../helpers/general";
 
 const positions_dict = {
   utility: "Support",
@@ -30,6 +32,7 @@ export class PlayerItem extends Component {
       wins: null,
       isInPromo: null,
       bestChamps: null,
+      masteryLevels: null,
     };
   }
 
@@ -110,6 +113,21 @@ export class PlayerItem extends Component {
       .catch((err) => {
         console.log(err);
       });
+
+    // Pido info de las maestrias
+    electron.ipcRenderer
+      .invoke(
+        "GET_SUMMONER_MASTERIES_BY_ID",
+        JSON.stringify({ connection, summonerId })
+      )
+      .then((res) => {
+        this.setState({
+          masteryLevels: res,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   getPlayerRankData() {
@@ -140,7 +158,7 @@ export class PlayerItem extends Component {
   }
 
   render() {
-    const { player, assets } = this.props;
+    const { player, assets, enemy } = this.props;
     const {
       division,
       tier,
@@ -150,18 +168,30 @@ export class PlayerItem extends Component {
       isInPromo,
       bestChamps,
       profileIconId,
+      masteryLevels,
     } = this.state;
     var selectedChamp = this.getChampInfo(this.getSelectedChamp());
 
     const playerData = () => {
+      var current_champ_mastery = null;
+      if (masteryLevels && selectedChamp) {
+        current_champ_mastery = masteryLevels.find(
+          (el) => el.championId == parseInt(selectedChamp.championId)
+        );
+      }
+
       return (
         <div className="tooltip">
+          {/* Nombre */}
           <div className="tooltip__title">{displayName}</div>
+          {/* Nivel */}
           {summonerLevel && (
             <div className="tooltip__content">
               Nivel: <div className="value">{summonerLevel}</div>
             </div>
           )}
+
+          {/* Division */}
           {!!tier && !!division && !!wins && (
             <div className="tooltip__content">
               Division:{" "}
@@ -170,6 +200,7 @@ export class PlayerItem extends Component {
               </div>
             </div>
           )}
+          {/* Mejores campeones */}
           {bestChamps && (
             <div className="tooltip__champlist">
               <div className="tooltip__content">Campeones mas jugados</div>
@@ -184,34 +215,101 @@ export class PlayerItem extends Component {
             </div>
           )}
           {isInPromo && <div className="tooltip__subcontent">En promo</div>}
+
+          {/* Maestria */}
+          {current_champ_mastery && (
+            <div className="tooltip__mastery">
+              <div className="mastery">
+                <div className="row">
+                  <div className="col-4">
+                    <div className="mastery__image">
+                      {
+                        <img
+                          src={getSquare(assets.img_links, selectedChamp.key)}
+                        />
+                      }
+                    </div>
+                  </div>
+
+                  <div className="col-8">
+                    <div className="mastery__data">
+                      <div>
+                        Puntos de maestria:{" "}
+                        <div className="value">
+                          {numberToDots(current_champ_mastery.championPoints)}
+                        </div>
+                      </div>
+                      <div>
+                        Nivel de maestria:{" "}
+                        <div className="value  d-inline">
+                          {current_champ_mastery.championLevel}
+                        </div>
+                      </div>
+                      <div>
+                        Jugado por última vez:{" "}
+                        <div className="value">
+                          {moment
+                            .unix(current_champ_mastery.lastPlayTime / 1000)
+                            .format("DD/MM/YYYY HH:mm")}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
     };
 
-    return (
-      <div className="player">
+    // Decido si pongo un tooltip o no
+    const Wrapper = (content) => {
+      return !!player.summonerId ? (
+        <CustomTooltip placement="left" title={playerData()}>
+          {content}
+        </CustomTooltip>
+      ) : (
+        <React.Fragment>{content}</React.Fragment>
+      );
+    };
+
+    // Spells del jugador
+    var player_spells = [];
+    var valid_spells = assets.spells.map((spell) => parseInt(spell.key));
+
+    if (selectedChamp) {
+      var index1 = valid_spells.indexOf(player.spell1Id);
+      var index2 = valid_spells.indexOf(player.spell2Id);
+      if (index1 != -1) {
+        player_spells.push(assets.spells[index1]);
+      }
+      if (index2 != -1) {
+        player_spells.push(assets.spells[index2]);
+      }
+    }
+
+    return Wrapper(
+      <div
+        className={classnames("player", {
+          "player--enemy": enemy,
+        })}
+      >
         <div className="player__data">
-          {!!player.assignedPosition && (
-            <div className="player__lane">
-              {positions_dict[player.assignedPosition]}
-            </div>
-          )}
           {!!player.summonerId ? (
-            <CustomTooltip placement="top" title={playerData()}>
-              <div
-                className={classnames("player__image", {
-                  "player__image--local": player.isLocalPlayer,
-                })}
-              >
-                <img src={imgPlaceholder} alt="" />
-                {selectedChamp && (
-                  <img
-                    src={getSquare(assets.img_links, selectedChamp.key)}
-                    alt=""
-                  />
-                )}
-              </div>
-            </CustomTooltip>
+            <div
+              className={classnames("player__image", {
+                "player__image--local": player.isLocalPlayer,
+              })}
+            >
+              <img src={imgPlaceholder} alt="" />
+              {selectedChamp && (
+                <img
+                  src={getSquare(assets.img_links, selectedChamp.key)}
+                  alt=""
+                />
+              )}
+            </div>
           ) : (
             <div
               className={classnames("player__image", {
@@ -227,7 +325,40 @@ export class PlayerItem extends Component {
               )}
             </div>
           )}
-          <div className="player__name">{displayName || "?"}</div>
+          <div className="player__spells">
+            {player_spells.map((spell) => {
+              return (
+                <div key={spell.id} className="player__spells__img fadeIn">
+                  <img src={getSpell(assets.img_links, spell.id)} />
+                </div>
+              );
+            })}
+          </div>
+          {/* Nombre */}
+          <div
+            className={classnames("player__name", {
+              "player__name--nosums":
+                player_spells.length == 0 || !selectedChamp,
+              "player__name--lowop": !displayName && selectedChamp,
+            })}
+          >
+            {displayName || ""}
+            {!displayName && selectedChamp ? selectedChamp.name : ""}
+            {!!player.assignedPosition && (
+              <small> ({positions_dict[player.assignedPosition]})</small>
+            )}
+          </div>
+          {/* Division */}
+          {!!tier && !!division && !!wins && (
+            <div className="player__stats">
+              <div className="tier">
+                {tier} {division}
+              </div>
+              <div className="wins">{wins} wins (Ranked)</div>
+            </div>
+          )}
+
+          {/* Pongo nivel de campeon actual */}
         </div>
       </div>
     );

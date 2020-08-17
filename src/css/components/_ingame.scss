@@ -49,14 +49,12 @@
     height: 220px;
   }
 
-  .col-6 {
-    padding: 0 0;
-  }
   &__image {
     width: 100%;
 
     .detailcard {
-      height: 350px;
+      height: 330px;
+      margin-bottom: 0;
 
       &__background {
         img {

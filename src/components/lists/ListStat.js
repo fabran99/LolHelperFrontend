@@ -1,8 +1,38 @@
 import React, { Component } from "react";
 
 export class ListStat extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 0,
+    };
+  }
+
+  componentDidMount() {
+    this.timeout = setTimeout(() => {
+      this.setState({
+        value: this.props.value,
+      });
+    }, 50);
+  }
+
+  componentWillUnmount() {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.value != this.state.value) {
+      this.setState({
+        value: this.props.value,
+      });
+    }
+  }
+
   render() {
-    var { value, title, color } = this.props;
+    var { title, color } = this.props;
+    var { value } = this.state;
     color = color ? `barstat__fill--${color}` : "";
 
     return (

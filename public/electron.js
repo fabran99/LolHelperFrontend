@@ -23,6 +23,7 @@ const {
   getRankedStatsByPuuid,
   checkReadyForMatch,
   AskLane,
+  getSummonerMasteries,
 } = require("./electron_related/gameRequests");
 
 let mainWindow;
@@ -117,6 +118,7 @@ ipc.handle("GET_BEST_CHAMPS_BY_ID", getBestChampsBySummoner);
 ipc.handle("GET_RANKED_STATS_BY_PUUID", getRankedStatsByPuuid);
 ipc.handle("CHECK_READY_FOR_MATCH", checkReadyForMatch);
 ipc.handle("ASK_FOR_LANE", AskLane);
+ipc.handle("GET_SUMMONER_MASTERIES_BY_ID", getSummonerMasteries);
 
 // Listeners del juego
 const startListeners = (auth_data) => {
@@ -149,8 +151,6 @@ const addExtensions = () => {
     readdirSync(source)
       .map((name) => join(source, name))
       .filter(isDirectory);
-
-  // var direc
 
   try {
     BrowserWindow.addDevToolsExtension(
