@@ -4,6 +4,7 @@ import { getLoading, getSquare, getSpell } from "../../helpers/getImgLinks";
 import { spellsFromChamp } from "../../functions/assetParser";
 import CustomTooltip from "../utility/CustomTooltip";
 import { getCurrentPlayer } from "../../functions/gameSession";
+import { parseBuild } from "../../functions/buildLists";
 import RuneList from "./RuneList";
 import ItemList from "./ItemList";
 import CountersList from "./CountersList";
@@ -26,9 +27,10 @@ export class ChampImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visibleData: "runes",
       runesApplied: false,
       runeButtonDisabled: false,
+      buildApplied: false,
+      buildButtonDisabled: false,
     };
   }
 
@@ -70,15 +72,71 @@ export class ChampImage extends Component {
     );
   }
 
-  toggleAutoImport() {
+  toggleAutoImportRunes() {
     this.props.updateConfig({
       dontAutoImportRunesNow: !this.props.configuration.dontAutoImportRunesNow,
     });
   }
 
+  // Objetos
+  toggleAutoImportBuild() {
+    this.props.updateConfig({
+      dontAutoImportBuildNow: !this.props.configuration.dontAutoImportBuildNow,
+    });
+  }
+
+  applyBuild() {
+    var { champ, updateConfig } = this.props;
+    if (
+      !champ ||
+      this.state.buildButtonDisabled ||
+      this.props.configuration.savingBuild
+    ) {
+      return;
+    }
+    this.setState(
+      {
+        buildButtonDisabled: true,
+      },
+      () => {
+        var buildObject = parseBuild(champ);
+
+        updateConfig({
+          savingBuild: true,
+        });
+
+        electron.ipcRenderer.invoke(
+          "IMPORT_ITEMS",
+          JSON.stringify(buildObject)
+        );
+      }
+    );
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.configuration.savingBuild &&
+      !this.props.configuration.savingBuild
+    ) {
+      this.timeoutApplyBuild = setTimeout(() => {
+        this.setState({
+          buildButtonDisabled: false,
+          buildApplied: true,
+        });
+      }, 200);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timeoutApplyBuild) {
+      clearTimeout(this.timeoutApplyBuild);
+    }
+  }
+
   // General
   handleInput(e) {
-    this.setState({
+    const { updateConfig } = this.props;
+    updateConfig({
       [e.target.name]: e.target.value,
     });
   }
@@ -133,7 +191,11 @@ export class ChampImage extends Component {
 
   render() {
     const { champ, assets, configuration } = this.props;
-    const { visibleData } = this.state;
+    const {
+      champSelectionVisibleData: visibleData,
+      savingBuild,
+    } = configuration;
+    const { runeButtonDisabled, buildButtonDisabled } = this.state;
 
     // Si no tengo un champ seleccionado retorno una vista default
     if (!champ) {
@@ -199,8 +261,7 @@ export class ChampImage extends Component {
 
     // Runas
     var noAutoRunes = configuration.dontAutoImportRunesNow;
-    var { autoImportRunes } = configuration;
-    const { runeButtonDisabled } = this.state;
+    var { autoImportRunes, autoImportBuild } = configuration;
 
     const runeButtonContent = () => {
       if (runeButtonDisabled || configuration.changingRunes) {
@@ -218,12 +279,35 @@ export class ChampImage extends Component {
       if (!autoImportRunes) {
         return this.applyRunes.bind(this);
       } else {
-        return this.toggleAutoImport.bind(this);
+        return this.toggleAutoImportRunes.bind(this);
+      }
+    };
+
+    // Build
+    var noAutoBuild = configuration.dontAutoImportBuildNow;
+
+    const buildButtonContent = () => {
+      if (buildButtonDisabled || savingBuild) {
+        return "Aplicando build...";
+      } else if (!autoImportBuild) {
+        return "Click para importar build";
+      } else if (autoImportBuild && noAutoBuild) {
+        return "Auto importación de build desactivada, click para reactivar";
+      } else {
+        return "Auto importación de build activa, click para desactivar";
+      }
+    };
+
+    const buildButtonAction = () => {
+      if (!autoImportBuild) {
+        return this.applyBuild.bind(this);
+      } else {
+        return this.toggleAutoImportBuild.bind(this);
       }
     };
 
     return (
-      <div>
+      <div className="selectChampImage">
         <div className="detailcard detailcard--visible">
           <div className="detailcard__border"></div>
           <div className="detailcard__background">
@@ -262,34 +346,60 @@ export class ChampImage extends Component {
               })}
             </div>
           </div>
-          {/* Runas */}
-          <CustomTooltip title={runeButtonContent()} placement="top">
-            <div
-              onClick={runeButtonAction()}
-              className={classnames("runehandler", {
-                disabled: runeButtonDisabled || configuration.changingRunes,
-              })}
-            >
-              <div className="runehandler__border"></div>
-              {autoImportRunes && noAutoRunes && (
-                <span>
-                  AutoImport <i className="fas fa-ban"></i>
-                </span>
-              )}
-              {autoImportRunes && !noAutoRunes && (
-                <span>
-                  AutoImport <i className="fas fa-check-circle"></i>
-                </span>
-              )}
-              {!autoImportRunes && <span>Importar runas</span>}
-            </div>
-          </CustomTooltip>
+          {/* Selector de Runas */}
+          {visibleData == "runes" && (
+            <CustomTooltip title={runeButtonContent()} placement="top">
+              <div
+                onClick={runeButtonAction()}
+                className={classnames("runehandler fadeIn", {
+                  disabled: runeButtonDisabled || configuration.changingRunes,
+                })}
+              >
+                <div className="runehandler__border"></div>
+                {autoImportRunes && noAutoRunes && (
+                  <span>
+                    AutoImportar runas <i className="fas fa-ban"></i>
+                  </span>
+                )}
+                {autoImportRunes && !noAutoRunes && (
+                  <span>
+                    AutoImportar runas <i className="fas fa-check-circle"></i>
+                  </span>
+                )}
+                {!autoImportRunes && <span>Importar runas</span>}
+              </div>
+            </CustomTooltip>
+          )}
+          {/* Selector de build */}
+          {visibleData == "build" && (
+            <CustomTooltip title={buildButtonContent()} placement="top">
+              <div
+                onClick={buildButtonAction()}
+                className={classnames("runehandler fadeIn", {
+                  disabled: buildButtonDisabled || configuration.savingBuild,
+                })}
+              >
+                <div className="runehandler__border"></div>
+                {autoImportBuild && noAutoBuild && (
+                  <span>
+                    AutoImportar build <i className="fas fa-ban"></i>
+                  </span>
+                )}
+                {autoImportBuild && !noAutoBuild && (
+                  <span>
+                    AutoImportar build <i className="fas fa-check-circle"></i>
+                  </span>
+                )}
+                {!autoImportBuild && <span>Importar build</span>}
+              </div>
+            </CustomTooltip>
+          )}
         </div>
         {/* Toggle de opciones de campeon */}
         <div className="champImageExtraData">
           <div className="champImageExtraData__select">
             <select
-              name="visibleData"
+              name="champSelectionVisibleData"
               value={visibleData}
               onChange={this.handleInput.bind(this)}
             >

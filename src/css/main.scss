@@ -115,3 +115,32 @@ body {
     }
   }
 }
+
+// toastify
+.Toastify__toast {
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &-container {
+    & > div {
+      font-family: "Source Sans Pro";
+      min-height: 40px;
+      border-radius: 2px;
+    }
+  }
+
+  &--info {
+    background: linear-gradient(
+      to left,
+      lighten($blue_accent, 2%),
+      darken($blue_accent, 15%)
+    );
+  }
+  &--error {
+    background: linear-gradient(
+      to left,
+      darken($pink, 10%),
+      darken($pink, 15%)
+    );
+  }
+}

@@ -16,6 +16,7 @@ const {
   handleGameSession,
   handleGameLobby,
 } = require("./electron_related/lcuSockets");
+// Game requests
 const {
   updateRunePage,
   getSummonerInfoById,
@@ -25,6 +26,9 @@ const {
   AskLane,
   getSummonerMasteries,
 } = require("./electron_related/gameRequests");
+
+// Os handler
+const { importBuild } = require("./electron_related/osHandler");
 
 let mainWindow;
 let socket;
@@ -76,6 +80,7 @@ app.on("activate", () => {
   }
 });
 
+// Manejo listener del juego
 ipc.on("WORKING", () => {
   if (socket) {
     for (key in socket.subscriptions) {
@@ -119,6 +124,11 @@ ipc.handle("GET_RANKED_STATS_BY_PUUID", getRankedStatsByPuuid);
 ipc.handle("CHECK_READY_FOR_MATCH", checkReadyForMatch);
 ipc.handle("ASK_FOR_LANE", AskLane);
 ipc.handle("GET_SUMMONER_MASTERIES_BY_ID", getSummonerMasteries);
+
+// Acciones del os
+ipc.handle("IMPORT_ITEMS", (event, data) => {
+  importBuild(mainWindow, data);
+});
 
 // Listeners del juego
 const startListeners = (auth_data) => {

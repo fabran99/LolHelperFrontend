@@ -8,6 +8,7 @@ import {
   getSelectedChamp,
   playerHasConfirmedPick,
 } from "../../functions/gameSession";
+import { parseBuild } from "../../functions/buildLists";
 
 import {
   lcuConnect,
@@ -100,6 +101,13 @@ export class AppWrapper extends Component {
         lcuConnect(data);
       }
     );
+    // Check disconnected
+    this.lcu_disconnect_listener = electron.ipcRenderer.on(
+      "LCU_DISCONNECT",
+      () => {
+        lcuDisconnect();
+      }
+    );
 
     // ChampSelect
     this.champselectchange_listener = electron.ipcRenderer.on(
@@ -123,15 +131,49 @@ export class AppWrapper extends Component {
       }
     );
 
-    // Check disconnected
-    this.lcu_disconnect_listener = electron.ipcRenderer.on(
-      "LCU_DISCONNECT",
+    // Check build is imported
+    this.build_imported_listener = electron.ipcRenderer.on(
+      "BUILD_APPLIED",
       () => {
-        lcuDisconnect();
+        this.buildIsImported();
+      }
+    );
+    this.build_not_imported_listener = electron.ipcRenderer.on(
+      "BUILD_FAILED",
+      () => {
+        this.buildFailed();
       }
     );
 
     electron.ipcRenderer.send("WORKING", true);
+  }
+
+  buildIsImported() {
+    this.props.updateConfig({
+      savingBuild: false,
+    });
+    toast.info("Build importada con exito", {
+      position: "bottom-left",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  buildFailed() {
+    this.props.updateConfig({
+      savingBuild: false,
+    });
+    toast.error("No se pudo importar la build correctamente", {
+      position: "bottom-left",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   }
 
   askLane(data, counter, retrys) {
@@ -189,12 +231,22 @@ export class AppWrapper extends Component {
       autoAcceptMatch,
       autoImportRunes,
       dontAutoImportRunesNow,
+      autoImportBuild,
+      dontAutoImportBuildNow,
     } = configuration;
     // Manejo de fases
     var prevPhase = prevProps.lcuConnector.gameSession.phase;
     var currentPhase = lcuConnector.gameSession.phase;
     var notIngamePhases = ["None", "Lobby", "Matchmaking", "ReadyCheck"];
     var ingamePhases = ["ChampSelect", "InProgress"];
+
+    // Variables del estado de la partida
+    var currentSelection = lcuConnector.champSelect;
+    var prevSelection = prevProps.lcuConnector.champSelect;
+    var currentConfirmPick = playerHasConfirmedPick(currentSelection);
+    var prevConfirmPick = playerHasConfirmedPick(prevSelection);
+    var currentChamp = getSelectedChamp(currentSelection);
+    var prevChamp = getSelectedChamp(prevSelection);
 
     // Si entro en partida, redirijo a ingame
     if (
@@ -224,13 +276,6 @@ export class AppWrapper extends Component {
       currentPhase == "ChampSelect" &&
       !dontAutoImportRunesNow
     ) {
-      var currentSelection = lcuConnector.champSelect;
-      var prevSelection = prevProps.lcuConnector.champSelect;
-      var currentConfirmPick = playerHasConfirmedPick(currentSelection);
-      var prevConfirmPick = playerHasConfirmedPick(prevSelection);
-      var currentChamp = getSelectedChamp(currentSelection);
-      var prevChamp = getSelectedChamp(prevSelection);
-
       if (
         (!prevConfirmPick && currentConfirmPick) ||
         (prevConfirmPick && currentConfirmPick && currentChamp != prevChamp) ||
@@ -267,6 +312,44 @@ export class AppWrapper extends Component {
       }
     }
 
+    // Cargar build automaticamente
+    if (
+      autoImportBuild &&
+      currentPhase == "ChampSelect" &&
+      !dontAutoImportBuildNow
+    ) {
+      if (
+        (!prevConfirmPick && currentConfirmPick) ||
+        (prevConfirmPick && currentConfirmPick && currentChamp != prevChamp) ||
+        (prevConfirmPick && currentConfirmPick && currentPhase != prevPhase)
+      ) {
+        if (currentChamp) {
+          var champ = assets.champions.find(
+            (item) => item.championId == currentChamp
+          );
+
+          var buildObject = parseBuild(champ);
+
+          updateConfig({
+            savingBuild: true,
+          });
+
+          electron.ipcRenderer
+            .invoke("IMPORT_ITEMS", JSON.stringify(buildObject))
+            .then((res) => {
+              this.props.updateConfig({
+                savingBuild: false,
+              });
+            })
+            .catch((err) => {
+              this.props.updateConfig({
+                savingBuild: false,
+              });
+            });
+        }
+      }
+    }
+
     // Quito dontAutoImportRunesNow si salgo de champSelect
     if (
       dontAutoImportRunesNow &&
@@ -275,6 +358,17 @@ export class AppWrapper extends Component {
     ) {
       updateConfig({
         dontAutoImportRunesNow: false,
+      });
+    }
+
+    // Quito dontAutoImportBuildNow si salgo de champSelect
+    if (
+      dontAutoImportBuildNow &&
+      prevPhase == "ChampSelect" &&
+      currentPhase != "ChampSelect"
+    ) {
+      updateConfig({
+        dontAutoImportBuildNow: false,
       });
     }
 

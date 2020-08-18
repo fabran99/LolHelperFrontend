@@ -1,12 +1,20 @@
 import { UPDATE_CONFIG } from "../actions/types";
 
 var initialState = {
+  // General
   autoNavigate: true,
+  // Lane
+  autoAskLane: "",
+  // Runes
   autoImportRunes: false,
   dontAutoImportRunesNow: false,
   autoAcceptMatch: false,
   changingRunes: false,
-  autoAskLane: "",
+  // Build
+  autoImportBuild: false,
+  dontAutoImportBuildNow: false,
+  champSelectionVisibleData: "runes",
+  savingBuild: false,
 };
 
 var cached_config = window.localStorage.getItem("config");

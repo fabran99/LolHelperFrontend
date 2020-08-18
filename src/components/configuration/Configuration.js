@@ -17,6 +17,7 @@ export class Configuration extends Component {
       autoNavigate,
       autoImportRunes,
       autoAcceptMatch,
+      autoImportBuild,
     } = this.props.configuration;
 
     return (
@@ -44,6 +45,16 @@ export class Configuration extends Component {
                   />
                   <div className="configuration__element__name">
                     Importar runas automáticamente al confirmar campeón.
+                  </div>
+                </div>
+                <div className="configuration__element">
+                  <Switch
+                    name="autoImportBuild"
+                    checked={autoImportBuild}
+                    onChange={this.updateConfig.bind(this)}
+                  />
+                  <div className="configuration__element__name">
+                    Importar build automáticamente al confirmar campeón.
                   </div>
                 </div>
                 <div className="configuration__element">
