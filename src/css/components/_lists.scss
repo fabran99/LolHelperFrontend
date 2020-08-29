@@ -5,6 +5,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
+  border: 1px solid rgba(67, 94, 129, 0.219);
 
   .empty {
     text-align: center;
@@ -84,15 +85,19 @@
       border: 1px solid $card_border_color;
       width: 35%;
       background: $input_background;
+      font-family: "Source Sans Pro";
+      font-weight: lighter;
+      border: 1px solid rgba(66, 74, 80, 0.301);
 
       input {
         background: none;
         font-family: "Source Sans Pro";
-        color: lighten(rgba($gold, 0.5), 30%);
         border: none;
         outline: none;
         font-weight: lighter;
         width: calc(100% - 40px);
+        text-indent: 5px;
+        color: lighten(rgba($gold, 0.5), 30%);
 
         &::placeholder {
           color: lighten(rgba($gold, 0.3), 30%);
@@ -106,8 +111,8 @@
     }
 
     &__icon {
-      width: 30px;
-      padding-right: 7px;
+      width: 25px;
+      padding-right: 5px;
       text-align: center;
       font-size: 0.85em;
       transform: translateY(3px);
@@ -118,6 +123,9 @@
       width: 23.3%;
       padding-left: 1em;
       select {
+        background: $input_background;
+        font-family: "Source Sans Pro";
+
         width: 100%;
         display: block;
         text-indent: 5px;
@@ -127,8 +135,8 @@
         border: none;
         outline: none;
         font-weight: lighter;
-        padding: 0.5em;
-        border: 1px solid $card_border_color;
+        padding: 0.5em 0.5em;
+        border: 1px solid rgba(66, 74, 80, 0.301);
 
         option {
           background: $input_background;
@@ -179,6 +187,7 @@
   //   Listado
   &__container {
     width: 73.5%;
+
     &--full {
       width: 100%;
     }
@@ -196,6 +205,10 @@
     border-right: 3px solid transparent;
     position: relative;
     border-top: 1px solid transparent;
+
+    &:last-child {
+      border-bottom: none;
+    }
 
     &:hover {
       background: rgba($skyblue, 0.02);
@@ -224,6 +237,7 @@
     border: 2px solid $gold;
     background: $content_background;
     transition: all 0.2s ease;
+    box-shadow: 0 0 10px 5px rgba($gold, 0.02);
 
     img {
       @extend %abs_center;
@@ -252,6 +266,7 @@
     color: rgba(lighten($gold, 25%), 0.8);
     text-decoration: none;
     font-family: $bolderFont;
+
     &:hover {
       color: rgba(lighten($gold, 25%), 1);
     }
@@ -260,13 +275,20 @@
   &__lane {
     color: rgb(71, 72, 75);
     text-transform: uppercase;
-    font-size: 0.85em;
-    margin-top: 0.1em;
+    font-size: 0.8em;
+    margin-top: 0.2em;
+    transform: translateY(2px);
+
     img {
       display: inline-block;
-      width: 14px;
+      width: 12px;
       margin-right: 0.3em;
       transform: translateY(2px);
+    }
+
+    span {
+      display: inline-block;
+      margin-right: 0.5em;
     }
   }
 

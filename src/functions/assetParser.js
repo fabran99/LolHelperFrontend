@@ -8,10 +8,14 @@ import Emblem_Platinum from "../img/emblems/Emblem_Platinum.png";
 import Emblem_Silver from "../img/emblems/Emblem_Silver.png";
 import Emblem_Grandmaster from "../img/emblems/Emblem_Grandmaster.png";
 
-export const runesFromChamp = (champ_data, assets) => {
+export const runesFromChamp = (champ_data, assets, lane) => {
+  if (!lane || champ_data.lanes.indexOf(lane) == -1) {
+    lane = champ_data.lanes[0];
+  }
+  var current_lane_data = champ_data.info_by_lane.find((el) => el.lane == lane);
   var runes = assets.runes;
   var perks = assets.perks;
-  var champ_runes = champ_data.runes;
+  var champ_runes = current_lane_data.runes;
 
   //  Runas primarias
   var primaryRune = runes.find((item) => {
@@ -62,14 +66,21 @@ export const runesFromChamp = (champ_data, assets) => {
   };
 };
 
-export const itemsFromChamp = (champ_data, assets) => {
+export const itemsFromChamp = (champ_data, assets, lane) => {
+  if (!lane || champ_data.lanes.indexOf(lane) == -1) {
+    lane = champ_data.lanes[0];
+  }
+  var current_lane_data = champ_data.info_by_lane.find((el) => el.lane == lane);
+
   var build = [];
-  var boots = assets.items.find((item) => item.id == champ_data.build.boots[0]);
+  var boots = assets.items.find(
+    (item) => item.id == current_lane_data.build.boots[0]
+  );
   if (boots) {
     build.push(boots);
   }
 
-  champ_data.build.items.forEach((item_id) => {
+  current_lane_data.build.items.forEach((item_id) => {
     var match = assets.items.find((it) => it.id == item_id);
     if (match) {
       build.push(match);
@@ -77,12 +88,12 @@ export const itemsFromChamp = (champ_data, assets) => {
   });
 
   if (build.length < 6) {
-    for (let i = 0; i < champ_data.build.secondary.length; i++) {
+    for (let i = 0; i < current_lane_data.build.secondary.length; i++) {
       if (build.length >= 6) {
         break;
       }
       var match = assets.items.find(
-        (it) => it.id == champ_data.build.secondary[i]
+        (it) => it.id == current_lane_data.build.secondary[i]
       );
       if (match) {
         build.push(match);
@@ -91,16 +102,20 @@ export const itemsFromChamp = (champ_data, assets) => {
   }
 
   var trinket = assets.items.find(
-    (item) => item.id == champ_data.build.trinket[0]
+    (item) => item.id == current_lane_data.build.trinket[0]
   );
   build.push(trinket);
 
   return build;
 };
 
-export const spellsFromChamp = (champ_data, assets) => {
+export const spellsFromChamp = (champ_data, assets, lane = "") => {
+  if (!lane || champ_data.lanes.indexOf(lane) == -1) {
+    lane = champ_data.lanes[0];
+  }
+  var current_lane_data = champ_data.info_by_lane.find((el) => el.lane == lane);
   var spells = assets.spells.filter((summ, i) => {
-    return champ_data.spells.indexOf(parseInt(summ.key)) != -1;
+    return current_lane_data.spells.indexOf(parseInt(summ.key)) != -1;
   });
 
   const flash = 4;

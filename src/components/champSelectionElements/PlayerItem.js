@@ -7,7 +7,14 @@ import imgPlaceholder from "../../img/placeholder.svg";
 import { getSelectedChampByCellId } from "../../functions/gameSession";
 import { electron } from "../../helpers/outsideObjects";
 import moment from "moment";
-import { numberToDots } from "../../helpers/general";
+import {
+  numberToDots,
+  getTagsFromMatchlist,
+  getTagsFromData,
+  getWarningFromTagList,
+} from "../../helpers/general";
+import PlayerDetailModal from "../playerDetail/PlayerDetailModal";
+import Tag from "../utility/Tag";
 
 const positions_dict = {
   utility: "Support",
@@ -33,6 +40,8 @@ export class PlayerItem extends Component {
       isInPromo: null,
       bestChamps: null,
       masteryLevels: null,
+      matchlist: null,
+      detailModalVisible: false,
     };
   }
 
@@ -121,6 +130,8 @@ export class PlayerItem extends Component {
         JSON.stringify({ connection, summonerId })
       )
       .then((res) => {
+        // Ordeno descendentemente por maestria
+        res = res.sort((a, b) => b.championPoints - a.championPoints);
         this.setState({
           masteryLevels: res,
         });
@@ -155,6 +166,30 @@ export class PlayerItem extends Component {
       .catch((err) => {
         console.log(err);
       });
+
+    // Solicito info de las partidas del jugador
+    electron.ipcRenderer
+      .invoke("GET_MATCHLIST_BY_PUUID", JSON.stringify({ connection, puuid }))
+      .then((res) => {
+        this.setState({
+          matchlist: res,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  openModal() {
+    const { displayName, puuid, summonerId } = this.state;
+    if (displayName && puuid && summonerId) {
+      this.setState({
+        detailModalVisible: true,
+      });
+    }
+  }
+  closeModal() {
+    this.setState({ detailModalVisible: false });
   }
 
   render() {
@@ -167,20 +202,48 @@ export class PlayerItem extends Component {
       wins,
       isInPromo,
       bestChamps,
-      profileIconId,
       masteryLevels,
+      detailModalVisible,
     } = this.state;
     var selectedChamp = this.getChampInfo(this.getSelectedChamp());
 
+    // tags de estadisticas
+    var data = {
+      ...this.state,
+      assignedPosition: player.assignedPosition,
+    };
+    var tags = [
+      ...getTagsFromMatchlist(
+        data.matchlist,
+        assets,
+        selectedChamp,
+        player.assignedPosition
+      ),
+      ...getTagsFromData(data, assets, selectedChamp),
+    ];
+
+    var warningLevel = getWarningFromTagList(tags);
+
+    // Tooltip de player
     const playerData = () => {
       return (
         <div className="tooltip">
           {/* Nombre */}
           <div className="tooltip__title">{displayName}</div>
-          {/* Nivel */}
-          {summonerLevel && (
-            <div className="tooltip__content">
-              Nivel: <div className="value">{summonerLevel}</div>
+
+          {/* Tags */}
+          {tags && tags.length > 0 && (
+            <div className="tooltip__tags">
+              {tags.map((tag, i) => {
+                return (
+                  <Tag
+                    tooltip={tag.tooltip}
+                    value={tag.value}
+                    type={tag.type}
+                    key={i}
+                  />
+                );
+              })}
             </div>
           )}
 
@@ -203,7 +266,10 @@ export class PlayerItem extends Component {
       );
     };
 
+    // Tooltip de mastery
     const masteryData = () => {
+      if (!selectedChamp) return "No hay datos de maestria";
+
       var current_champ_mastery = null;
       if (masteryLevels && selectedChamp) {
         current_champ_mastery = masteryLevels.find(
@@ -211,12 +277,27 @@ export class PlayerItem extends Component {
         );
       }
 
-      if (current_champ_mastery) {
-        return (
-          <div className="tooltip">
-            <div className="tooltip__title">
-              {displayName} <small>({selectedChamp.name})</small>
-            </div>
+      if (!enemy && !current_champ_mastery) {
+        return "No hay datos de maestria";
+      }
+
+      var tips = enemy ? selectedChamp.enemyTips : selectedChamp.allyTips;
+
+      return (
+        <div className="tooltip">
+          <div className="tooltip__title">
+            {displayName ? (
+              <span>
+                {" "}
+                {displayName}
+                <small> ({selectedChamp.name})</small>
+              </span>
+            ) : (
+              selectedChamp.name
+            )}
+          </div>
+          {/* Datos de maestria */}
+          {current_champ_mastery && (
             <div className="mastery">
               <div className="row">
                 <div className="col-4">
@@ -239,13 +320,13 @@ export class PlayerItem extends Component {
                     </div>
                     <div>
                       Nivel de maestria:{" "}
-                      <div className="value  d-inline">
+                      <div className="value ">
                         {current_champ_mastery.championLevel}
                       </div>
                     </div>
                     <div>
                       Jugado por última vez:{" "}
-                      <div className="value">
+                      <div className="value d-block">
                         {moment
                           .unix(current_champ_mastery.lastPlayTime / 1000)
                           .format("DD/MM/YYYY HH:mm")}
@@ -255,11 +336,26 @@ export class PlayerItem extends Component {
                 </div>
               </div>
             </div>
-          </div>
-        );
-      } else {
-        return "No hay datos de maestria ";
-      }
+          )}
+
+          {/* Consejos */}
+
+          {(enemy || player.isLocalPlayer) && (
+            <div className="tips">
+              <div className="tips__title">Tips</div>
+              {tips.map((tip, i) => {
+                // Maximo 2 consejos
+                if (i > 1) return null;
+                return (
+                  <div className="tip" key={i}>
+                    - {tip}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
     };
 
     // Decido si pongo un tooltip o no
@@ -289,12 +385,20 @@ export class PlayerItem extends Component {
     }
 
     return (
-      <div
-        className={classnames("player", {
-          "player--enemy": enemy,
-        })}
-      >
-        {!!player.summonerId ? (
+      <div>
+        {detailModalVisible && (
+          <PlayerDetailModal
+            data={data}
+            close={this.closeModal.bind(this)}
+            selectedChamp={selectedChamp}
+          />
+        )}
+        <div
+          className={classnames(`player ${warningLevel}`, {
+            "player--enemy": enemy,
+          })}
+        >
+          {/* Tooltip del campeon */}
           <CustomTooltip placement="left" title={masteryData()}>
             <div
               className={classnames("player__image", {
@@ -310,60 +414,46 @@ export class PlayerItem extends Component {
               )}
             </div>
           </CustomTooltip>
-        ) : (
-          <div
-            className={classnames("player__image", {
-              "player__image--local": player.isLocalPlayer,
-            })}
-          >
-            <img src={imgPlaceholder} alt="" />
-            {selectedChamp && (
-              <img
-                src={getSquare(assets.img_links, selectedChamp.key)}
-                alt=""
-              />
-            )}
-          </div>
-        )}
 
-        {Wrapper(
-          <div className="player__data">
-            <div className="player__spells">
-              {player_spells.map((spell) => {
-                return (
-                  <div key={spell.id} className="player__spells__img fadeIn">
-                    <img src={getSpell(assets.img_links, spell.id)} />
-                  </div>
-                );
-              })}
-            </div>
-            {/* Nombre */}
-            <div
-              className={classnames("player__name", {
-                "player__name--nosums":
-                  player_spells.length == 0 || !selectedChamp,
-                "player__name--lowop": !displayName && selectedChamp,
-              })}
-            >
-              {displayName || ""}
-              {!displayName && selectedChamp ? selectedChamp.name : ""}
-              {!!player.assignedPosition && (
-                <small> ({positions_dict[player.assignedPosition]})</small>
-              )}
-            </div>
-            {/* Division */}
-            {!!tier && !!division && !!wins && (
-              <div className="player__stats">
-                <div className="tier">
-                  {tier} {division}
-                </div>
-                <div className="wins">{wins} wins (Ranked)</div>
+          {Wrapper(
+            <div className="player__data" onClick={this.openModal.bind(this)}>
+              <div className="player__spells">
+                {player_spells.map((spell) => {
+                  return (
+                    <div key={spell.id} className="player__spells__img fadeIn">
+                      <img src={getSpell(assets.img_links, spell.id)} />
+                    </div>
+                  );
+                })}
               </div>
-            )}
+              {/* Nombre */}
+              <div
+                className={classnames("player__name", {
+                  "player__name--nosums":
+                    player_spells.length == 0 || !selectedChamp,
+                  "player__name--lowop": !displayName && selectedChamp,
+                })}
+              >
+                {displayName || ""}
+                {!displayName && selectedChamp ? selectedChamp.name : ""}
+                {!!player.assignedPosition && (
+                  <small> ({positions_dict[player.assignedPosition]})</small>
+                )}
+              </div>
+              {/* Division */}
+              {!!tier && !!division && !!wins && (
+                <div className="player__stats">
+                  <div className="tier">
+                    {tier} {division}
+                  </div>
+                  <div className="wins">{wins} wins (Ranked)</div>
+                </div>
+              )}
 
-            {/* Pongo nivel de campeon actual */}
-          </div>
-        )}
+              {/* Pongo nivel de campeon actual */}
+            </div>
+          )}
+        </div>
       </div>
     );
   }

@@ -1,0 +1,479 @@
+// Teams
+.teams {
+  display: block;
+  width: 100%;
+  transition: all 0.6s ease;
+  height: 260px;
+
+  .team {
+    width: 100%;
+    &__title {
+      font-size: 0.95em;
+      color: lighten($gold, 20%);
+      margin-bottom: 1em;
+      text-transform: uppercase;
+      font-family: $bolderFont;
+    }
+
+    &__list {
+      width: 100%;
+      margin-bottom: 1em;
+
+      .player {
+        text-align: left;
+        margin-bottom: 0.3em;
+        background: rgba($ranking_border_color, 0.2);
+        background: linear-gradient(
+          to right,
+          rgba($ranking_border_color, 0.4),
+          rgba($ranking_border_color, 0.05)
+        );
+        position: relative;
+        height: 45px;
+        opacity: 0.8;
+
+        &.warning {
+          background: linear-gradient(
+            to right,
+            rgba($red, 0.4),
+            rgba($red, 0.05)
+          );
+
+          .player__stats {
+            color: lighten($red, 12%);
+          }
+        }
+        &.good {
+          background: linear-gradient(
+            to right,
+            rgba($green, 0.4),
+            rgba($green, 0.05)
+          );
+
+          .player__stats {
+            color: lighten($green, 12%);
+          }
+        }
+
+        &:after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 1px;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &__lane {
+          font-size: 0.7em;
+          transform: translateY(-4px);
+          opacity: 0.7;
+          text-transform: uppercase;
+        }
+
+        &__data {
+          cursor: pointer;
+          margin: 0 auto;
+          width: 100%;
+          height: 100%;
+          margin-left: 3em;
+        }
+        &__image {
+          width: 45px;
+          height: 45px;
+          overflow: hidden;
+          position: absolute;
+          left: 0;
+          top: 0;
+          border: 2px solid lighten($back_bar, 5%);
+          opacity: 0.9;
+
+          &:hover {
+            opacity: 1;
+          }
+
+          &--local {
+            border-color: $gold;
+          }
+          img {
+            @extend %abs_center;
+            width: 110%;
+          }
+        }
+
+        &__name {
+          top: 100%;
+          font-size: 0.9em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          margin-left: 32px;
+          transform: translateY(14px);
+          transition: all 0.3s ease;
+
+          &--nosums {
+            margin-left: 12px;
+          }
+
+          &--lowop {
+            opacity: 0.4;
+          }
+        }
+
+        &__stats {
+          position: absolute;
+          right: 0.5em;
+          top: 50%;
+          font-size: 0.7em;
+          opacity: 0.7;
+          text-align: right;
+          transform: translateY(-50%);
+          color: lighten($skyblue, 20%);
+        }
+
+        &__spells {
+          position: absolute;
+          left: 52px;
+          top: 50%;
+          transform: translateY(-46%);
+          display: block;
+
+          &__img {
+            width: 18px;
+            height: 18px;
+            display: block;
+            position: relative;
+            margin-bottom: 2px;
+            border: 1px solid rgba(128, 128, 128, 0.11);
+            img {
+              @extend %abs_center;
+              width: 100%;
+            }
+          }
+        }
+
+        &--enemy {
+          background: linear-gradient(
+            to left,
+            rgba($ranking_border_color, 0.4),
+            rgba($ranking_border_color, 0.05)
+          );
+          .player__data {
+            text-align: right;
+            margin-left: 0;
+            margin-right: 3em;
+          }
+          .player {
+            &__image {
+              left: auto;
+              right: 0;
+            }
+
+            &__name {
+              margin-left: 0;
+              margin-right: 55px;
+            }
+
+            &__stats {
+              right: auto;
+              left: 0.5em;
+              text-align: left;
+            }
+
+            &__spells {
+              right: 50px;
+              left: auto;
+            }
+          }
+        }
+      }
+    }
+
+    &__header {
+      position: relative;
+    }
+
+    &__bans {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+
+      .ban {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        margin-left: 0.5em;
+        border: 12px solidrgba(255, 255, 255, 0.116) e;
+        overflow: hidden;
+        position: relative;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        img {
+          @extend %abs_center;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Champ image
+.selectChampImage {
+  .detailcard {
+    &__text {
+      padding: 0.5em;
+      padding-left: 0.7em;
+    }
+  }
+}
+.champImageExtraData {
+  position: relative;
+  border: 1px solid rgb(198, 155, 75);
+  transform: translateY(-2px);
+  margin: 0 1px;
+  overflow: hidden;
+  height: 190px;
+
+  &__select {
+    z-index: 100;
+
+    select {
+      width: 100%;
+      display: block;
+      text-indent: 5px;
+      background: $input_background;
+      font-family: "Source Sans Pro";
+      color: lighten(rgba($gold, 0.5), 30%);
+      border: none;
+      outline: none;
+      font-weight: lighter;
+      padding: 0.5em 0.5em;
+      border: none;
+      border-bottom: 1px solid rgb(198, 155, 75);
+
+      option {
+        background: $input_background;
+        line-height: 3em;
+        border-bottom: 1px solid grey;
+        font-weight: lighter;
+      }
+    }
+  }
+
+  .stats {
+    padding: 0.45em 0.8em;
+
+    .barstat {
+      margin: 1em auto 1.9em auto;
+    }
+  }
+
+  .chart_container {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+
+    .radar_container {
+      width: 115%;
+      height: 200px;
+      position: absolute;
+      left: -12px;
+      top: 13px;
+    }
+    .doughnut_container {
+      width: 158%;
+      height: 200px;
+      position: absolute;
+      left: -62px;
+      top: -24px;
+    }
+  }
+}
+
+// Team stats
+.teamStats {
+  margin-top: 2em;
+  font-size: 0.9em;
+
+  .title {
+    text-align: center;
+    transition: all 0.4s ease;
+  }
+  .graph_data {
+    max-height: 250px;
+    max-width: 350px;
+    position: relative;
+    margin: 0 auto;
+    transition: all 0.4s ease;
+
+    .barstat {
+      margin-top: 1.5em;
+    }
+  }
+
+  .alerts {
+    &:not(.alert--empty) {
+      .alert {
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .title {
+      text-align: left;
+      margin-bottom: 0.5em;
+    }
+
+    .alert {
+      font-size: 0.75em;
+      margin-bottom: 2px;
+    }
+  }
+
+  &--unique {
+    .graph_data {
+      .doughnut_container {
+        left: -24px;
+      }
+    }
+  }
+
+  &--enemy,
+  &--noalerts {
+    .graph_data {
+      .doughnut_container {
+        left: -22px;
+      }
+    }
+  }
+  &--enemy {
+    .graph_data {
+      .doughnut_container {
+        left: -22px;
+      }
+    }
+  }
+}
+
+// Counters
+.counters {
+  width: 100%;
+  padding: 0.5em;
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    darken(rgba($input_background, 0.3), 2%),
+    rgba($input_background, 0.3)
+  );
+
+  &__section {
+    z-index: 8;
+    margin-bottom: 0.2em;
+  }
+
+  &__title {
+    color: lighten($gold, 15%);
+    margin: 0.5em;
+    margin-bottom: 0.9em;
+    font-size: 0.8em;
+    text-align: center;
+    font-weight: bolder;
+    text-transform: uppercase;
+  }
+
+  &__list {
+    text-align: center;
+    position: relative;
+
+    &__champ {
+      width: 15%;
+      display: inline-block;
+      &:not(:last-child) {
+        margin-right: 0.5em;
+      }
+
+      .image {
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        margin: 0 auto;
+        display: block;
+        overflow: hidden;
+        border-radius: 50%;
+        border: 2px solid $skyblue;
+        opacity: 0.9;
+        position: relative;
+
+        &--hard {
+          border-color: $pink;
+        }
+
+        &:hover {
+          opacity: 1;
+        }
+        img {
+          width: 100%;
+          position: absolute;
+          @extend %abs_center;
+        }
+      }
+    }
+  }
+}
+
+// Baneos recomendados
+
+.recommended_bans {
+  &_container {
+    margin-top: 1em;
+    text-align: center;
+  }
+
+  &__item {
+    display: inline-block;
+    &:not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+  &__image {
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    cursor: pointer;
+    border: 2px solid lighten($pink, 2%);
+    box-shadow: 0 0 10px 5px rgba($pink, 0.12);
+
+    opacity: 0.8;
+    &:hover {
+      opacity: 1;
+      box-shadow: 0 0 10px 5px rgba($pink, 0.18);
+    }
+
+    img {
+      @extend %abs_center;
+      width: 110%;
+      max-height: 32px;
+      max-width: 32px;
+    }
+  }
+}

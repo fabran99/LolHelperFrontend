@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import LobbyPlayerItem from "../champSelectionElements/LobbyPlayerItem";
+import LobbyPlayerItem from "../lobby/LobbyPlayerItem";
 import { getGameName } from "../../functions/gameSession";
 
 import { updateConfig } from "../../actions/configActions";
@@ -42,6 +42,19 @@ export class Lobby extends Component {
     } catch {
       showAutoPick = false;
     }
+
+    var teams = {};
+
+    members.forEach((member) => {
+      if (member.teamId in teams) {
+        teams[member.teamId].push(member);
+      } else {
+        teams[member.teamId] = [member];
+      }
+    });
+
+    var team_list = Object.keys(teams).map((key) => teams[key]);
+
     return (
       <div className="lobbyContainer">
         {showAutoPick && (
@@ -64,17 +77,22 @@ export class Lobby extends Component {
           Lobby - {gameSession.map.gameModeShortName}
         </div>
         <div className="lobby">
-          <div className="lobby__list">
-            {members.map((member, i) => {
-              return (
-                <LobbyPlayerItem
-                  isLocalPlayer={currentSummonerId == member.summonerId}
-                  player={member}
-                  key={member.summonerId}
-                />
-              );
-            })}
-          </div>
+          {team_list.map((team, k) => {
+            return (
+              <div className="lobby__list" key={k}>
+                {team.map((member, i) => {
+                  return (
+                    <LobbyPlayerItem
+                      isLocalPlayer={currentSummonerId == member.summonerId}
+                      player={member}
+                      key={member.summonerId}
+                      multiTeams={team_list.length > 1}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
       </div>
     );

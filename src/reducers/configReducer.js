@@ -10,6 +10,7 @@ var initialState = {
   dontAutoImportRunesNow: false,
   autoAcceptMatch: false,
   changingRunes: false,
+  laneSelectedForRecommendations: "",
   // Build
   autoImportBuild: false,
   dontAutoImportBuildNow: false,

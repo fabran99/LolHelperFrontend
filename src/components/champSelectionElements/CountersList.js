@@ -25,14 +25,19 @@ export class CountersList extends Component {
           <div className="counters__title">Fuerte contra</div>
           <div className="counters__list">
             {champ.strongAgainst.map((enemy, i) => {
-              var enemyInfo = this.getChampInfo(enemy);
+              var enemyInfo = this.getChampInfo(enemy.championId);
               return (
                 <div className="counters__list__champ" key={enemyInfo.key}>
                   <CustomTooltip
                     placement="top"
                     title={
                       <div className="tooltip">
-                        <div className="tooltip__content">{enemyInfo.name}</div>
+                        <div className="tooltip__content">
+                          {enemyInfo.name}{" "}
+                          <div>
+                            <small>{enemy.winRate.toFixed(2)}% WinRate</small>
+                          </div>
+                        </div>
                       </div>
                     }
                   >
@@ -49,14 +54,19 @@ export class CountersList extends Component {
           <div className="counters__title">Debil contra</div>
           <div className="counters__list">
             {champ.weakAgainst.map((enemy, i) => {
-              var enemyInfo = this.getChampInfo(enemy);
+              var enemyInfo = this.getChampInfo(enemy.championId);
               return (
                 <div className="counters__list__champ" key={enemyInfo.key}>
                   <CustomTooltip
                     placement="top"
                     title={
                       <div className="tooltip">
-                        <div className="tooltip__content">{enemyInfo.name}</div>
+                        <div className="tooltip__content tooltip__content--center">
+                          {enemyInfo.name}{" "}
+                          <div>
+                            <small>{enemy.winRate.toFixed(2)}% WinRate</small>
+                          </div>
+                        </div>
                       </div>
                     }
                   >

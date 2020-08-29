@@ -46,14 +46,11 @@ export class ChampRanking extends Component {
                   </div>
                   <div className="lane">
                     <div
-                      className={`lane__icon lane__icon--${champ_data.lane.toLowerCase()}`}
+                      className={`lane__icon lane__icon--${key.toLowerCase()}`}
                     >
-                      <img
-                        src={icon_dict[champ_data.lane.toLowerCase()]}
-                        alt=""
-                      />
+                      <img src={icon_dict[key.toLowerCase()]} alt="" />
                     </div>
-                    <div className="lane__name">{champ_data.lane}</div>
+                    <div className="lane__name">{key}</div>
                   </div>
                 </div>
               </Link>

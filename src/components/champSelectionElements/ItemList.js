@@ -5,14 +5,24 @@ import CustomTooltip from "../utility/CustomTooltip";
 
 export class ItemList extends Component {
   render() {
-    const { assets, champ } = this.props;
+    const { assets, champ, configuration } = this.props;
+    const { laneSelectedForRecommendations: lane } = configuration;
 
+    // Filtro por la linea actual
+    var current_lane = lane;
+
+    if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
+      current_lane = champ.lanes[0];
+    }
+    var current_champ_laneinfo = champ.info_by_lane.find(
+      (el) => el.lane == current_lane
+    );
     return (
       <div className="build">
         <div className="build__section">
           <div className="build__title">principales</div>
           <div className="build__list">
-            {champ.build.items.map((item, i) => {
+            {current_champ_laneinfo.build.items.map((item, i) => {
               var itemInfo = assets.items.find((x) => x.id == item);
               return (
                 <CustomTooltip
@@ -20,7 +30,13 @@ export class ItemList extends Component {
                   placement="top"
                   title={
                     <div className="tooltip">
-                      <div className="tooltip__title">{itemInfo.name}</div>
+                      <div className="tooltip__title tooltip__title--image">
+                        <img
+                          src={getItem(assets.img_links, itemInfo.id)}
+                          alt=""
+                        />{" "}
+                        <span>{itemInfo.name}</span>
+                      </div>
 
                       <div className="tooltip__content">
                         {itemInfo.description}
@@ -48,7 +64,7 @@ export class ItemList extends Component {
         <div className="build__section d-none">
           <div className="build__title">Secundarios</div>
           <div className="build__list">
-            {champ.build.secondary.map((item, i) => {
+            {current_champ_laneinfo.build.secondary.map((item, i) => {
               var itemInfo = assets.items.find((x) => x.id == item);
               return (
                 <CustomTooltip
@@ -56,7 +72,13 @@ export class ItemList extends Component {
                   placement="top"
                   title={
                     <div className="tooltip">
-                      <div className="tooltip__title">{itemInfo.name}</div>
+                      <div className="tooltip__title tooltip__title--image">
+                        <img
+                          src={getItem(assets.img_links, itemInfo.id)}
+                          alt=""
+                        />{" "}
+                        <span>{itemInfo.name}</span>
+                      </div>
 
                       <div className="tooltip__content">
                         {itemInfo.description}
@@ -87,11 +109,13 @@ export class ItemList extends Component {
             className="build__list"
             style={{
               width: `${
-                20 * (champ.build.boots.length + champ.build.trinket.length)
+                20 *
+                (current_champ_laneinfo.build.boots.length +
+                  current_champ_laneinfo.build.trinket.length)
               }%`,
             }}
           >
-            {champ.build.boots.map((item, i) => {
+            {current_champ_laneinfo.build.boots.map((item, i) => {
               var itemInfo = assets.items.find((x) => x.id == item);
               return (
                 <CustomTooltip
@@ -99,7 +123,13 @@ export class ItemList extends Component {
                   placement="top"
                   title={
                     <div className="tooltip">
-                      <div className="tooltip__title">{itemInfo.name}</div>
+                      <div className="tooltip__title tooltip__title--image">
+                        <img
+                          src={getItem(assets.img_links, itemInfo.id)}
+                          alt=""
+                        />{" "}
+                        <span>{itemInfo.name}</span>
+                      </div>
 
                       <div className="tooltip__content">
                         {itemInfo.description}
@@ -121,7 +151,7 @@ export class ItemList extends Component {
                 </CustomTooltip>
               );
             })}
-            {champ.build.trinket.map((item, i) => {
+            {current_champ_laneinfo.build.trinket.map((item, i) => {
               var itemInfo = assets.items.find((x) => x.id == item);
               return (
                 <CustomTooltip
@@ -129,7 +159,13 @@ export class ItemList extends Component {
                   placement="top"
                   title={
                     <div className="tooltip">
-                      <div className="tooltip__title">{itemInfo.name}</div>
+                      <div className="tooltip__title tooltip__title--image">
+                        <img
+                          src={getItem(assets.img_links, itemInfo.id)}
+                          alt=""
+                        />{" "}
+                        <span>{itemInfo.name}</span>
+                      </div>
 
                       <div className="tooltip__content">
                         {itemInfo.description}
@@ -160,6 +196,7 @@ export class ItemList extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
+  configuration: state.configuration,
 });
 
 export default connect(mapStateToProps, null)(ItemList);

@@ -25,6 +25,8 @@ const {
   checkReadyForMatch,
   AskLane,
   getSummonerMasteries,
+  getMatchlist,
+  restartUx,
 } = require("./electron_related/gameRequests");
 
 // Os handler
@@ -124,6 +126,8 @@ ipc.handle("GET_RANKED_STATS_BY_PUUID", getRankedStatsByPuuid);
 ipc.handle("CHECK_READY_FOR_MATCH", checkReadyForMatch);
 ipc.handle("ASK_FOR_LANE", AskLane);
 ipc.handle("GET_SUMMONER_MASTERIES_BY_ID", getSummonerMasteries);
+ipc.handle("GET_MATCHLIST_BY_PUUID", getMatchlist);
+ipc.handle("RESTART_UX", restartUx);
 
 // Acciones del os
 ipc.handle("IMPORT_ITEMS", (event, data) => {

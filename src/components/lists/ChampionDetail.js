@@ -6,7 +6,7 @@ import { icon_dict } from "../../helpers/iconDict";
 
 export class ChampionDetail extends Component {
   render() {
-    const { champ_data, assets, build } = this.props;
+    const { champ_data, assets } = this.props;
     const { img_links } = assets;
 
     return (
@@ -22,12 +22,21 @@ export class ChampionDetail extends Component {
             <div className="name">{champ_data.name}</div>
             <div className="title">{champ_data.title}</div>
             <div className="lane">
-              <div
-                className={`lane__icon lane__icon--${champ_data.lane.toLowerCase()}`}
-              >
-                <img src={icon_dict[champ_data.lane.toLowerCase()]} alt="" />
-              </div>
-              <div className="lane__name">{champ_data.lane}</div>
+              {champ_data.info_by_lane.map((laneinfo) => {
+                return (
+                  <React.Fragment key={laneinfo.lane}>
+                    <div
+                      className={`lane__icon lane__icon--${laneinfo.lane.toLowerCase()}`}
+                    >
+                      <img
+                        src={icon_dict[laneinfo.lane.toLowerCase()]}
+                        alt=""
+                      />
+                    </div>
+                    <div className="lane__name">{laneinfo.lane}</div>
+                  </React.Fragment>
+                );
+              })}
             </div>
           </div>
         </Link>

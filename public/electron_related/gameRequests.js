@@ -159,6 +159,66 @@ const getRankedStatsByPuuid = async (event, data) => {
   return parsedResult;
 };
 
+const millisToMinutesAndSeconds = (millis) => {
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+};
+
+const getMatchlist = async (event, data) => {
+  const { puuid, connection } = JSON.parse(data);
+  var result = await request(
+    {
+      url: `/lol-career-stats/v1/summoner-games/${puuid}`,
+      method: "GET",
+      json: true,
+    },
+    connection
+  );
+
+  var parsedResult = await result.json();
+  var games = [];
+  var end = Math.min(20, parsedResult.length);
+  for (let i = 0; i < end; i++) {
+    let current_game = parsedResult[parsedResult.length - i - 1];
+    let current_stats = current_game.stats["CareerStats.js"];
+
+    let game = {
+      lane: current_game.lane,
+      queueType: current_game.queueType,
+      role: current_game.role,
+      championId: current_game.championId,
+      gameId: current_game.gameId,
+      timestamp: current_game.timestamp,
+      teamId: current_game.teamId,
+      win: current_stats.victory == 1,
+      visionScore: current_stats.visionScore,
+      kills: current_stats.kills,
+      csScore: current_stats.csScore,
+      deaths: current_stats.deaths,
+      assists: current_stats.assists,
+      goldEarned: current_stats.goldEarned,
+      gameDuration: millisToMinutesAndSeconds(current_stats.timePlayed),
+      csPerMin: (
+        current_stats.csScore /
+        (current_stats.timePlayed / 1000 / 60)
+      ).toFixed(2),
+      kd: parseFloat(
+        (current_stats.kills / Math.max(1, current_stats.deaths)).toFixed(2)
+      ),
+      kda: parseFloat(
+        (
+          (current_stats.kills + current_stats.assists) /
+          Math.max(1, current_stats.deaths)
+        ).toFixed(2)
+      ),
+    };
+    games.push(game);
+  }
+
+  return games;
+};
+
 // launcher actions
 const checkReadyForMatch = async (event, data) => {
   const { connection } = JSON.parse(data);
@@ -196,6 +256,22 @@ const AskLane = async (event, data) => {
   return result;
 };
 
+const restartUx = async (event, data) => {
+  const { connection } = JSON.parse(data);
+
+  var result = await request(
+    {
+      url: `/riotclient/kill-and-restart-ux`,
+      method: "POST",
+      json: true,
+    },
+    connection
+  );
+
+  result = await result;
+  return result;
+};
+
 module.exports = {
   parseRunepage,
   updateRunePage,
@@ -205,4 +281,6 @@ module.exports = {
   checkReadyForMatch,
   AskLane,
   getSummonerMasteries,
+  getMatchlist,
+  restartUx,
 };

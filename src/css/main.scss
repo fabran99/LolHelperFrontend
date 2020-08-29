@@ -9,6 +9,8 @@
 @import "./components/lists";
 @import "./components/runes";
 @import "./components/ingame";
+@import "./components/champSelection";
+@import "./components/modals";
 
 * {
   box-sizing: border-box;
@@ -142,5 +144,11 @@ body {
       darken($pink, 10%),
       darken($pink, 15%)
     );
+  }
+}
+
+.Toastify {
+  &__progress-bar {
+    height: 3px;
   }
 }

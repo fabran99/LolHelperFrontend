@@ -1,3 +1,5 @@
+// Info del game
+
 export const getGameName = (gameSession) => {
   if (!gameSession || !gameSession.gameData) {
     return "";
@@ -13,6 +15,7 @@ export const gameHasBans = (gameSession) => {
   );
 };
 
+// Info de los jugadores
 export const getCurrentPlayer = (champSelection) => {
   if (!champSelection) {
     return null;
@@ -108,13 +111,14 @@ export const getSelectedChampByCellId = (champSelection, cellId) => {
   return null;
 };
 
+// Fases
 export const getCurrentPhase = (champSelection) => {
   var uncompleted_action = champSelection.actions.filter((action) => {
     return action.filter((y) => !y.completed).length > 0;
   })[0];
+
   if (uncompleted_action) {
-    console.log(uncompleted_action[0]);
-    return uncompleted_action[0].type;
+    return uncompleted_action[uncompleted_action.length - 1].type;
   }
   return null;
 };
@@ -123,6 +127,7 @@ export const isBaning = (champSelection) => {
   return getCurrentPhase(champSelection) == "ban";
 };
 
+// Manejos de bans e integrantes del team
 export const getBanByCellId = (champSelection, cellId) => {
   if (champSelection.actions.length == 0) {
     return null;
@@ -191,4 +196,57 @@ export const getEnemyBans = (champSelection) => {
   });
 
   return bans;
+};
+
+// Manejo de queues
+export const NORMALQUEUE = 430;
+export const NORMALRECQUEUE = 400;
+export const RANKEDQUEUE = 420;
+export const FLEXQUEUE = 440;
+
+export const QUEUENAMES = {
+  [NORMALQUEUE]: "blind5",
+  [NORMALRECQUEUE]: "draft5",
+  [RANKEDQUEUE]: "rank5solo",
+  [FLEXQUEUE]: "rank5flex",
+};
+
+export const queueTypeToName = (queue) => {
+  var dictQueues = {
+    rank5solo: "Ranked",
+    rank5flex: "Flex",
+  };
+
+  if (queue in dictQueues) {
+    return dictQueues[queue];
+  } else {
+    return "Normal";
+  }
+};
+
+export const VALID_QUEUES = [
+  NORMALQUEUE,
+  NORMALRECQUEUE,
+  RANKEDQUEUE,
+  FLEXQUEUE,
+];
+
+export const isValidQueue = (gameSession) => {
+  try {
+    if (QUEUENAMES[gameSession.gameData.queue.id]) {
+      return QUEUENAMES[gameSession.gameData.queue.id];
+    }
+  } catch {
+    return null;
+  }
+  return null;
+};
+
+// Manejo de lanes
+export const API_LANES = {
+  adc: "BOTTOM",
+  top: "TOP",
+  jungla: "JUNGLE",
+  mid: "MID",
+  support: "SUPPORT",
 };

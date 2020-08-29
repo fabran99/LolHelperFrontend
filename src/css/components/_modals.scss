@@ -1,0 +1,427 @@
+.modal {
+  position: fixed;
+  top: 40px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 40px);
+  animation: fadeIn 0.3s ease;
+  z-index: 100;
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &__background {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.677);
+    cursor: pointer;
+  }
+
+  &__content {
+    position: absolute;
+    @extend %abs_center;
+    width: 700px;
+    height: 500px;
+    background-size: cover;
+    overflow-y: auto;
+
+    &_data {
+      padding: 1em;
+      background: rgba(lighten($input_background, 1.5%), 0.4);
+      height: calc(100% - 35px);
+    }
+  }
+
+  &__close {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    padding: 0.5em;
+    cursor: pointer;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__bar {
+    width: 100%;
+    padding: 0.5em;
+    color: white;
+    padding-left: 1em;
+    background: rgba(darken($input_background, 0.5%), 0.8);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.277);
+    font-size: 0.9em;
+    text-indent: 5px;
+    color: lighten(rgba($gold, 0.5), 30%);
+    font-weight: lighter;
+  }
+}
+
+.playerdetail {
+  position: relative;
+
+  & > .row > .col-8 > .row:first-child {
+    align-items: center;
+  }
+
+  & > .row > .col-8 > .row:first-child .col-4 {
+    transform: translateY(-8px);
+    padding-right: 0;
+  }
+  &__img {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    opacity: 0.9;
+    margin-bottom: 1.5em;
+
+    .border {
+      display: none;
+    }
+    &:hover {
+      opacity: 1;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      border-radius: 50%;
+      border: 2px solid $gold;
+    }
+  }
+
+  &__level {
+    z-index: 2;
+    background: darken($back_bar, 10%);
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    font-size: 0.8em;
+    animation: fadeIn 0.4s ease;
+    display: inline-block;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &__name {
+    display: none;
+  }
+
+  &__playerinfo {
+    font-size: 0.9em;
+  }
+
+  .playerinfo__title {
+    font-size: 0.9em;
+    color: lighten(rgba($gold, 0.9), 60%);
+    font-weight: lighter;
+  }
+
+  .playerinfo__tags {
+    max-height: 60px;
+    overflow-y: auto;
+  }
+
+  .playerinfo__item {
+    margin-bottom: 0.2em;
+
+    .value {
+      font-size: 0.7em;
+      color: rgba(255, 255, 255, 0.61);
+
+      .champ_image_container {
+        display: inline-block;
+        width: 47px;
+        height: 47px;
+        margin-top: 0.5em;
+        &:not(:last-child) {
+          margin-right: 0.5em;
+        }
+      }
+
+      img {
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .mastery {
+    font-size: 0.9em;
+    &__image {
+      display: inline-block;
+      .champ_image_container {
+        width: 42px;
+        height: 42px;
+      }
+      img {
+        display: block;
+      }
+    }
+
+    &__name {
+      display: inline-block;
+      margin-left: 0.5em;
+      transform: translateY(-15px);
+      font-size: 1em;
+      color: lighten(rgba($gold, 0.9), 60%);
+    }
+
+    &__data {
+      margin-bottom: 0.2em;
+      font-size: 0.9em;
+      color: lighten(rgba($gold, 0.9), 60%);
+      font-weight: lighter;
+
+      &--not_played {
+        margin-top: 0.5em;
+      }
+      .value {
+        display: inline;
+        opacity: 0.7;
+        font-size: 0.8em;
+
+        &.d-block {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .section_title {
+    margin-bottom: 0.6em;
+    font-size: 0.9em;
+    color: lighten(rgba($gold, 0.7), 30%);
+    font-weight: lighter;
+
+    small {
+      opacity: 0.5;
+    }
+  }
+
+  .section_subtitle {
+    font-size: 0.6em;
+    opacity: 0.5;
+    margin: 1em;
+    border-bottom: 1px solid rgba(50, 125, 211, 0.215);
+    padding-bottom: 1em;
+    color: lighten($gold, 30%);
+  }
+}
+
+.match_container {
+  overflow-y: auto;
+  max-height: 296px;
+  border: 1px solid rgba(67, 94, 129, 0.219);
+
+  .match {
+    overflow: hidden;
+    display: block;
+    opacity: 0.9;
+    position: relative;
+    height: 45px;
+    font-size: 0.9em;
+    background: rgba(0, 0, 0, 0.103);
+    background: linear-gradient(
+      to right,
+      rgba($ranking_border_color, 0.3),
+      rgba($ranking_border_color, 0.05)
+    );
+    cursor: pointer;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &__champion {
+      display: inline-block;
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-53%);
+      height: 35px;
+      width: 35px;
+      overflow: hidden;
+      border: 2px solid lighten($gold, 2%);
+      border-radius: 50%;
+
+      img {
+        width: 115%;
+        @extend %abs_center;
+      }
+    }
+
+    table {
+      margin-left: 3.9em;
+      font-size: 0.95em;
+      font-weight: lighter;
+      transform: translateY(1px);
+      td {
+        &:nth-child(1) {
+          width: 90px;
+        }
+        &:nth-child(2) {
+          width: 75px;
+          font-size: 0.9em;
+        }
+        &:nth-child(3) {
+          width: 80px;
+          font-size: 0.9em;
+        }
+      }
+
+      .gameresult {
+        &__value {
+          font-family: $bolderFont;
+          color: lighten(rgba($skyblue, 0.7), 12%);
+          font-weight: bolder;
+
+          &--lose {
+            color: $pink;
+          }
+        }
+        .lane {
+          &__icon {
+            display: inline-block;
+            transform: translateY(3px);
+            margin-right: 0.3em;
+            img {
+              width: 13px;
+            }
+          }
+          &__name {
+            display: inline-block;
+            color: white;
+            font-size: 0.85em;
+          }
+        }
+      }
+    }
+
+    &__lane {
+      display: inline-block;
+      img {
+        display: inline-block;
+        width: 15px;
+        transform: translateY(3px);
+        filter: brightness(0) invert(1);
+      }
+    }
+
+    &__score {
+      & > div {
+        display: inline-block;
+      }
+    }
+
+    &__date {
+      display: inline-block;
+      small {
+        opacity: 0.7;
+        margin-left: 1em;
+        font-size: 0.7em;
+      }
+    }
+  }
+}
+
+.match_stats {
+  &__champ_list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -3px;
+
+    .champ_item {
+      max-width: 33%;
+      text-align: center;
+      padding: 0.2em;
+      margin: 0 auto;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+        cursor: pointer;
+      }
+      .champ_image_container {
+        width: 45px;
+        height: 45px;
+      }
+
+      &__value {
+        margin-top: 0.3em;
+        font-size: 0.8em;
+        opacity: 0.7;
+        color: lighten($gold, 10%);
+      }
+    }
+  }
+}
+
+.match_distributions {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 0.5em;
+  .lane_element {
+    width: 20%;
+    padding: 0 0.7em;
+    margin-top: 0.2em;
+
+    &__bar {
+      height: 100px;
+      width: 14px;
+      border-radius: 5px;
+      background: lighten($background, 1%);
+      margin: 0 auto;
+      margin-bottom: 0.5em;
+      padding: 3px;
+      transform: rotate(180deg);
+
+      &:hover {
+        .lane_element__fill {
+          opacity: 1;
+        }
+      }
+    }
+
+    &__fill {
+      height: 100%;
+      background: $blue_accent;
+      background: linear-gradient(
+        to top,
+        lighten($blue_accent, 10%),
+        darken($blue_accent, 2%)
+      );
+      z-index: 10;
+      border-radius: 10px;
+      position: relative;
+      overflow-x: hidden;
+      transition: all 0.3s ease;
+      z-index: 100;
+      opacity: 0.8;
+    }
+
+    &__icon {
+      img {
+        max-width: 100%;
+        filter: brightness(0.8) invert(0.2);
+      }
+    }
+  }
+}

@@ -5,9 +5,16 @@ import { runesFromChamp } from "../../functions/assetParser";
 
 export class RuneList extends Component {
   render() {
-    const { assets, champ } = this.props;
+    const { assets, champ, configuration } = this.props;
+    const { laneSelectedForRecommendations: lane } = configuration;
 
-    var working_runes = runesFromChamp(champ, assets);
+    var current_lane = lane;
+
+    if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
+      current_lane = champ.lanes[0];
+    }
+
+    var working_runes = runesFromChamp(champ, assets, current_lane);
 
     return (
       <div className="runes">
@@ -27,7 +34,10 @@ export class RuneList extends Component {
                 placement="top"
                 title={
                   <div className="tooltip">
-                    <div className="tooltip__title">{perk.name}</div>
+                    <div className="tooltip__title tooltip__title--image">
+                      <img className="noround" src={perk.image} alt="" />{" "}
+                      <span>{perk.name}</span>
+                    </div>
                     <div className="tooltip__content">{perk.description}</div>
                   </div>
                 }
@@ -36,7 +46,6 @@ export class RuneList extends Component {
                   <div className="image">
                     <img src={perk.image} alt="" />
                   </div>
-                  {/* <div className="name">{perk.name}</div> */}
                 </div>
               </CustomTooltip>
             );
@@ -60,7 +69,10 @@ export class RuneList extends Component {
                   placement="top"
                   title={
                     <div className="tooltip">
-                      <div className="tooltip__title">{perk.name}</div>
+                      <div className="tooltip__title tooltip__title--image">
+                        <img className="noround" src={perk.image} alt="" />{" "}
+                        <span>{perk.name}</span>
+                      </div>
                       <div className="tooltip__content">{perk.description}</div>
                     </div>
                   }
@@ -69,7 +81,6 @@ export class RuneList extends Component {
                     <div className="image">
                       <img src={perk.image} alt="" />
                     </div>
-                    {/* <div className="name">{perk.name}</div> */}
                   </div>
                 </CustomTooltip>
               );
@@ -96,16 +107,6 @@ export class RuneList extends Component {
               );
             })}
           </div>
-          {/* <div className="runeList__bonus">
-            <div className="bonustitle">Perks:</div>
-            {working_runes.perkList.map((perk, i) => {
-              return (
-                <div className="bonusElement" key={`${perk.id}_${i}`}>
-                  {perk.description}
-                </div>
-              );
-            })}
-          </div> */}
         </div>
       </div>
     );
@@ -114,6 +115,7 @@ export class RuneList extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
+  configuration: state.configuration,
 });
 
 export default connect(mapStateToProps, null)(RuneList);

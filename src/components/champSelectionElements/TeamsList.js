@@ -2,12 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import {
-  getGameName,
-  gameHasBans,
   getCurrentPlayer,
   getSelectedChamp,
-  playerHasConfirmedPick,
-  getCurrentPhase,
   getMyTeam,
   getEnemyTeam,
   getEnemyBans,

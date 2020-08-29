@@ -115,6 +115,7 @@
         }
         .image {
           border-color: $card_supp;
+          box-shadow: 0 0 10px 5px rgba($card_supp, 0.1);
         }
       }
     }
@@ -125,6 +126,7 @@
         }
         .image {
           border-color: $gold;
+          box-shadow: 0 0 10px 5px rgba($gold, 0.1);
         }
       }
     }
@@ -135,6 +137,7 @@
         }
         .image {
           border-color: $pink;
+          box-shadow: 0 0 10px 5px rgba($pink, 0.1);
         }
       }
     }
@@ -145,6 +148,7 @@
         }
         .image {
           border-color: $violet;
+          box-shadow: 0 0 10px 5px rgba($violet, 0.1);
         }
       }
     }
@@ -155,6 +159,7 @@
         }
         .image {
           border-color: $skyblue;
+          box-shadow: 0 0 10px 5px rgba($skyblue, 0.1);
         }
       }
     }

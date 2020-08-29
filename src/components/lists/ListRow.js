@@ -5,12 +5,24 @@ import { getSquare } from "../../helpers/getImgLinks";
 import { Link } from "react-router-dom";
 import { icon_dict } from "../../helpers/iconDict";
 import classnames from "classnames";
-import ListStat from "./ListStat";
+import BarRateStat from "../utility/BarRateStat";
+import { getWinrate } from "../../helpers/general";
 
 export class ListRow extends Component {
   render() {
-    const { champ, i, lockChamp, assets, current_champ } = this.props;
+    const { champ, i, lockChamp, assets, current_champ, lane } = this.props;
     const { img_links } = assets;
+
+    var winrate = getWinrate(champ, lane);
+    var tipowinrate = !lane ? "(Global)" : `(${lane})`;
+
+    const winRateContent = () => {
+      return (
+        <span>
+          Winrate <small>{tipowinrate}</small>
+        </span>
+      );
+    };
 
     return (
       <div
@@ -38,14 +50,20 @@ export class ListRow extends Component {
             {champ.name}
           </Link>
           <div className="championlist__lane">
-            <img src={icon_dict[champ.lane.toLowerCase()]} />
-            <span>{champ.lane}</span>
+            {champ.info_by_lane.map((laneinfo) => {
+              return (
+                <React.Fragment key={laneinfo.lane}>
+                  <img src={icon_dict[laneinfo.lane.toLowerCase()]} />
+                  <span>{laneinfo.lane}</span>
+                </React.Fragment>
+              );
+            })}
           </div>
         </div>
         <div className="championlist__stats">
-          <ListStat value={champ.winRate} title="Winrate" />
-          <ListStat value={champ.banRate} title="Banrate" color="pink" />
-          <ListStat value={champ.pickRate} title="Pickrate" color="green" />
+          <BarRateStat value={winrate} title={winRateContent()} />
+          <BarRateStat value={champ.banRate} title="Banrate" color="pink" />
+          <BarRateStat value={champ.pickRate} title="Pickrate" color="green" />
         </div>
       </div>
     );

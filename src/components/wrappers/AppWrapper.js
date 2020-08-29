@@ -21,6 +21,8 @@ import { updateConfig } from "../../actions/configActions";
 import { getAssets } from "../../actions/assetsActions";
 import { electron } from "../../helpers/outsideObjects";
 import { toast } from "react-toastify";
+import { IngameHandler } from "./IngameHandler";
+import ConfigurationHandler from "./ConfigurationHandler";
 
 export class AppWrapper extends Component {
   constructor(props) {
@@ -134,8 +136,8 @@ export class AppWrapper extends Component {
     // Check build is imported
     this.build_imported_listener = electron.ipcRenderer.on(
       "BUILD_APPLIED",
-      () => {
-        this.buildIsImported();
+      (event, fileExisted) => {
+        this.buildIsImported(fileExisted);
       }
     );
     this.build_not_imported_listener = electron.ipcRenderer.on(
@@ -148,18 +150,20 @@ export class AppWrapper extends Component {
     electron.ipcRenderer.send("WORKING", true);
   }
 
-  buildIsImported() {
+  buildIsImported(buildExisted) {
     this.props.updateConfig({
       savingBuild: false,
     });
-    toast.info("Build importada con exito", {
-      position: "bottom-left",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    if (!buildExisted) {
+      toast.info("Build importada con exito", {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
   }
 
   buildFailed() {
@@ -233,6 +237,7 @@ export class AppWrapper extends Component {
       dontAutoImportRunesNow,
       autoImportBuild,
       dontAutoImportBuildNow,
+      laneSelectedForRecommendations,
     } = configuration;
     // Manejo de fases
     var prevPhase = prevProps.lcuConnector.gameSession.phase;
@@ -248,17 +253,29 @@ export class AppWrapper extends Component {
     var currentChamp = getSelectedChamp(currentSelection);
     var prevChamp = getSelectedChamp(prevSelection);
 
+    // ========================================
     // Si entro en partida, redirijo a ingame
+    // ========================================
     if (
       autoNavigate &&
       notIngamePhases.indexOf(prevPhase) != -1 &&
       ingamePhases.indexOf(currentPhase) != -1 &&
-      location != "/ingame"
+      location.pathname != "/ingame"
     ) {
       this.props.history.push("/ingame");
     }
+    // Si cierro el juego y estaba en ingame lo mando a la principal
+    if (
+      location.pathname == "/ingame" &&
+      prevProps.lcuConnector.connected &&
+      !lcuConnector.connected
+    ) {
+      this.props.history.push("/");
+    }
 
+    // ==========================================
     // Si tengo configurado, autoacepto la partida
+    // ==========================================
     if (
       autoAcceptMatch &&
       prevPhase != "ReadyCheck" &&
@@ -270,7 +287,9 @@ export class AppWrapper extends Component {
       );
     }
 
-    // Cargar runas automaticamente
+    // =================================
+    // Cargar runas y build automaticamente
+    // =================================
     if (
       autoImportRunes &&
       currentPhase == "ChampSelect" &&
@@ -279,15 +298,30 @@ export class AppWrapper extends Component {
       if (
         (!prevConfirmPick && currentConfirmPick) ||
         (prevConfirmPick && currentConfirmPick && currentChamp != prevChamp) ||
-        (prevConfirmPick && currentConfirmPick && currentPhase != prevPhase)
+        (prevConfirmPick && currentConfirmPick && currentPhase != prevPhase) ||
+        (prevConfirmPick &&
+          currentConfirmPick &&
+          laneSelectedForRecommendations !=
+            prevProps.configuration.laneSelectedForRecommendations)
       ) {
         if (currentChamp) {
           var champ = assets.champions.find(
             (item) => item.championId == currentChamp
           );
 
+          //
+          var current_lane = laneSelectedForRecommendations;
+
+          if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
+            current_lane = champ.lanes[0];
+          }
+
+          var runes = champ.info_by_lane.find(
+            (item) => item.lane == current_lane
+          ).runes;
+
           var obj = {
-            runePage: champ.runes,
+            runePage: runes,
             champName: champ.name,
             connection: lcuConnector.connection,
           };
@@ -372,22 +406,33 @@ export class AppWrapper extends Component {
       });
     }
 
+    // =======================================
     // Auto pedir linea
+    // =======================================
     var keepAutoAskPhases = [
       "Lobby",
       "Matchmaking",
       "ReadyCheck",
       "ChampSelect",
     ];
-    // Quito linea automatica si deje de estar en lobby
+    // Quito linea automatica si deje de estar en lobby o cambie de modo
     if (
       configuration.autoAskLane != "" &&
       keepAutoAskPhases.indexOf(prevPhase) != -1 &&
       keepAutoAskPhases.indexOf(currentPhase) == -1
     ) {
-      console.log("quito");
-      console.log(currentPhase);
       updateConfig({ autoAskLane: "" });
+    } else if (configuration.autoAskLane != "") {
+      var gameModesToAutoPick = ["NORMAL", "BOT"];
+      var gameSession = lcuConnector.gameSession;
+      if (
+        gameModesToAutoPick.indexOf(gameSession.gameData.queue.type) == -1 ||
+        !gameSession.gameData.queue.gameMode == "CLASSIC" ||
+        gameSession.gameData.queue.gameTypeConfig.name !=
+          "GAME_CFG_TEAM_BUILDER_BLIND"
+      ) {
+        updateConfig({ autoAskLane: "" });
+      }
     }
 
     if (
@@ -413,11 +458,20 @@ export class AppWrapper extends Component {
   }
 
   render() {
-    const { assets } = this.props;
+    const { assets, lcuConnector } = this.props;
     if (!assets.champions) {
       return <Loading />;
     }
-    return this.props.children;
+
+    var currentPhase = lcuConnector.gameSession.phase;
+
+    return (
+      <React.Fragment>
+        {currentPhase == "inProgress" && <IngameHandler />}
+        <ConfigurationHandler />
+        {this.props.children}
+      </React.Fragment>
+    );
   }
 }
 

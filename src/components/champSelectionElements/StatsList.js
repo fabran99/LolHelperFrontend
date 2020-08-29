@@ -10,7 +10,7 @@ import {
 } from "../../helpers/chartDefaults";
 
 import { Radar, Doughnut } from "react-chartjs-2";
-import ListStat from "../lists/ListStat";
+import BarRateStat from "../utility/BarRateStat";
 
 export class StatsList extends Component {
   getRadarAvg() {
@@ -92,9 +92,13 @@ export class StatsList extends Component {
     return (
       <div className="statlist">
         <div className="stats">
-          <ListStat value={champ.winRate} title={"Winrate"} />
-          <ListStat value={champ.banRate} title={"Banrate"} color="pink" />
-          <ListStat value={champ.pickRate} title={"Pickrate"} color="green" />
+          <BarRateStat value={champ.winRate} title={"Winrate"} />
+          <BarRateStat value={champ.banRate} title={"Banrate"} color="pink" />
+          <BarRateStat
+            value={champ.pickRate}
+            title={"Pickrate"}
+            color="green"
+          />
         </div>
         <div className="chartjscontainer mt-2">
           <div className="chartjscontainer__box">

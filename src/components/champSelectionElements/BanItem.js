@@ -20,7 +20,17 @@ export class BanItem extends Component {
     var championInfo = this.getChampInfo(champ);
     const Wrapper = (content) => {
       return championInfo ? (
-        <CustomTooltip placement="top" title={championInfo.name}>
+        <CustomTooltip
+          placement="left"
+          title={
+            <div className="tooltip">
+              <div className="tooltip__title">{championInfo.name}</div>
+              <div className="tooltip__content">
+                BanRate: <div className="value">{championInfo.banRate} %</div>
+              </div>
+            </div>
+          }
+        >
           {content}
         </CustomTooltip>
       ) : (

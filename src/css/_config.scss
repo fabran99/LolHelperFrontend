@@ -78,6 +78,12 @@ $col_width: 8.3333333%;
   }
 }
 
+.col {
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
 .t-center {
   text-align: center !important;
 }

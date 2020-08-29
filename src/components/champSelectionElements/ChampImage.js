@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getLoading, getSquare, getSpell } from "../../helpers/getImgLinks";
+import { getLoading, getSpell } from "../../helpers/getImgLinks";
 import { spellsFromChamp } from "../../functions/assetParser";
 import CustomTooltip from "../utility/CustomTooltip";
 import { getCurrentPlayer } from "../../functions/gameSession";
@@ -8,7 +8,7 @@ import { parseBuild } from "../../functions/buildLists";
 import RuneList from "./RuneList";
 import ItemList from "./ItemList";
 import CountersList from "./CountersList";
-import ListStat from "../lists/ListStat";
+import BarRateStat from "../utility/BarRateStat";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { electron } from "../../helpers/outsideObjects";
 import { updateConfig } from "../../actions/configActions";
@@ -20,6 +20,8 @@ import {
   doughnutDatasetStyles,
 } from "../../helpers/chartDefaults";
 import classnames from "classnames";
+
+import { getWinrate } from "../../helpers/general";
 
 import { Radar, Doughnut } from "react-chartjs-2";
 
@@ -36,11 +38,11 @@ export class ChampImage extends Component {
 
   // Runas
   applyRunes() {
-    var { champ } = this.props;
+    var { champ, configuration } = this.props;
     if (
       !champ ||
       this.state.runeButtonDisabled ||
-      this.props.configuration.changingRunes
+      configuration.changingRunes
     ) {
       return;
     }
@@ -49,8 +51,15 @@ export class ChampImage extends Component {
         runeButtonDisabled: true,
       },
       () => {
+        var lane = configuration.laneSelectedForRecommendations;
+
+        if (!lane || champ.lanes.indexOf(lane) == -1) {
+          lane = champ.lanes[0];
+        }
+
+        var runes = champ.info_by_lane.find((item) => item.lane == lane).runes;
         var obj = {
-          runePage: champ.runes,
+          runePage: runes,
           champName: champ.name,
           connection: this.props.connection,
         };
@@ -86,12 +95,8 @@ export class ChampImage extends Component {
   }
 
   applyBuild() {
-    var { champ, updateConfig } = this.props;
-    if (
-      !champ ||
-      this.state.buildButtonDisabled ||
-      this.props.configuration.savingBuild
-    ) {
+    var { champ, updateConfig, configuration } = this.props;
+    if (!champ || this.state.buildButtonDisabled || configuration.savingBuild) {
       return;
     }
     this.setState(
@@ -100,7 +105,6 @@ export class ChampImage extends Component {
       },
       () => {
         var buildObject = parseBuild(champ);
-
         updateConfig({
           savingBuild: true,
         });
@@ -114,6 +118,17 @@ export class ChampImage extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    // Actualizo la linea actual
+    if (
+      (!prevProps.champ && this.props.champ) ||
+      (this.props.champ &&
+        prevProps.champ &&
+        prevProps.champ.key != this.props.champ.key)
+    ) {
+      this.defaultToFirstLaneOrKeep();
+    }
+
+    // Muestro cambios en la interfaz si aplico la build
     if (
       prevProps.configuration.savingBuild &&
       !this.props.configuration.savingBuild
@@ -130,6 +145,23 @@ export class ChampImage extends Component {
   componentWillUnmount() {
     if (this.timeoutApplyBuild) {
       clearTimeout(this.timeoutApplyBuild);
+    }
+  }
+
+  // Manejo de lineas
+  componentDidMount() {
+    this.defaultToFirstLaneOrKeep();
+  }
+
+  defaultToFirstLaneOrKeep() {
+    // Mantengo la linea seleccionada o pongo la primera si cambio de personaje
+    const { champ, configuration, updateConfig } = this.props;
+    var currentLane = configuration.laneSelectedForRecommendations;
+    if (champ) {
+      var lanes = champ.lanes;
+      if (lanes.indexOf(currentLane) == -1) {
+        updateConfig({ laneSelectedForRecommendations: lanes[0] });
+      }
     }
   }
 
@@ -194,6 +226,7 @@ export class ChampImage extends Component {
     const {
       champSelectionVisibleData: visibleData,
       savingBuild,
+      laneSelectedForRecommendations: lane,
     } = configuration;
     const { runeButtonDisabled, buildButtonDisabled } = this.state;
 
@@ -259,6 +292,15 @@ export class ChampImage extends Component {
       };
     }
 
+    var winrate = getWinrate(champ, lane);
+    const winRateContent = () => {
+      return (
+        <span>
+          Winrate <small>({lane})</small>
+        </span>
+      );
+    };
+
     // Runas
     var noAutoRunes = configuration.dontAutoImportRunesNow;
     var { autoImportRunes, autoImportBuild } = configuration;
@@ -309,6 +351,22 @@ export class ChampImage extends Component {
     return (
       <div className="selectChampImage">
         <div className="detailcard detailcard--visible">
+          <div className="detailcard__laneselector">
+            <div className="detailcard__laneselector__border"></div>
+            <select
+              name="laneSelectedForRecommendations"
+              value={lane}
+              onChange={this.handleInput.bind(this)}
+            >
+              {champ.lanes.map((lane) => {
+                return (
+                  <option value={lane} key={lane}>
+                    {lane}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
           <div className="detailcard__border"></div>
           <div className="detailcard__background">
             <img src={getLoading(assets.img_links, champ.key)} alt="" />
@@ -319,7 +377,7 @@ export class ChampImage extends Component {
             <div className="name">{champ.name}</div>
             <div className="title">{champ.title}</div>
             <div className="summoners">
-              {spellsFromChamp(champ, assets).map((spell, i) => {
+              {spellsFromChamp(champ, assets, lane).map((spell, i) => {
                 return (
                   <CustomTooltip
                     key={spell.id}
@@ -433,13 +491,13 @@ export class ChampImage extends Component {
           {visibleData == "champstats" && (
             <div className="fadeIn">
               <div className="stats">
-                <ListStat value={champ.winRate} title={"Winrate"} />
-                <ListStat
+                <BarRateStat value={winrate} title={winRateContent()} />
+                <BarRateStat
                   value={champ.banRate}
                   title={"Banrate"}
                   color="pink"
                 />
-                <ListStat
+                <BarRateStat
                   value={champ.pickRate}
                   title={"Pickrate"}
                   color="green"

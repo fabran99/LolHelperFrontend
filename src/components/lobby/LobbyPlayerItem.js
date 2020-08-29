@@ -4,7 +4,10 @@ import { electron } from "../../helpers/outsideObjects";
 import { getIcon, getSquare } from "../../helpers/getImgLinks";
 import classnames from "classnames";
 import CustomTooltip from "../utility/CustomTooltip";
+import Tag from "../utility/Tag";
+import { getTagsFromMatchlist, getTagsFromData } from "../../helpers/general";
 import imgPlaceholder from "../../img/placeholder.svg";
+import PlayerDetailModal from "../playerDetail/PlayerDetailModal";
 
 export class LobbyPlayerItem extends Component {
   constructor(props) {
@@ -12,15 +15,19 @@ export class LobbyPlayerItem extends Component {
     this.state = {
       division: null,
       tier: null,
-      summonerName: null,
       puuid: null,
       summonerId: null,
       summonerLevel: null,
       accountId: null,
-      summonerIconId: null,
       wins: null,
       isInPromo: null,
       bestChamps: null,
+      displayName: null,
+      profileIconId: null,
+      masteryLevels: null,
+      matchlist: null,
+      detailModalVisible: false,
+      displayName: null,
     };
   }
   getChampInfo(id) {
@@ -51,10 +58,10 @@ export class LobbyPlayerItem extends Component {
 
     this.setState({
       summonerId,
-      summonerIconId,
       summonerLevel,
-      summonerName,
       puuid,
+      displayName: summonerName,
+      profileIconId: summonerIconId,
     });
 
     // Info de mejores champs del jugador
@@ -69,6 +76,23 @@ export class LobbyPlayerItem extends Component {
           return { championId, championPoints };
         });
         this.setState({ bestChamps });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // Pido info de las maestrias
+    electron.ipcRenderer
+      .invoke(
+        "GET_SUMMONER_MASTERIES_BY_ID",
+        JSON.stringify({ connection, summonerId })
+      )
+      .then((res) => {
+        // Ordeno descendentemente por maestria
+        res = res.sort((a, b) => b.championPoints - a.championPoints);
+        this.setState({
+          masteryLevels: res,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -95,25 +119,72 @@ export class LobbyPlayerItem extends Component {
       .catch((err) => {
         console.log(err);
       });
+
+    // Solicito info de las partidas del jugador
+    electron.ipcRenderer
+      .invoke("GET_MATCHLIST_BY_PUUID", JSON.stringify({ connection, puuid }))
+      .then((res) => {
+        this.setState({
+          matchlist: res,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  openModal() {
+    const { displayName, puuid, summonerId } = this.state;
+    if (displayName && puuid && summonerId) {
+      this.setState({
+        detailModalVisible: true,
+      });
+    }
+  }
+
+  closeModal() {
+    this.setState({ detailModalVisible: false });
   }
 
   render() {
-    const { player, isLocalPlayer, assets } = this.props;
+    const { player, isLocalPlayer, assets, multiTeams } = this.props;
     const { summonerId } = player;
     const {
       summonerLevel,
-      summonerIconId,
-      summonerName,
+      profileIconId,
+      displayName,
       bestChamps,
       tier,
       division,
       wins,
       isInPromo,
+      detailModalVisible,
     } = this.state;
+
+    var tags = [
+      ...getTagsFromMatchlist(this.state.matchlist, assets, null),
+      ...getTagsFromData(this.state, assets, null),
+    ];
 
     const playerData = () => {
       return (
         <div className="tooltip">
+          {/* Tags */}
+          {tags && tags.length > 0 && (
+            <div className="tooltip__tags mt-0">
+              {tags.map((tag, i) => {
+                return (
+                  <Tag
+                    tooltip={tag.tooltip}
+                    value={tag.value}
+                    type={tag.type}
+                    key={i}
+                  />
+                );
+              })}
+            </div>
+          )}
+
           {!!tier && !!division && !!wins && (
             <div className="tooltip__content">
               Division:{" "}
@@ -141,10 +212,44 @@ export class LobbyPlayerItem extends Component {
     };
 
     return (
-      <div className="player">
-        {!!player.summonerId ? (
-          <CustomTooltip placement="bottom" title={playerData()}>
-            <div className="player__data">
+      <React.Fragment>
+        {detailModalVisible && (
+          <PlayerDetailModal
+            data={this.state}
+            close={this.closeModal.bind(this)}
+          />
+        )}
+        <div
+          className={classnames("player", {
+            "player--multiteam": multiTeams,
+          })}
+          onClick={this.openModal.bind(this)}
+        >
+          {!!player.summonerId ? (
+            <CustomTooltip placement="top" title={playerData()}>
+              <div
+                className={classnames("player__data", {
+                  "player__data--local": isLocalPlayer,
+                })}
+              >
+                <div className="player__level">{summonerLevel}</div>
+                <div
+                  className={classnames("player__image", {
+                    "player__image--local": isLocalPlayer,
+                  })}
+                >
+                  <img src={imgPlaceholder} alt="" />
+                  <img src={getIcon(assets.img_links, profileIconId)} alt="" />
+                </div>
+                <div className="player__name">{displayName || "?"}</div>
+              </div>
+            </CustomTooltip>
+          ) : (
+            <div
+              className={classnames("player__data", {
+                "player__data--local": isLocalPlayer,
+              })}
+            >
               <div className="player__level">{summonerLevel}</div>
               <div
                 className={classnames("player__image", {
@@ -152,26 +257,13 @@ export class LobbyPlayerItem extends Component {
                 })}
               >
                 <img src={imgPlaceholder} alt="" />
-                <img src={getIcon(assets.img_links, summonerIconId)} alt="" />
+                <img src={getIcon(assets.img_links, profileIconId)} alt="" />
               </div>
-              <div className="player__name">{summonerName || "?"}</div>
+              <div className="player__name">{displayName || "?"}</div>
             </div>
-          </CustomTooltip>
-        ) : (
-          <div className="player__data">
-            <div className="player__level">{summonerLevel}</div>
-            <div
-              className={classnames("player__image", {
-                "player__image--local": isLocalPlayer,
-              })}
-            >
-              <img src={imgPlaceholder} alt="" />
-              <img src={getIcon(assets.img_links, summonerIconId)} alt="" />
-            </div>
-            <div className="player__name">{summonerName || "?"}</div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </React.Fragment>
     );
   }
 }

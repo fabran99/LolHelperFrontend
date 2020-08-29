@@ -3,8 +3,16 @@ import { connect } from "react-redux";
 import { updateConfig } from "../../actions/configActions";
 import AppContent from "../wrappers/AppContent";
 import Switch from "../utility/Switch";
+import { electron } from "../../helpers/outsideObjects";
+import classnames from "classnames";
 
 export class Configuration extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      restartingUx: false,
+    };
+  }
   updateConfig(e) {
     const { updateConfig } = this.props;
     var value = e.target.checked;
@@ -12,13 +20,37 @@ export class Configuration extends Component {
     updateConfig({ [variable]: value });
   }
 
+  restartUx() {
+    const { connection } = this.props;
+    this.setState({
+      restartingUx: true,
+    });
+    electron.ipcRenderer
+      .invoke("RESTART_UX", JSON.stringify({ connection }))
+      .then((res) => {
+        this.setState({
+          restartingUx: false,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({
+          restartingUx: false,
+        });
+      });
+  }
+
   render() {
+    const { connection, configuration } = this.props;
+
     const {
       autoNavigate,
       autoImportRunes,
       autoAcceptMatch,
       autoImportBuild,
-    } = this.props.configuration;
+    } = configuration;
+
+    const { restartingUx } = this.state;
 
     return (
       <AppContent>
@@ -69,6 +101,27 @@ export class Configuration extends Component {
                 </div>
               </div>
             </div>
+            <div className="col-6">
+              {connection && (
+                <div className="configuration__section">
+                  <div className="configuration__title">Acciones manuales</div>
+                  <div className="configuration__element">
+                    <button
+                      className={classnames("configuration__button", {
+                        "configuration__button--disabled": restartingUx,
+                      })}
+                      onClick={this.restartUx.bind(this)}
+                    >
+                      <div className="configuration__button__border"></div>
+                      Aplicar
+                    </button>
+                    <div className="configuration__element__name">
+                      Reiniciar interfaz del launcher (para cuando se cuelga)
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </AppContent>
@@ -78,6 +131,7 @@ export class Configuration extends Component {
 
 const mapStateToProps = (state) => ({
   configuration: state.configuration,
+  connection: state.lcuConnector.connection,
 });
 
 const mapDispatchToProps = {

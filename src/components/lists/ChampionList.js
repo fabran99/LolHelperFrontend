@@ -6,11 +6,7 @@ import img_placeholder from "../../img/placeholder.svg";
 import ListFilter from "./ListFilter";
 import ListRow from "./ListRow";
 import ChampionDetail from "./ChampionDetail";
-import {
-  itemsFromChamp,
-  runesFromChamp,
-  spellsFromChamp,
-} from "../../functions/assetParser";
+import { getWinrate } from "../../helpers/general";
 
 export class ChampionList extends Component {
   constructor(props) {
@@ -62,9 +58,11 @@ export class ChampionList extends Component {
       },
       () => {
         var list = this.filterList();
-        this.setState({
-          current_champ: list[0].championId,
-        });
+        if (list.length > 0) {
+          this.setState({
+            current_champ: list[0].championId,
+          });
+        }
       }
     );
   }
@@ -74,18 +72,31 @@ export class ChampionList extends Component {
     var new_list = [...this.props.list];
     new_list = new_list.filter((item) => {
       let name = item.name.toLowerCase();
-      let champ_lane = item.lane.toLowerCase();
+      let champ_lane = item.lanes.map((el) => el.toLowerCase());
       return (
         name.indexOf(search.toLowerCase()) != -1 &&
-        champ_lane.indexOf(lane.toLowerCase()) != -1
+        (champ_lane.indexOf(lane.toLowerCase()) != -1 || !lane)
       );
     });
+
     new_list = new_list.sort((a, b) => {
-      if (a[order_var] > b[order_var]) {
-        return order == "asc" ? 1 : -1;
-      }
-      if (a[order_var] < b[order_var]) {
-        return order == "asc" ? -1 : 1;
+      if (order_var != "winRate") {
+        if (a[order_var] > b[order_var]) {
+          return order == "asc" ? 1 : -1;
+        }
+        if (a[order_var] < b[order_var]) {
+          return order == "asc" ? -1 : 1;
+        }
+      } else {
+        // Cambio el orden si es por winRate
+        var winrateA = getWinrate(a, lane);
+        var winrateB = getWinrate(b, lane);
+        if (winrateA > winrateB) {
+          return order == "asc" ? 1 : -1;
+        }
+        if (winrateA < winrateB) {
+          return order == "asc" ? -1 : 1;
+        }
       }
       return 0;
     });
@@ -141,13 +152,12 @@ export class ChampionList extends Component {
     if (!champ_data && list.length) {
       champ_data = list[0];
     }
-    var build = champ_data ? itemsFromChamp(champ_data, assets) : null;
 
     return (
       <div className="championlist">
         {/* Detalle */}
         {champ_data ? (
-          <ChampionDetail build={build} champ_data={champ_data} />
+          <ChampionDetail champ_data={champ_data} />
         ) : (
           <div className="championdetail">
             <div className="detailcard">
@@ -188,6 +198,7 @@ export class ChampionList extends Component {
                     i={i}
                     current_champ={current_champ}
                     lockChamp={this.lockChamp}
+                    lane={lane}
                   />
                 );
               })
