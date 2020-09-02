@@ -22,3 +22,5 @@ yarn-error.log*
 /dist
 
 *Thumbs.db
+
+electron-builder.yml

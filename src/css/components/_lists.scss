@@ -275,20 +275,20 @@
   &__lane {
     color: rgb(71, 72, 75);
     text-transform: uppercase;
-    font-size: 0.8em;
+    font-size: 0.75em;
     margin-top: 0.2em;
     transform: translateY(2px);
 
     img {
       display: inline-block;
       width: 12px;
-      margin-right: 0.3em;
+      margin-right: 0.1em;
       transform: translateY(2px);
     }
 
     span {
       display: inline-block;
-      margin-right: 0.5em;
+      margin-right: 0.3em;
     }
   }
 

@@ -37,12 +37,12 @@ export class ChampSelect extends Component {
     return champ;
   }
 
-  componentWillUnmount() {
-    const { configuration, updateConfig } = this.props;
-    if (configuration.autoImportRunes && configuration.dontAutoImportRunesNow) {
-      updateConfig({ dontAutoImportRunesNow: false });
-    }
-  }
+  // componentWillUnmount() {
+  //   const { configuration, updateConfig } = this.props;
+  //   if (configuration.autoImportRunes && configuration.dontAutoImportRunesNow) {
+  //     updateConfig({ dontAutoImportRunesNow: false });
+  //   }
+  // }
 
   render() {
     const { champSelect } = this.props;
@@ -64,7 +64,7 @@ export class ChampSelect extends Component {
             </div>
           </div>
 
-          {/* Build */}
+          {/* Teams */}
           <div className="col-9">
             <TeamsList alone={!champ} />
           </div>

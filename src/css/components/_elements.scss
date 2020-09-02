@@ -96,6 +96,8 @@
     width: 100%;
     height: 100%;
     position: relative;
+    transition: all 0.3 ease;
+
     img {
       @extend %abs_center;
       width: 107%;
@@ -105,6 +107,10 @@
         top: 50% !important;
         opacity: 0.85;
       }
+    }
+
+    &--dead {
+      filter: grayscale(100%) brightness(0.5);
     }
   }
 
@@ -349,6 +355,14 @@
         background: #000 !important;
       }
     }
+  }
+
+  &__deadtimer {
+    z-index: 100;
+    color: $pink;
+    font-size: 2.2em;
+    @extend %abs_center;
+    animation: fadeIn 0.3s ease;
   }
 }
 

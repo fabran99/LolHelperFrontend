@@ -16,7 +16,7 @@ export class TopBar extends Component {
   };
 
   render() {
-    const { location, lcuConnector, assets } = this.props;
+    const { location, lcuConnector, assets, summoner } = this.props;
 
     const isActive = (path) => {
       return location.pathname == path;
@@ -71,6 +71,9 @@ export class TopBar extends Component {
             {process.env.REACT_APP_VERSION}
           </div>
         </div>
+        {summoner && summoner.displayName && (
+          <div className="navbar_summoner">{summoner.displayName}</div>
+        )}
 
         <div className="icons">
           <div className="minimize" onClick={this.minimize}>
@@ -89,6 +92,7 @@ export class TopBar extends Component {
 const mapStateToProps = (state) => ({
   assets: state.assets,
   lcuConnector: state.lcuConnector,
+  summoner: state.summoner,
 });
 
 export default connect(mapStateToProps, null)(withRouter(TopBar));

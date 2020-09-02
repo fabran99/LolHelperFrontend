@@ -22,7 +22,7 @@ const importBuild = (currentWindow, build) => {
         fs.writeFileSync(filename, JSON.stringify(build));
       });
 
-      currentWindow.webContents.send("BUILD_APPLIED", !allExists);
+      currentWindow.webContents.send("BUILD_APPLIED", allExists);
     }
   });
 };

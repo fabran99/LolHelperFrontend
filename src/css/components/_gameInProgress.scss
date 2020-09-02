@@ -1,0 +1,455 @@
+.gameInProgressImage {
+  .detailcard {
+    height: 350px;
+    margin-bottom: 0;
+
+    &__background {
+      img {
+        top: 58%;
+      }
+    }
+
+    &__text {
+      padding: 0.5em;
+      padding-left: 0.7em;
+    }
+  }
+
+  .champImageExtraData {
+    height: 218px;
+  }
+}
+
+.inProgress {
+  .teams {
+    & > .row > .col-6 {
+      padding: 0 5px;
+    }
+    .team__list {
+      .player {
+        height: 55px;
+
+        .player__spells {
+          left: 62px;
+          top: 50%;
+          transform: translateY(-50%);
+
+          &__img {
+            border-radius: 3px;
+            overflow: hidden;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+            &:not(:last-child) {
+              margin-bottom: 3px;
+            }
+
+            width: 21px;
+            height: 21px;
+          }
+        }
+
+        .player__build {
+          width: 200px;
+          display: inline-block;
+          position: absolute;
+          left: 90px;
+          top: 74%;
+          transform: translateY(-50%);
+          transition: all 0.2s ease;
+
+          &__item {
+            width: 21px;
+            height: 21px;
+            background: darken($back_bar, 2%);
+            overflow: hidden;
+            display: inline-block;
+            border-radius: 3px;
+            position: relative;
+            //   border: 1px solid rgb(43, 43, 43);
+
+            &:not(:last-child) {
+              margin-right: 3px;
+            }
+
+            .empty {
+              width: 100%;
+              height: 100%;
+              position: relative;
+              display: none;
+              &:after {
+                content: "";
+                width: 115%;
+                height: 2px;
+                position: absolute;
+                background: rgba(0, 0, 0, 0.103);
+                left: 50%;
+                top: 50%;
+                transform: translateY(-50%) translateX(-50%) rotate(-45deg);
+              }
+              &:before {
+                content: "";
+                width: 115%;
+                height: 2px;
+                position: absolute;
+                background: rgba(0, 0, 0, 0.103);
+                left: 50%;
+                top: 50%;
+                transform: translateY(-50%) translateX(-50%) rotate(45deg);
+              }
+            }
+
+            &__container {
+              width: 100%;
+              height: 100%;
+              position: relative;
+              animation: fadeIn 0.3s ease;
+              img {
+                @extend %abs_center;
+                width: 105%;
+              }
+            }
+          }
+        }
+
+        .player__name__small {
+          left: 91px;
+          font-size: 0.75em;
+          display: inline-block;
+          position: absolute;
+          top: 6px;
+          opacity: 0.85;
+
+          small {
+            font-size: 0.7em;
+            color: lighten($skyblue, 20%);
+            opacity: 0.8;
+            margin-left: 0.5em;
+          }
+        }
+
+        .player__score {
+          display: inline-block;
+          position: absolute;
+          right: 5px;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: all 0.2s ease;
+          font-size: 0.7em;
+
+          table {
+            text-align: center;
+            td {
+              padding: 6px 0;
+            }
+            td:nth-child(1) {
+              width: 50px;
+            }
+            td:nth-child(2) {
+              width: 35px;
+            }
+          }
+
+          .kda {
+            display: inline-block;
+            width: 100%;
+            text-align: right;
+
+            &:not(:last-child) {
+              margin-right: 5px;
+            }
+            & > div {
+              display: inline-block;
+            }
+
+            .score_separator {
+              opacity: 0.8;
+            }
+          }
+          .gold {
+            text-align: right;
+            width: 100%;
+          }
+
+          .farm {
+            img {
+              width: 8px;
+              transform: translateY(1px);
+              margin-right: 3px;
+            }
+          }
+          .gold,
+          .vision {
+            img {
+              width: 10px;
+
+              margin-right: 1px;
+            }
+          }
+
+          .gold {
+            img {
+              width: 12px;
+              transform: translateY(1px);
+              margin-right: 3px;
+            }
+          }
+
+          .vision {
+            img {
+              transform: translateY(1px) translateX(-1px);
+            }
+            .value {
+              transform: translateX(-1px);
+            }
+          }
+
+          .value {
+            width: 10px;
+            display: inline-block;
+          }
+        }
+
+        &--red {
+          background: linear-gradient(
+            to right,
+            rgba($red, 0.4),
+            rgba($red, 0.05)
+          );
+
+          .player__name__small {
+            small {
+              color: lighten($pink, 10%);
+            }
+          }
+        }
+
+        &__image {
+          width: 55px;
+          height: 55px;
+          img {
+            transition: 0.3s ease;
+
+            &.dead {
+              filter: grayscale(100%) brightness(0.4);
+            }
+          }
+          .player__level {
+            z-index: 80;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 0.75em;
+            background: rgba(0, 0, 0, 0.601);
+            padding: 1px 0;
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            border-top-left-radius: 3px;
+          }
+
+          .player__timer {
+            z-index: 100;
+            @extend %abs_center;
+            font-weight: bolder;
+            color: lighten($pink, 2%);
+            font-size: 1em;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    .teams_score_header {
+      .score_row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        text-align: center;
+
+        .score_col__big {
+          flex: 47%;
+          width: 47%;
+          flex-wrap: nowrap;
+        }
+        .score_col__small {
+          flex: 6%;
+          width: 6%;
+          flex-wrap: nowrap;
+        }
+      }
+      // Scores
+      .scores {
+        position: relative;
+        & > div {
+          display: inline-block;
+        }
+
+        &--ally {
+          text-align: right;
+          .kills {
+            color: lighten($card_adc, 2%);
+          }
+
+          .turrets {
+            margin-right: 1.5em;
+          }
+        }
+        &--enemy {
+          text-align: left;
+          .kills {
+            text-align: left;
+
+            color: lighten($pink, 2%);
+          }
+          .turrets {
+            margin-left: 1.5em;
+          }
+
+          .drakes {
+            margin-right: 0;
+            margin-left: 1.5em;
+          }
+        }
+
+        .turrets {
+          font-size: 0.9em;
+          img {
+            transform: translateY(3px);
+            margin-right: 2px;
+            max-height: 17px;
+          }
+        }
+
+        .kills {
+          font-size: 0.9em;
+          width: 2em;
+          font-size: 1.5em;
+          font-family: $bolderFont;
+        }
+
+        .gold {
+          font-size: 0.9em;
+          img {
+            max-width: 18px;
+            margin-right: 4px;
+            transform: translateY(2px);
+          }
+        }
+      }
+
+      .score_block {
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.033),
+          rgba(0, 0, 0, 0.126),
+          rgba(0, 0, 0, 0.033)
+        );
+        position: relative;
+        padding: 0.5em 0;
+
+        &:after {
+          content: "";
+          width: 100%;
+          height: 1px;
+          background: white;
+          background: linear-gradient(
+            to right,
+            transparent,
+            rgba($gold, 0.5),
+            transparent
+          );
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+        &:before {
+          content: "";
+          width: 100%;
+          height: 1px;
+          background: white;
+          background: linear-gradient(
+            to right,
+            transparent,
+            rgba($gold, 0.5),
+            transparent
+          );
+          position: absolute;
+          bottom: 0;
+          left: 0;
+        }
+      }
+
+      .timer {
+        text-align: center;
+        font-size: 0.95em;
+        margin: 0 auto;
+        // margin-top: 0.5em;
+
+        span {
+          padding: 0.3em 1em;
+
+          display: inline-block;
+        }
+      }
+
+      .drakes {
+        margin-right: 1.5em;
+
+        &__kill {
+          overflow: hidden;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          display: inline-block;
+          position: relative;
+          transform: translateY(5px);
+          border: 2px solid $back_bar;
+          cursor: pointer;
+
+          &--Water {
+            border-color: rgba($blue_accent, 0.6);
+          }
+          &--Air {
+            border-color: rgba(lighten($skyblue, 40%), 0.6);
+          }
+          &--Fire {
+            border-color: rgba($red, 0.6);
+          }
+          &--Earth {
+            border-color: rgba(brown, 0.6);
+          }
+          &--Elder {
+            border-color: rgba(white, 0.6);
+            width: 25px;
+            height: 25px;
+            transform: translateY(6.5px);
+          }
+
+          &:not(:last-child) {
+            margin-right: 0.5em;
+          }
+
+          img {
+            @extend %abs_center;
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .versus {
+      text-align: center;
+      font-family: $bolderFont;
+      font-size: 1.5em;
+      color: lighten($gold, 17%);
+      img {
+        max-width: 20px;
+        transform: translateY(2px) rotate(-10deg);
+      }
+    }
+  }
+}

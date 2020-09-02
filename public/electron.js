@@ -6,7 +6,7 @@ const path = require("path");
 const join = path.join;
 const isDev = require("electron-is-dev");
 const { lstatSync, readdirSync } = require("fs");
-
+const { autoUpdater } = require("electron-updater");
 // LCU
 const LCUConnector = require("lcu-connector");
 const { auth, connect } = require("league-connect");
@@ -27,6 +27,8 @@ const {
   getSummonerMasteries,
   getMatchlist,
   restartUx,
+  getCurrentSummonerData,
+  getCurrentGameData,
 } = require("./electron_related/gameRequests");
 
 // Os handler
@@ -69,7 +71,10 @@ var createWindow = () => {
   mainWindow.on("closed", () => (mainWindow = null));
 };
 
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createWindow();
+  autoUpdater.checkForUpdates();
+});
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -128,6 +133,10 @@ ipc.handle("ASK_FOR_LANE", AskLane);
 ipc.handle("GET_SUMMONER_MASTERIES_BY_ID", getSummonerMasteries);
 ipc.handle("GET_MATCHLIST_BY_PUUID", getMatchlist);
 ipc.handle("RESTART_UX", restartUx);
+ipc.handle("GET_CURRENT_GAME_DATA", getCurrentGameData);
+
+// Datos del summoner actual
+ipc.handle("GET_CURRENT_SUMMONER_DATA", getCurrentSummonerData);
 
 // Acciones del os
 ipc.handle("IMPORT_ITEMS", (event, data) => {
@@ -145,6 +154,18 @@ const startListeners = (auth_data) => {
     });
   }, 5000);
 };
+
+// Auto update
+// when the update is ready, notify the BrowserWindow
+autoUpdater.on("update-downloaded", (info) => {
+  console.log("downloaded", info);
+  mainWindow.webContents.send("updateReady");
+});
+
+ipcMain.on("quitAndInstall", (event, arg) => {
+  console.log("install");
+  autoUpdater.quitAndInstall();
+});
 
 // Extensiones para desarrollo
 const addExtensions = () => {

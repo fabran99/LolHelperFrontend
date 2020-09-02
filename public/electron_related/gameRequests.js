@@ -1,4 +1,5 @@
 const { request } = require("league-connect");
+const rp = require("request-promise");
 
 // Runes
 const parseRunepage = (runepage, champName, make_current) => {
@@ -272,6 +273,35 @@ const restartUx = async (event, data) => {
   return result;
 };
 
+const getCurrentSummonerData = async (event, data) => {
+  const { connection } = JSON.parse(data);
+
+  var result = await request(
+    {
+      url: `/lol-summoner/v1/current-summoner`,
+      method: "GET",
+      json: true,
+    },
+    connection
+  );
+
+  result = await result.json();
+
+  return result;
+};
+
+const getCurrentGameData = async (event, data) => {
+  var options = {
+    method: "GET",
+    uri: `https://127.0.0.1:2999/liveclientdata/allgamedata`,
+    resolveWithFullResponse: true,
+    strictSSL: false,
+  };
+
+  var result = await rp(options);
+  return result.body;
+};
+
 module.exports = {
   parseRunepage,
   updateRunePage,
@@ -283,4 +313,6 @@ module.exports = {
   getSummonerMasteries,
   getMatchlist,
   restartUx,
+  getCurrentSummonerData,
+  getCurrentGameData,
 };

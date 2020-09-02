@@ -109,4 +109,14 @@
       }
     }
   }
+
+  .navbar_summoner {
+    position: absolute;
+    right: 85px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75em;
+    opacity: 0.6;
+    animation: fadeIn 0.2s ease;
+  }
 }

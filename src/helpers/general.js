@@ -400,3 +400,15 @@ export const getWarningFromTagList = (taglist) => {
 
   return "";
 };
+
+// Utilidades
+export const fillZero = (number) => {
+  return number >= 10 ? number : `0${number}`;
+};
+export const secondsToTime = (seconds) => {
+  seconds = Math.round(seconds);
+
+  var mins = Math.floor(seconds / 60);
+  var secs = seconds % 60;
+  return `${fillZero(mins)}:${fillZero(secs)}`;
+};

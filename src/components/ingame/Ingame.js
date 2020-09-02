@@ -4,6 +4,7 @@ import AppContent from "../wrappers/AppContent";
 import ChampSelect from "./ChampSelect";
 import NotIngame from "./NotIngame";
 import Lobby from "./Lobby";
+import GameInProgress from "./GameInProgress";
 
 export class Ingame extends Component {
   render() {
@@ -19,6 +20,12 @@ export class Ingame extends Component {
       return (
         <AppContent>
           <Lobby />
+        </AppContent>
+      );
+    } else if (gameSession.phase == "InProgress") {
+      return (
+        <AppContent>
+          <GameInProgress />
         </AppContent>
       );
     }

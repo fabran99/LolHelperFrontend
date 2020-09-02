@@ -300,6 +300,15 @@
       top: -24px;
     }
   }
+
+  &__loading {
+    @extend %abs_center;
+    width: 100%;
+    padding: 1em;
+    text-align: center;
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
 }
 
 // Team stats
@@ -447,6 +456,8 @@
 
   &__item {
     display: inline-block;
+    animation: fadeIn 0.3s ease;
+
     &:not(:last-child) {
       margin-right: 1em;
     }

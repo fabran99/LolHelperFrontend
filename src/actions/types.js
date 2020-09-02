@@ -12,5 +12,8 @@ export const LOBBY_CHANGE = "LOBBY_CHANGE";
 // IngameReducer
 export const UPDATE_GAMEINFO = "UPDATE_GAMEINFO";
 
+// SummonerReducer
+export const UPDATE_SUMMONER = "UPDATE_SUMMONER";
+
 // configReducer
 export const UPDATE_CONFIG = "UPDATE_CONFIG";

@@ -1,4 +1,12 @@
 // Info del game
+const SUMMONER_RIFT = 11;
+export const isSummonerRift = (gameSession) => {
+  if (gameSession && gameSession.gameData && gameSession.gameData.queue) {
+    return gameSession.gameData.queue.mapId == SUMMONER_RIFT;
+  } else {
+    return false;
+  }
+};
 
 export const getGameName = (gameSession) => {
   if (!gameSession || !gameSession.gameData) {

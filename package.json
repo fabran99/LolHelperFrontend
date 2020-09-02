@@ -1,10 +1,10 @@
 {
   "name": "lol_interface",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
   "description": "Lol app",
   "author": "fabran99",
   "main": "./public/electron.js",
+  "repository": "https://github.com/fabran99/LolHelperFrontend",
   "build": {
     "appId": "lol.app",
     "win": {
@@ -22,6 +22,7 @@
     "classnames": "^2.2.6",
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
+    "electron-updater": "^4.3.4",
     "lcu-connector": "^2.1.3",
     "league-connect": "^2.0.1",
     "lodash": "^4.17.15",
@@ -48,7 +49,8 @@
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
     "build": "npm run react-build && npm run electron-build",
-    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "ship": "npm run react-build && npm run electron-build --win --ia32 -p always -c electron-builder.yml"
   },
   "eslintConfig": {
     "extends": "react-app"
