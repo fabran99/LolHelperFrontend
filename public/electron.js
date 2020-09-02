@@ -162,7 +162,7 @@ autoUpdater.on("update-downloaded", (info) => {
   mainWindow.webContents.send("updateReady");
 });
 
-ipcMain.on("quitAndInstall", (event, arg) => {
+ipc.on("quitAndInstall", (event, arg) => {
   console.log("install");
   autoUpdater.quitAndInstall();
 });
