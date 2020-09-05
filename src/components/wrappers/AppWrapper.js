@@ -129,7 +129,39 @@ export class AppWrapper extends Component {
       }
     );
 
+    // Updates
+    this.update_listener = electron.ipcRenderer.on(
+      "updateReady",
+      (event, data) => {
+        this.showUpdateIsReady(data);
+      }
+    );
+
     electron.ipcRenderer.send("WORKING", true);
+  }
+
+  showUpdateIsReady(data) {
+    const { version } = data;
+    const UpdateComponent = () => {
+      return (
+        <div className="update_notif">
+          <div className="update_notif__text">Version {version} disponible</div>
+          <div className="update_notif__button">
+            <button onClick={this.quitAndInstall.bind(this)}>Actualizar</button>
+          </div>
+        </div>
+      );
+    };
+    this.toastUpdate = toast.info(UpdateComponent, {
+      position: "bottom-left",
+      autoClose: false,
+      closeOnClick: false,
+    });
+  }
+
+  quitAndInstall() {
+    toast.dismiss(this.toastUpdate);
+    electron.ipcRenderer.send("quitAndInstall");
   }
 
   componentDidUpdate(prevProps) {

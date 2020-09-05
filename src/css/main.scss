@@ -153,3 +153,33 @@ body {
     height: 3px;
   }
 }
+
+// Update toast
+
+.update_notif {
+  &__text {
+    display: inline-block;
+  }
+  &__button {
+    display: inline-block;
+    margin-left: 1em;
+    button {
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      color: white;
+      background: linear-gradient(
+        to bottom,
+        $ranking_border_color,
+        darken($ranking_border_color, 2%)
+      );
+      padding: 0.5em;
+      opacity: 0.9;
+      outline: none;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}

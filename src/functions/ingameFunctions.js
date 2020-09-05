@@ -296,6 +296,7 @@ export const getTeamStats = (team, enemyTeam, ingame, teamId, assets) => {
   var dragonKills = [];
   var heraldKills = [];
   var turretKills = [];
+  var baronKills = [];
   var teamKills = 0;
   var enemyKills = 0;
   var teamGold = 0;
@@ -357,6 +358,14 @@ export const getTeamStats = (team, enemyTeam, ingame, teamId, assets) => {
             EventID: event.EventID,
           });
         }
+      } else if (event.EventName == "BaronKill") {
+        if (teamNames.indexOf(event.KillerName) != -1) {
+          baronKills.push({
+            EventTime: event.EventTime,
+            KillerName: event.KillerName,
+            EventID: event.EventID,
+          });
+        }
       }
     });
   }
@@ -364,6 +373,7 @@ export const getTeamStats = (team, enemyTeam, ingame, teamId, assets) => {
   return {
     dragonKills,
     heraldKills,
+    baronKills,
     turretKills,
     teamKills,
     enemyKills,
@@ -385,6 +395,8 @@ export const getNextDrakeTime = (ingame, allyDrakeKills, enemyDrakeKills) => {
 
   if (ingame && ingame.events && ingame.events.Events) {
     events = ingame.events.Events.reverse();
+  } else {
+    return null;
   }
   var timer = null;
   if (ingame && ingame.gameData && ingame.gameData.gameTime) {
@@ -492,3 +504,38 @@ export const getNextCannonwaveTime = (ingame) => {
 
 const FIRST_BARON_SPAWN = minsToSeconds(20, 0);
 const BARON_RESPAWN_TIME = minsToSeconds(7, 0);
+
+export const getNextBaronTime = (ingame) => {
+  var events = [];
+
+  if (ingame && ingame.events && ingame.events.Events) {
+    events = ingame.events.Events.reverse();
+  } else {
+    console.log(ingame);
+    return null;
+  }
+  var timer = null;
+  if (ingame && ingame.gameData && ingame.gameData.gameTime) {
+    timer = Math.round(ingame.gameData.gameTime);
+  } else {
+    console.log(2);
+    return null;
+  }
+
+  // Si estoy antes del primer spawn entonces devuelvo lo que falta
+  if (timer <= FIRST_BARON_SPAWN) {
+    return secondsToTime(FIRST_BARON_SPAWN - timer);
+  }
+
+  // Si estoy luego del primer spawn reviso si hubo un asesinato de baron
+  var lastBaronKill = events.find((el) => el.EventName == "BaronKill");
+
+  // Si no lo mataron sigue vivo el inicial
+  if (!lastBaronKill) {
+    return null;
+  }
+
+  let timeLeft =
+    BARON_RESPAWN_TIME - Math.round(timer - lastBaronKill.EventTime);
+  return timeLeft <= 0 ? null : secondsToTime(timeLeft);
+};

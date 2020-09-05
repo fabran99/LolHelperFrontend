@@ -12,7 +12,10 @@ import Elder from "../../img/elderDrake.png";
 import Fire from "../../img/infernalDrake.png";
 import Earth from "../../img/mountainDrake.png";
 import Water from "../../img/oceanDrake.png";
-import { getNextDrakeTime } from "../../functions/ingameFunctions";
+import {
+  getNextDrakeTime,
+  getNextBaronTime,
+} from "../../functions/ingameFunctions";
 import { isSummonerRift } from "../../functions/gameSession";
 
 const INGAME_TEAM_NAMES = {
@@ -38,15 +41,18 @@ export class TeamListHeader extends Component {
     // Timers
     var isRift = isSummonerRift(lcuConnector.gameSession);
     var nextDrakeTime = null;
+    var nextBaronTime = null;
     if (isRift) {
       nextDrakeTime = getNextDrakeTime(
         ingame,
         myTeamStats.dragonKills.length,
         theirTeamStats.dragonKills.length
       );
+      nextBaronTime = getNextBaronTime(ingame);
     }
 
     console.log(nextDrakeTime);
+    console.log(nextBaronTime);
 
     return (
       <div className="teams_score_header">

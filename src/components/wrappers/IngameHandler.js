@@ -75,6 +75,7 @@ export class IngameHandler extends Component {
   componentWillUnmount() {
     console.log("unmount");
     if (this.timeoutGetData) {
+      console.log("desmontar");
       clearTimeout(this.timeoutGetData);
     }
     this.props.updateGameinfo({

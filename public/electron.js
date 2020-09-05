@@ -38,6 +38,7 @@ let mainWindow;
 let socket;
 
 var createWindow = () => {
+  console.log(isDev);
   // Agrego extensiones
   if (isDev) {
     addExtensions();
@@ -65,7 +66,9 @@ var createWindow = () => {
   );
 
   // Abro herramientas de desarrollo
-  mainWindow.webContents.openDevTools();
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   // Cierro programa al cerrar ventana
   mainWindow.on("closed", () => (mainWindow = null));
@@ -74,6 +77,9 @@ var createWindow = () => {
 app.on("ready", () => {
   createWindow();
   autoUpdater.checkForUpdates();
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 1000 * 60 * 15);
 });
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -159,7 +165,7 @@ const startListeners = (auth_data) => {
 // when the update is ready, notify the BrowserWindow
 autoUpdater.on("update-downloaded", (info) => {
   console.log("downloaded", info);
-  mainWindow.webContents.send("updateReady");
+  mainWindow.webContents.send("updateReady", info);
 });
 
 ipc.on("quitAndInstall", (event, arg) => {

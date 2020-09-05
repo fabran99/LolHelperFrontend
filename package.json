@@ -1,12 +1,12 @@
 {
-  "name": "lol_interface",
-  "version": "0.2.0",
+  "name": "lol_stats_app",
+  "version": "0.2.5",
   "description": "Lol app",
   "author": "fabran99",
   "main": "./public/electron.js",
   "repository": "https://github.com/fabran99/LolHelperFrontend",
   "build": {
-    "appId": "lol.app",
+    "appId": "com.electron.lolhelper",
     "win": {
       "icon": "build/logo512.png"
     }
@@ -50,7 +50,7 @@
     "electron-build": "electron-builder",
     "build": "npm run react-build && npm run electron-build",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
-    "ship": "npm run react-build && npm run electron-build --win --ia32 -p always -c electron-builder.yml"
+    "ship": "electron-builder -p always -c electron-builder.yml"
   },
   "eslintConfig": {
     "extends": "react-app"
