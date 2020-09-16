@@ -350,7 +350,7 @@ export class ChampImage extends Component {
 
     return (
       <div className="selectChampImage">
-        <div className="detailcard detailcard--visible">
+        <div className="detailcard detailcard--squared detailcard--visible">
           <div className="detailcard__laneselector">
             <div className="detailcard__laneselector__border"></div>
             <select

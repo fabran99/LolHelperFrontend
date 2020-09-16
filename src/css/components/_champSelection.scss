@@ -22,22 +22,31 @@
       .player {
         text-align: left;
         margin-bottom: 0.3em;
-        background: rgba($ranking_border_color, 0.2);
-        background: linear-gradient(
-          to right,
-          rgba($ranking_border_color, 0.4),
-          rgba($ranking_border_color, 0.05)
-        );
+        font-family: "Source Sans Pro";
         position: relative;
         height: 45px;
-        opacity: 0.8;
+        background: linear-gradient(
+          to right,
+          rgba($row_item_background, 0.9),
+          rgba($row_item_background, 0.4)
+        );
+        border-radius: 3px;
+        box-shadow: $main_page_shadow;
 
         &.warning {
           background: linear-gradient(
             to right,
-            rgba($red, 0.4),
-            rgba($red, 0.05)
+            rgba($red, 0.3),
+            rgba($red, 0.1)
           );
+
+          &:hover {
+            background: linear-gradient(
+              to right,
+              rgba($red, 0.35),
+              rgba($red, 0.1)
+            );
+          }
 
           .player__stats {
             color: lighten($red, 12%);
@@ -46,27 +55,29 @@
         &.good {
           background: linear-gradient(
             to right,
-            rgba($green, 0.4),
+            rgba($green, 0.35),
             rgba($green, 0.05)
           );
+
+          &:hover {
+            background: linear-gradient(
+              to right,
+              rgba($green, 0.4),
+              rgba($green, 0.1)
+            );
+          }
 
           .player__stats {
             color: lighten($green, 12%);
           }
         }
 
-        &:after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          height: 1px;
-          width: 100%;
-          background: rgba(255, 255, 255, 0.05);
-        }
-
         &:hover {
-          opacity: 1;
+          background: linear-gradient(
+            to right,
+            rgba($row_item_background_active, 0.9),
+            rgba($row_item_background_active, 0.4)
+          );
         }
 
         &__lane {
@@ -81,28 +92,31 @@
           margin: 0 auto;
           width: 100%;
           height: 100%;
-          margin-left: 3em;
+          margin-left: 47px;
+          font-size: 0.8em;
         }
+
         &__image {
-          width: 45px;
-          height: 45px;
+          width: 38px;
+          height: 38px;
           overflow: hidden;
           position: absolute;
-          left: 0;
-          top: 0;
+          left: 8px;
+          top: 50%;
+          transform: translateY(-50%);
           border: 2px solid lighten($back_bar, 5%);
-          opacity: 0.9;
+          border-radius: 50%;
 
           &:hover {
             opacity: 1;
           }
 
           &--local {
-            border-color: $gold;
+            border-color: darken($gold, 7%);
           }
           img {
             @extend %abs_center;
-            width: 110%;
+            width: 115%;
           }
         }
 
@@ -113,9 +127,10 @@
           overflow: hidden;
           text-overflow: ellipsis;
           display: inline-block;
-          margin-left: 32px;
+          margin-left: 27px;
           transform: translateY(14px);
           transition: all 0.3s ease;
+          padding-right: 0.5em;
 
           &--nosums {
             margin-left: 12px;
@@ -128,7 +143,7 @@
 
         &__stats {
           position: absolute;
-          right: 0.5em;
+          right: 1em;
           top: 50%;
           font-size: 0.7em;
           opacity: 0.7;
@@ -141,16 +156,19 @@
           position: absolute;
           left: 52px;
           top: 50%;
-          transform: translateY(-46%);
+          transform: translateY(-50%);
           display: block;
 
           &__img {
-            width: 18px;
-            height: 18px;
+            width: 15px;
+            height: 15px;
             display: block;
             position: relative;
-            margin-bottom: 2px;
-            border: 1px solid rgba(128, 128, 128, 0.11);
+            overflow: hidden;
+            &:not(:last-child) {
+              margin-bottom: 3px;
+            }
+
             img {
               @extend %abs_center;
               width: 100%;
@@ -161,9 +179,17 @@
         &--enemy {
           background: linear-gradient(
             to left,
-            rgba($ranking_border_color, 0.4),
-            rgba($ranking_border_color, 0.05)
+            rgba($row_item_background, 0.9),
+            rgba($row_item_background, 0.4)
           );
+
+          &:hover {
+            background: linear-gradient(
+              to left,
+              rgba($row_item_background_active, 0.9),
+              rgba($row_item_background_active, 0.4)
+            );
+          }
           .player__data {
             text-align: right;
             margin-left: 0;
@@ -172,7 +198,8 @@
           .player {
             &__image {
               left: auto;
-              right: 0;
+              border: 2px solid darken($back_bar, 5%);
+              right: 8px;
             }
 
             &__name {
@@ -210,7 +237,7 @@
         width: 28px;
         height: 28px;
         margin-left: 0.5em;
-        border: 12px solidrgba(255, 255, 255, 0.116) e;
+        border: 1px solid rgba(255, 255, 255, 0.116);
         overflow: hidden;
         position: relative;
 
@@ -220,7 +247,7 @@
 
         img {
           @extend %abs_center;
-          width: 100%;
+          width: 110%;
         }
       }
     }
@@ -229,6 +256,7 @@
 
 // Champ image
 .selectChampImage {
+  padding-right: 0.5em;
   .detailcard {
     &__text {
       padding: 0.5em;
@@ -238,12 +266,9 @@
 }
 .champImageExtraData {
   position: relative;
-  border: 1px solid rgb(198, 155, 75);
-  transform: translateY(-2px);
-  margin: 0 1px;
   overflow: hidden;
-  height: 190px;
-
+  background: rgba(rgb(20, 34, 49), 0.2);
+  border-radius: 1.5px;
   &__select {
     z-index: 100;
 
@@ -251,15 +276,22 @@
       width: 100%;
       display: block;
       text-indent: 5px;
-      background: $input_background;
       font-family: "Source Sans Pro";
       color: lighten(rgba($gold, 0.5), 30%);
       border: none;
-      outline: none;
       font-weight: lighter;
-      padding: 0.5em 0.5em;
-      border: none;
-      border-bottom: 1px solid rgb(198, 155, 75);
+      padding: 0.4em 0.5em;
+      outline: none;
+      background: rgba($row_item_background_active, 0.5);
+      border-radius: 1.5px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: 1px solid rgb(19, 25, 41);
+
+      &:hover {
+        cursor: pointer;
+        background: rgba($row_item_background_active, 0.65);
+      }
 
       option {
         background: $input_background;
@@ -289,14 +321,14 @@
       width: 115%;
       height: 200px;
       position: absolute;
-      left: -12px;
+      left: -13px;
       top: 13px;
     }
     .doughnut_container {
-      width: 158%;
+      width: 163%;
       height: 200px;
       position: absolute;
-      left: -62px;
+      left: -66px;
       top: -24px;
     }
   }
@@ -308,6 +340,13 @@
     text-align: center;
     font-size: 0.9em;
     opacity: 0.8;
+  }
+
+  & > .fadeIn {
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    height: 155px;
   }
 }
 

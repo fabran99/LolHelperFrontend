@@ -9,6 +9,7 @@ import { getLoading, getSpell } from "../../helpers/getImgLinks";
 import CustomTooltip from "../utility/CustomTooltip";
 import { secondsToTime } from "../../helpers/general";
 import imgPlaceholder from "../../img/placeholder.svg";
+import RuneList from "./RuneList";
 
 export class ChampImage extends Component {
   constructor(props) {
@@ -89,6 +90,7 @@ export class ChampImage extends Component {
     var champ = this.getSummonerChampInfo();
     var activePlayer = this.getActivePlayerData();
 
+    // Summoners actuales
     var spells = null;
     if (activePlayer && activePlayer.summonerSpells) {
       var spellDesc = [
@@ -104,6 +106,31 @@ export class ChampImage extends Component {
           spells[i] = currentSpell;
         }
       });
+    }
+
+    // Runas actuales
+    var runes = null;
+    if (activePlayer && activePlayer.fullRunes) {
+      let { fullRunes } = activePlayer;
+      runes = {
+        primary: {
+          main: fullRunes.primaryRuneTree.id,
+          perk0: fullRunes.generalRunes[0].id,
+          perk1: fullRunes.generalRunes[1].id,
+          perk2: fullRunes.generalRunes[2].id,
+          perk3: fullRunes.generalRunes[3].id,
+        },
+        secondary: {
+          main: fullRunes.secondaryRuneTree.id,
+          perk4: fullRunes.generalRunes[4].id,
+          perk5: fullRunes.generalRunes[5].id,
+        },
+        perks: {
+          statPerk0: fullRunes.statRunes[0].id,
+          statPerk1: fullRunes.statRunes[1].id,
+          statPerk2: fullRunes.statRunes[2].id,
+        },
+      };
     }
 
     if (!champ) {
@@ -124,7 +151,7 @@ export class ChampImage extends Component {
 
     return (
       <div className="gameInProgressImage">
-        <div className="detailcard detailcard--visible">
+        <div className="detailcard detailcard--squared detailcard--visible">
           <div className="detailcard__border"></div>
           <div
             className={classnames("detailcard__background", {
@@ -204,9 +231,15 @@ export class ChampImage extends Component {
                   onChange={this.handleInput.bind(this)}
                 >
                   <option value="runes">Runas actuales</option>
-                  <option value="champstats">Estadisticas actuales</option>
+                  {/* <option value="champstats">Estadisticas actuales</option> */}
                 </select>
               </div>
+            </div>
+          )}
+
+          {activePlayer && currentOption == "runes" && (
+            <div className="fadeIn">
+              <RuneList runes={runes} />
             </div>
           )}
         </div>

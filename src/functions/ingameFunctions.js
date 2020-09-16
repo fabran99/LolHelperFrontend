@@ -323,7 +323,7 @@ export const getTeamStats = (team, enemyTeam, ingame, teamId, assets) => {
   });
 
   // Eventos
-  var otherTeam = teamId == "teamOne" ? "T1" : "T2";
+  var otherTeam = teamId == "teamOne" ? "T2" : "T1";
 
   if (ingame && ingame.events && ingame.events.Events) {
     ingame.events.Events.forEach((event) => {
@@ -396,13 +396,13 @@ export const getNextDrakeTime = (ingame, allyDrakeKills, enemyDrakeKills) => {
   if (ingame && ingame.events && ingame.events.Events) {
     events = ingame.events.Events.reverse();
   } else {
-    return null;
+    return false;
   }
   var timer = null;
   if (ingame && ingame.gameData && ingame.gameData.gameTime) {
     timer = Math.round(ingame.gameData.gameTime);
   } else {
-    return null;
+    return false;
   }
 
   // Si estoy antes del primer spawn entonces devuelvo lo que falta
@@ -503,7 +503,7 @@ export const getNextCannonwaveTime = (ingame) => {
 // Baron
 
 const FIRST_BARON_SPAWN = minsToSeconds(20, 0);
-const BARON_RESPAWN_TIME = minsToSeconds(7, 0);
+const BARON_RESPAWN_TIME = minsToSeconds(6, 0);
 
 export const getNextBaronTime = (ingame) => {
   var events = [];
@@ -512,14 +512,14 @@ export const getNextBaronTime = (ingame) => {
     events = ingame.events.Events.reverse();
   } else {
     console.log(ingame);
-    return null;
+    return false;
   }
   var timer = null;
   if (ingame && ingame.gameData && ingame.gameData.gameTime) {
     timer = Math.round(ingame.gameData.gameTime);
   } else {
     console.log(2);
-    return null;
+    return false;
   }
 
   // Si estoy antes del primer spawn entonces devuelvo lo que falta

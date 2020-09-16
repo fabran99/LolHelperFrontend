@@ -8,6 +8,7 @@ import { getSquare } from "../../helpers/getImgLinks";
 
 import moment from "moment";
 import classnames from "classnames";
+import MiniLoader from "../utility/MiniLoader";
 
 export class MatchList extends Component {
   getChampInfo(id) {
@@ -29,16 +30,18 @@ export class MatchList extends Component {
 
     return (
       <React.Fragment>
-        {matchlist && matchlist.length > 0 ? (
+        {matchlist && matchlist.length > 0 && (
           <div className="section_title">
             Partidas Recientes <small>(Últimas {matchlist.length})</small>
           </div>
-        ) : (
+        )}
+        {matchlist && matchlist.length == 0 && (
           <div className="match_container_empty">
             No se encontraron partidas recientes
           </div>
         )}
 
+        {!matchlist && <MiniLoader />}
         <div className="match_container">
           {matchlist &&
             matchlist.length > 0 &&

@@ -5,8 +5,7 @@ import CustomTooltip from "../utility/CustomTooltip";
 
 export class ItemList extends Component {
   render() {
-    const { assets, champ, configuration } = this.props;
-    const { laneSelectedForRecommendations: lane } = configuration;
+    const { assets, champ, lane } = this.props;
 
     // Filtro por la linea actual
     var current_lane = lane;
@@ -226,7 +225,6 @@ export class ItemList extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
-  configuration: state.configuration,
 });
 
 export default connect(mapStateToProps, null)(ItemList);

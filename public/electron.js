@@ -54,6 +54,7 @@ var createWindow = () => {
     },
     frame: false,
     resizable: false,
+    show: false,
   });
 
   mainWindow.setMenuBarVisibility(false);
@@ -69,6 +70,11 @@ var createWindow = () => {
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
+
+  mainWindow.on("ready-to-show", () => {
+    mainWindow.show();
+    mainWindow.focus();
+  });
 
   // Cierro programa al cerrar ventana
   mainWindow.on("closed", () => (mainWindow = null));

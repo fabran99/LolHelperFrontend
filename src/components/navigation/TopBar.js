@@ -44,7 +44,7 @@ export class TopBar extends Component {
                   active: isActive("/ingame"),
                 })}
               >
-                InGame
+                Ingame
               </Link>
             )}
             {/* <Link
@@ -61,7 +61,7 @@ export class TopBar extends Component {
                 active: isActive("/configuration"),
               })}
             >
-              Configuración
+              Opciones
             </Link>
           </div>
         )}

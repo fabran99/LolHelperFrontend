@@ -44,7 +44,11 @@ export const playerHasConfirmedPick = (champSelection) => {
     return false;
   }
   // Reviso si es una seleccion automatica como aram
-  if (champSelection.actions.length == 0) {
+  var finalAction = champSelection.actions[champSelection.actions.length - 1];
+  if (
+    champSelection.actions.length == 0 ||
+    (finalAction.length > 0 && finalAction[finalAction.length - 1].completed)
+  ) {
     var playerSelection = champSelection.myTeam.find((el) => {
       return el.championId && el.cellId == currentPlayer.cellId;
     });
@@ -55,7 +59,9 @@ export const playerHasConfirmedPick = (champSelection) => {
 
   var pickActions = champSelection.actions.filter((action) => {
     return action.find(
-      (y) => y.actorCellId == currentPlayer.cellId && y.type == "pick"
+      (y) =>
+        y.actorCellId == currentPlayer.cellId &&
+        (y.type == "pick" || y.type == "vote")
     );
   });
 
@@ -80,7 +86,9 @@ export const getSelectedChamp = (champSelection) => {
 
   var pickActions = champSelection.actions.filter((action) => {
     return action.find(
-      (y) => y.actorCellId == currentPlayer.cellId && y.type == "pick"
+      (y) =>
+        y.actorCellId == currentPlayer.cellId &&
+        (y.type == "pick" || y.type == "vote")
     );
   });
   if (pickActions.length > 0) {
@@ -106,7 +114,9 @@ export const getSelectedChampByCellId = (champSelection, cellId) => {
 
   // Sino reviso normalmente
   var pickActions = champSelection.actions.filter((action) => {
-    return action.find((y) => y.actorCellId == cellId && y.type == "pick");
+    return action.find(
+      (y) => y.actorCellId == cellId && (y.type == "pick" || y.type == "vote")
+    );
   });
 
   if (pickActions.length > 0) {

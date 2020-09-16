@@ -420,7 +420,10 @@ export class PlayerItem extends Component {
               <div className="player__spells">
                 {player_spells.map((spell) => {
                   return (
-                    <div key={spell.id} className="player__spells__img fadeIn">
+                    <div
+                      key={spell.id}
+                      className={`player__spells__img fadeIn ${spell.id}`}
+                    >
                       <img src={getSpell(assets.img_links, spell.id)} />
                     </div>
                   );
@@ -446,7 +449,7 @@ export class PlayerItem extends Component {
                   <div className="tier">
                     {tier} {division}
                   </div>
-                  <div className="wins">{wins} wins (Ranked)</div>
+                  <div className="wins">{wins} wins</div>
                 </div>
               )}
 
