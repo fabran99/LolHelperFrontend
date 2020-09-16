@@ -10,6 +10,7 @@ export class Switch extends Component {
           "switch--checked": checked,
         })}
       >
+        <div className="switch__border"></div>
         <div className="icon">
           <span></span>
           <span></span>

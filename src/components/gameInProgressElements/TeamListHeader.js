@@ -17,6 +17,8 @@ import {
   getNextBaronTime,
 } from "../../functions/ingameFunctions";
 import { isSummonerRift } from "../../functions/gameSession";
+import DrakeStatus from "./DrakeStatus";
+import BaronStatus from "./BaronStatus";
 
 const INGAME_TEAM_NAMES = {
   ORDER: "teamOne",
@@ -40,8 +42,8 @@ export class TeamListHeader extends Component {
 
     // Timers
     var isRift = isSummonerRift(lcuConnector.gameSession);
-    var nextDrakeTime = null;
-    var nextBaronTime = null;
+    var nextDrakeTime = false;
+    var nextBaronTime = false;
     if (isRift) {
       nextDrakeTime = getNextDrakeTime(
         ingame,
@@ -51,12 +53,13 @@ export class TeamListHeader extends Component {
       nextBaronTime = getNextBaronTime(ingame);
     }
 
-    console.log(nextDrakeTime);
-    console.log(nextBaronTime);
-
     return (
       <div className="teams_score_header">
         <div className="score_block">
+          {nextDrakeTime && <DrakeStatus drakeStatus={nextDrakeTime} />}
+          {nextBaronTime != false && (
+            <BaronStatus baronStatus={nextBaronTime} />
+          )}
           <div className="score_row">
             <div className="score_col__big">
               <div className="scores scores--ally">

@@ -142,6 +142,12 @@ export class ChampionList extends Component {
     );
   };
 
+  changeLane = (lane) => {
+    this.setState({ lane }, () => {
+      this.scrollTop();
+    });
+  };
+
   render() {
     const { current_champ, search, order_var, order, lane } = this.state;
     const { assets } = this.props;
@@ -199,6 +205,7 @@ export class ChampionList extends Component {
                     current_champ={current_champ}
                     lockChamp={this.lockChamp}
                     lane={lane}
+                    changeLane={this.changeLane}
                   />
                 );
               })

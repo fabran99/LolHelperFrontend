@@ -10,7 +10,15 @@ import { getWinrate } from "../../helpers/general";
 
 export class ListRow extends Component {
   render() {
-    const { champ, i, lockChamp, assets, current_champ, lane } = this.props;
+    const {
+      champ,
+      i,
+      lockChamp,
+      assets,
+      current_champ,
+      lane,
+      changeLane,
+    } = this.props;
     const { img_links } = assets;
 
     var winrate = getWinrate(champ, lane);
@@ -32,7 +40,7 @@ export class ListRow extends Component {
         onClick={lockChamp.bind(this, champ.championId)}
       >
         <div className="championlist__number">{i + 1}</div>
-        <Link
+        <span
           className="championlist__icon"
           to={`/champion/${champ.championId}`}
         >
@@ -41,21 +49,24 @@ export class ListRow extends Component {
             src={img_placeholder}
           ></img>
           <img src={getSquare(img_links, champ.key)} alt={champ.name} />
-        </Link>
+        </span>
         <div className="championlist__info">
-          <Link
+          <span
             to={`/champion/${champ.championId}`}
             className="championlist__name"
           >
             {champ.name}
-          </Link>
+          </span>
           <div className="championlist__lane">
             {champ.info_by_lane.map((laneinfo) => {
               return (
-                <React.Fragment key={laneinfo.lane}>
+                <span
+                  key={laneinfo.lane}
+                  onClick={changeLane.bind(this, laneinfo.lane)}
+                >
                   <img src={icon_dict[laneinfo.lane.toLowerCase()]} />
                   <span>{laneinfo.lane}</span>
-                </React.Fragment>
+                </span>
               );
             })}
           </div>

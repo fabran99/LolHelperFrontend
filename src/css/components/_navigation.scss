@@ -1,7 +1,7 @@
 // Barra de arriba
 .top_bar {
   width: 100%;
-  background: rgba($content_background, 0.6);
+  background: rgba($row_item_background_active, 0.6);
   color: white;
   position: relative;
   -webkit-app-region: drag;
@@ -19,6 +19,7 @@
     transform: translateY(-50%) translateX(5px);
     position: absolute;
     top: 50%;
+    display: none;
 
     img {
       width: 40px;
@@ -84,7 +85,7 @@
 
   .links {
     position: absolute;
-    left: 3.2em;
+    // left: 3.2em;
     top: 50%;
     transform: translateY(-50%);
     -webkit-app-region: no-drag;
@@ -93,12 +94,12 @@
       display: inline-block;
       font-family: inherit;
       color: white;
-      text-transform: uppercase;
+      // text-transform: uppercase;
       font-size: 0.75em;
       padding: 1em 1em;
       cursor: pointer;
-      color: lighten($gold, 20%);
-      opacity: 0.2;
+      color: white;
+      opacity: 0.4;
 
       &:hover:not(.active) {
         opacity: 0.5;

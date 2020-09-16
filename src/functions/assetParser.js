@@ -66,6 +66,59 @@ export const runesFromChamp = (champ_data, assets, lane) => {
   };
 };
 
+export const runesFromPlayer = (champ_runes, assets) => {
+  var runes = assets.runes;
+  var perks = assets.perks;
+
+  //  Runas primarias
+  var primaryRune = runes.find((item) => {
+    return item.id == champ_runes.primary.main;
+  });
+
+  var primaryPerks = [];
+  for (let i = 0; i < 4; i++) {
+    let selected = champ_runes.primary[`perk${i}`];
+    let current_rune = primaryRune.slots.find((item) => item.id == selected);
+    if (current_rune) {
+      primaryPerks.push(current_rune);
+    }
+  }
+
+  // Runas secundarias
+  var secondaryRune = runes.find((item) => {
+    return item.id == champ_runes.secondary.main;
+  });
+
+  var secondaryPerks = [];
+
+  for (let i = 4; i < 6; i++) {
+    let selected = champ_runes.secondary[`perk${i}`];
+    let current_rune = secondaryRune.slots.find((item) => item.id == selected);
+    if (current_rune) {
+      secondaryPerks.push(current_rune);
+    }
+  }
+
+  // Perks
+  var perkList = [];
+
+  for (let i = 0; i < 3; i++) {
+    let perk_id = champ_runes.perks[`statPerk${i}`];
+    let perk_data = perks.find((x) => x.id == perk_id);
+    if (perk_data) {
+      perkList.push(perk_data);
+    }
+  }
+
+  return {
+    primaryRune,
+    secondaryRune,
+    primaryPerks,
+    secondaryPerks,
+    perkList,
+  };
+};
+
 export const itemsFromChamp = (champ_data, assets, lane) => {
   if (!lane || champ_data.lanes.indexOf(lane) == -1) {
     lane = champ_data.lanes[0];

@@ -11,7 +11,7 @@ import {
 import Matchlist from "./MatchList";
 import PlayerStats from "./PlayerStats";
 import moment from "moment";
-import akaliBg from "../../img/akaliBg.jpg";
+import bg from "../../img/universe-bg.jpg";
 import Tag from "../utility/Tag";
 import CustomTooltip from "../utility/CustomTooltip";
 
@@ -97,7 +97,7 @@ export class PlayerDetailModal extends Component {
         <div className="modal__background" onClick={close}></div>
         <div
           className="modal__content"
-          style={{ backgroundImage: `url(${akaliBg})` }}
+          style={{ backgroundImage: `url(${bg})` }}
         >
           <div className="modal__close" onClick={close}>
             <i className="fas fa-times"></i>

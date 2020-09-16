@@ -1,11 +1,9 @@
 .list_wrapper {
-  height: 470px;
-  padding-right: 1px;
+  height: 524px;
   transition: width 0.2s ease;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  border: 1px solid rgba(67, 94, 129, 0.219);
 
   .empty {
     text-align: center;
@@ -22,6 +20,7 @@
   user-select: none;
   position: relative;
   animation: fadeIn 0.5s ease;
+  // margin-top: 2em;
 
   ::-webkit-scrollbar {
     width: 3px;
@@ -82,12 +81,14 @@
       display: flex;
       flex-wrap: wrap;
       padding: 0.3em 0.5em;
-      border: 1px solid $card_border_color;
       width: 35%;
-      background: $input_background;
       font-family: "Source Sans Pro";
       font-weight: lighter;
-      border: 1px solid rgba(66, 74, 80, 0.301);
+      border: none;
+      background: $row_item_background;
+      transition: all 0.3s ease;
+      // box-shadow: $main_page_shadow;
+      border-radius: 2px;
 
       input {
         background: none;
@@ -108,6 +109,7 @@
     input,
     select {
       font-size: 0.8em;
+      outline: none;
     }
 
     &__icon {
@@ -116,33 +118,39 @@
       text-align: center;
       font-size: 0.85em;
       transform: translateY(3px);
-      color: lighten(rgba($gold, 0.5), 20%);
+      color: lighten(rgba($gold, 0.3), 20%);
     }
 
     &__select {
       width: 23.3%;
-      padding-left: 1em;
+      padding-left: 0.5em;
       select {
-        background: $input_background;
-        font-family: "Source Sans Pro";
-
         width: 100%;
         display: block;
         text-indent: 5px;
-        background: $input_background;
         font-family: "Source Sans Pro";
         color: lighten(rgba($gold, 0.5), 30%);
         border: none;
-        outline: none;
         font-weight: lighter;
         padding: 0.5em 0.5em;
-        border: 1px solid rgba(66, 74, 80, 0.301);
+        outline: none;
+        background: $row_item_background;
+        transition: all 0.3s ease;
+        // box-shadow: $main_page_shadow;
+        border-radius: 1.5px;
 
+        &:hover {
+          cursor: pointer;
+          background: lighten($row_item_background, 1%);
+        }
         option {
-          background: $input_background;
+          background: $row_item_background;
           line-height: 3em;
           border-bottom: 1px solid grey;
           font-weight: lighter;
+          outline: none;
+          display: inline-block;
+          padding: 0.5em;
         }
       }
     }
@@ -155,10 +163,10 @@
     transition: width 0.2s ease;
     padding: 0 0;
     margin-right: 2em;
-    height: 500px;
+    height: 562px;
 
     .detailcard {
-      height: 380px;
+      height: 362px;
       margin-bottom: 1em;
       &__background {
         img {
@@ -196,26 +204,24 @@
   &__element {
     text-decoration: none;
     color: white;
-    margin: 0 auto;
     display: flex;
-    border-bottom: 1px solid $card_border_color;
-    padding: 0.5em;
+    transition: all 0.3s ease;
+    padding: 0.5em 1em;
+    border-radius: 3px;
     align-items: center;
-    border-left: 3px solid transparent;
-    border-right: 3px solid transparent;
     position: relative;
-    border-top: 1px solid transparent;
-
-    &:last-child {
-      border-bottom: none;
-    }
+    background: $row_item_background;
+    transition: all 0.3s ease;
+    box-shadow: $main_page_shadow;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
 
     &:hover {
-      background: rgba($skyblue, 0.02);
+      background: lighten($row_item_background, 1%);
     }
     &--active,
     &--active:hover {
-      background: rgba($skyblue, 0.07);
+      background: $row_item_background_active;
     }
   }
 
@@ -223,79 +229,82 @@
     position: absolute;
     bottom: 0;
     left: 2px;
-    font-size: 0.75em;
+    font-size: 0.65em;
     opacity: 0.2;
+    z-index: 10;
+    padding: 3px;
   }
 
   &__icon {
-    width: 60px;
-    height: 50px;
+    width: 55px;
+    height: 46px;
     display: block;
-    border-radius: 50%;
     position: relative;
-    overflow: hidden;
-    border: 2px solid $gold;
+    border: 2px solid $ranking_border_color;
     background: $content_background;
     transition: all 0.2s ease;
-    box-shadow: 0 0 10px 5px rgba($gold, 0.02);
+    z-index: 9;
+    border-radius: 50%;
+    overflow: hidden;
 
     img {
       @extend %abs_center;
-      width: 110%;
-      opacity: 0.9;
-    }
-
-    &:hover {
-      img {
-        opacity: 1;
-      }
+      width: 108%;
     }
   }
 
   &__info {
     text-align: left;
-    margin: 0 1em;
+    margin: 0 0.5em;
+    padding-left: 0.5em;
     font-weight: 600;
-    width: 170px;
+    width: 190px;
+    transform: translateY(-1px);
   }
 
   &__name {
-    font-size: 1.1em;
-    // text-transform: uppercase;
-    font-weight: bolder;
-    color: rgba(lighten($gold, 25%), 0.8);
+    font-size: 1.03em;
     text-decoration: none;
-    font-family: $bolderFont;
-
-    &:hover {
-      color: rgba(lighten($gold, 25%), 1);
-    }
+    width: 100%;
+    color: rgba(lighten($gold, 25%), 1);
   }
 
   &__lane {
-    color: rgb(71, 72, 75);
-    text-transform: uppercase;
-    font-size: 0.75em;
+    color: rgb(86, 90, 95);
+    // text-transform: uppercase;
+    font-size: 0.72em;
     margin-top: 0.2em;
-    transform: translateY(2px);
+    transform: translateY(-1px);
+
+    & > span {
+      display: inline-block;
+      margin-right: 0.5em;
+      &:hover {
+        span {
+          text-decoration: underline;
+          cursor: pointer;
+          color: rgb(110, 114, 121);
+        }
+      }
+
+      span {
+        display: inline-block;
+        margin-right: 0.3em;
+      }
+    }
 
     img {
       display: inline-block;
       width: 12px;
-      margin-right: 0.1em;
+      margin-right: 0.21em;
       transform: translateY(2px);
-    }
-
-    span {
-      display: inline-block;
-      margin-right: 0.3em;
     }
   }
 
   &__stats {
     display: flex;
     flex-wrap: wrap;
-    width: 570px;
+    width: 560px;
     .barstat {
       display: flex;
       width: 28%;
