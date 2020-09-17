@@ -35,15 +35,33 @@ const {
 const { importBuild } = require("./electron_related/osHandler");
 
 let mainWindow;
+let loadingScreen;
+
 let socket;
 
-var createWindow = () => {
-  console.log(isDev);
-  // Agrego extensiones
-  if (isDev) {
-    addExtensions();
-  }
+const createLoadingScreen = () => {
+  loadingScreen = new BrowserWindow({
+    width: 300,
+    height: 350,
+    frame: false,
+    transparent: true,
+  });
 
+  loadingScreen.setResizable(false);
+  loadingScreen.loadURL(
+    isDev
+      ? `file://${path.join(__dirname, "./loading.html")}`
+      : `file://${path.join(__dirname, "../build/loading.html")}`
+  );
+
+  loadingScreen.on("closed", () => (loadingScreen = null));
+
+  loadingScreen.webContents.on("did-finish-load", () => {
+    loadingScreen.show();
+  });
+};
+
+const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 640,
@@ -69,11 +87,16 @@ var createWindow = () => {
   // Abro herramientas de desarrollo
   if (isDev) {
     mainWindow.webContents.openDevTools();
+    // Agrego extensiones
+    addExtensions();
   }
 
   mainWindow.on("ready-to-show", () => {
+    if (loadingScreen) {
+      loadingScreen.close();
+    }
     mainWindow.show();
-    mainWindow.focus();
+    // mainWindow.focus();
   });
 
   // Cierro programa al cerrar ventana
@@ -81,12 +104,14 @@ var createWindow = () => {
 };
 
 app.on("ready", () => {
+  createLoadingScreen();
   createWindow();
   autoUpdater.checkForUpdates();
   setInterval(() => {
     autoUpdater.checkForUpdates();
   }, 1000 * 60 * 15);
 });
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();

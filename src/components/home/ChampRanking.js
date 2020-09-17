@@ -30,8 +30,8 @@ export class ChampRanking extends Component {
             return (
               <Link
                 key={key}
-                to={`/champions/${ranking[key].championId}`}
                 className="detailcard"
+                to={`/#${champ_data.championId}`}
               >
                 <div className="detailcard__border"></div>
                 <div className="detailcard__background">

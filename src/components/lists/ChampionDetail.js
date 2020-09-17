@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { getLoading } from "../../helpers/getImgLinks";
 import { icon_dict } from "../../helpers/iconDict";
 
-import RuneList from "./RuneList";
+import RuneList from "../champExtraElements/RuneList";
 import ItemList from "./ItemList";
 import CountersList from "../champSelectionElements/CountersList";
 import BarRateStat from "../utility/BarRateStat";
@@ -234,7 +234,7 @@ export class ChampionDetail extends Component {
 
             return (
               <div className="fadeIn" key={lane}>
-                <RuneList champ={champ_data} lane={lane} />
+                <RuneList runeType="home" champ={champ_data} lane={lane} />
               </div>
             );
           })}

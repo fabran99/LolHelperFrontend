@@ -9,7 +9,7 @@
   border-top-left-radius: $border_radius;
   z-index: 100;
   padding: 0.3em 0.5em;
-  height: 37px;
+  height: 33px;
 
   .navbar_logo {
     color: white;
@@ -40,8 +40,8 @@
     -webkit-app-region: no-drag;
 
     div {
-      width: 37px;
-      height: 37px;
+      width: 33px;
+      height: 33px;
       display: inline-block;
       cursor: pointer;
 
@@ -89,7 +89,8 @@
     top: 50%;
     transform: translateY(-50%);
     -webkit-app-region: no-drag;
-    a {
+    a,
+    span {
       text-decoration: none;
       display: inline-block;
       font-family: inherit;

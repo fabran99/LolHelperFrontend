@@ -25,6 +25,12 @@ if (cached_assets) {
     window.localStorage.removeItem("assets");
   } else {
     initialState = { ...initialState, ...JSON.parse(cached_assets) };
+
+    if (initialState.champions) {
+      initialState.champions = initialState.champions.filter(
+        (item) => item.lanes && item.info_by_lane
+      );
+    }
   }
 }
 
@@ -34,6 +40,16 @@ export default (state = initialState, action) => {
       var data = action.payload;
       data.app_version = currentVersion;
       window.localStorage.setItem("assets", JSON.stringify(data));
+
+      data.champions = data.champions.filter(
+        (item) => item.lanes && item.info_by_lane
+      );
+
+      // Si fallo del todo continuo con el state actual
+      if (data.champions.length == 0) {
+        return { ...state, error: true };
+      }
+
       return {
         ...state,
         ...data,

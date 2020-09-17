@@ -9,6 +9,7 @@
 @import "./components/lists";
 @import "./components/runes";
 @import "./components/ingame";
+@import "./components/lobby";
 @import "./components/champSelection";
 @import "./components/gameInProgress";
 @import "./components/modals";
@@ -83,7 +84,7 @@ body {
 
   .app_content {
     width: 100vw;
-    height: calc(100vh - 39px);
+    height: calc(100vh - 32px);
     padding: 1em;
     overflow-y: auto;
     overflow-x: hidden;
@@ -162,6 +163,16 @@ body {
       darken($pink, 15%)
     );
   }
+  &--default {
+    background: lighten($row_item_background, 4%);
+    border-radius: 3px;
+    font-family: "Source Sans Pro";
+    box-shadow: $main_page_shadow;
+
+    svg {
+      color: white;
+    }
+  }
 }
 
 .Toastify {
@@ -178,20 +189,17 @@ body {
   }
   &__button {
     display: inline-block;
-    margin-left: 1em;
+    margin-left: 4.5em;
     button {
       cursor: pointer;
       font-family: inherit;
       border: none;
       color: white;
-      background: linear-gradient(
-        to bottom,
-        $ranking_border_color,
-        darken($ranking_border_color, 2%)
-      );
+      background: lighten($row_item_background_active, 10%);
       padding: 0.5em;
       opacity: 0.9;
       outline: none;
+      border-radius: 3px;
 
       &:hover {
         opacity: 1;

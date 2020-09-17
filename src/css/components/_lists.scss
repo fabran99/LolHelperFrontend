@@ -1,5 +1,5 @@
 .list_wrapper {
-  height: 524px;
+  height: 530px;
   transition: width 0.2s ease;
   overflow-y: auto;
   overflow-x: hidden;
@@ -166,35 +166,25 @@
     height: 562px;
 
     .detailcard {
-      height: 362px;
+      height: 361px;
       margin-bottom: 1em;
-      &__background {
-        img {
-          width: 110%;
+
+      &:hover {
+        .detailcard__overlay {
+          opacity: 0.7;
         }
       }
-    }
-
-    &__lore {
-      margin: 1em auto;
-      width: 100%;
-      border: 1px solid $card_border_color;
-      padding: 0.7em 1em;
-      position: relative;
-      background: rgba(0, 0, 0, 0.2);
-      height: 115px;
-      overflow-y: auto;
-      font-family: "Source Sans Pro";
-      font-size: 0.8em;
-      color: rgba(lighten($gold, 25%), 0.9);
-      text-align: left;
-      box-shadow: 0 0 15px 10px rgba(0, 0, 0, 0.13);
-      line-height: 1.7em;
+      &__background {
+        img {
+          width: 105%;
+        }
+      }
     }
   }
   //   Listado
   &__container {
     width: 73.5%;
+    transform: translateY(-1px);
 
     &--full {
       width: 100%;
