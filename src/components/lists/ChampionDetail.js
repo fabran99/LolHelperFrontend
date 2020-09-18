@@ -5,8 +5,8 @@ import { getLoading } from "../../helpers/getImgLinks";
 import { icon_dict } from "../../helpers/iconDict";
 
 import RuneList from "../champExtraElements/RuneList";
-import ItemList from "./ItemList";
-import CountersList from "../champSelectionElements/CountersList";
+import ItemList from "../champExtraElements/ItemList";
+import CountersList from "../champExtraElements/CountersList";
 import BarRateStat from "../utility/BarRateStat";
 import {
   radarDatasetStylesAvg,
@@ -247,7 +247,7 @@ export class ChampionDetail extends Component {
 
             return (
               <div className="fadeIn" key={lane}>
-                <ItemList champ={champ_data} lane={lane} />
+                <ItemList buildType="home" champ={champ_data} lane={lane} />
               </div>
             );
           })}

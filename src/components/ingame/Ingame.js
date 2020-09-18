@@ -27,7 +27,10 @@ export class Ingame extends Component {
           <Lobby />
         </AppContent>
       );
-    } else if (gameSession.phase == "InProgress") {
+    } else if (
+      gameSession.phase == "InProgress" &&
+      gameSession.map.gameMode != "TFT"
+    ) {
       return (
         <AppContent>
           <GameInProgress />

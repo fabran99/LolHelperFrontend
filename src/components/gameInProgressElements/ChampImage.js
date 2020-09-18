@@ -9,7 +9,7 @@ import { getLoading, getSpell } from "../../helpers/getImgLinks";
 import CustomTooltip from "../utility/CustomTooltip";
 import { secondsToTime } from "../../helpers/general";
 import imgPlaceholder from "../../img/placeholder.svg";
-import RuneList from "./RuneList";
+import RuneList from "../champExtraElements/RuneList";
 
 export class ChampImage extends Component {
   constructor(props) {
@@ -239,7 +239,7 @@ export class ChampImage extends Component {
 
           {activePlayer && currentOption == "runes" && (
             <div className="fadeIn">
-              <RuneList runes={runes} />
+              <RuneList runeType="gameInProgress" runes={runes} />
             </div>
           )}
         </div>

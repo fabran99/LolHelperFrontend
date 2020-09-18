@@ -5,9 +5,9 @@ import { spellsFromChamp } from "../../functions/assetParser";
 import CustomTooltip from "../utility/CustomTooltip";
 import { getCurrentPlayer } from "../../functions/gameSession";
 import { parseBuild } from "../../functions/buildLists";
-import RuneList from "./RuneList";
-import ItemList from "./ItemList";
-import CountersList from "./CountersList";
+import RuneList from "../champExtraElements/RuneList";
+import ItemList from "../champExtraElements/ItemList";
+import CountersList from "../champExtraElements/CountersList";
 import BarRateStat from "../utility/BarRateStat";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { electron } from "../../helpers/outsideObjects";
@@ -472,7 +472,7 @@ export class ChampImage extends Component {
           {/* Runas */}
           {visibleData == "runes" && (
             <div className="fadeIn">
-              <RuneList champ={champ} />
+              <RuneList runeType="champSelection" champ={champ} />
             </div>
           )}
           {/* Counters */}
@@ -484,7 +484,7 @@ export class ChampImage extends Component {
           {/* items */}
           {visibleData == "build" && (
             <div className="fadeIn">
-              <ItemList champ={champ} />
+              <ItemList buildType="champSelection" champ={champ} />
             </div>
           )}
           {/* Winrate, banrate pickrate */}
