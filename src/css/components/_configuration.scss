@@ -1,21 +1,34 @@
 .configuration {
+  z-index: 1000;
   &__section {
     margin-bottom: 2px;
   }
   &__title {
     text-transform: uppercase;
     opacity: 0.98;
-    font-size: 0.95em;
-    color: white;
+    font-size: 0.9em;
+    color: lighten($gold, 25%);
     margin-bottom: 1em;
     border-bottom: 1px solid rgba(255, 255, 255, 0.123);
     padding-bottom: 0.5em;
+    font-family: $bolderFont;
   }
 
   &__element {
     display: flex;
     align-items: center;
     margin-bottom: 1em;
+
+    &--switch {
+      .configuration__element__name {
+        opacity: 0.6;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
 
     &--button {
       display: block;
@@ -26,6 +39,7 @@
       margin-left: 1em;
       color: lighten($gold, 45%);
       opacity: 0.9;
+      transition: all 0.2s ease;
 
       &--block {
         display: block;

@@ -361,7 +361,7 @@
         padding: 0.5em 0;
 
         border-radius: 3px;
-        background: $row_item_background;
+        background: rgba(darken($row_item_background, 1%), 0.7);
         box-shadow: $main_page_shadow;
       }
 

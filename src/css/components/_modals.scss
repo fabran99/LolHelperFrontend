@@ -8,7 +8,7 @@
   z-index: 100;
 
   &--forward {
-    z-index: 1000000;
+    z-index: 1000;
     top: 0;
     height: 100vh;
   }
@@ -31,6 +31,7 @@
     height: 500px;
     background-size: cover;
     overflow-y: auto;
+    z-index: 100;
 
     &_data {
       padding: 1em;
@@ -62,7 +63,7 @@
     border-bottom: 2px solid rgba(0, 0, 0, 0.277);
     font-size: 0.9em;
     text-indent: 5px;
-    color: lighten(rgba($gold, 0.5), 30%);
+    color: $text_color;
     font-weight: lighter;
   }
 }
@@ -250,7 +251,7 @@
       position: absolute;
       left: 8px;
       top: 50%;
-      transform: translateY(-53%);
+      transform: translateY(-50%);
       height: 35px;
       width: 35px;
       overflow: hidden;
@@ -286,7 +287,7 @@
         transform: translateY(2px);
 
         &__value {
-          color: lighten(rgba($skyblue, 0.7), 12%);
+          color: lighten($skyblue, 12%);
           font-weight: bolder;
           text-transform: uppercase;
           font-size: 0.9em;

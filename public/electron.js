@@ -39,10 +39,25 @@ let loadingScreen;
 
 let socket;
 
+// Evito multiples instancias
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+}
+
+// Pantalla de carga
 const createLoadingScreen = () => {
   loadingScreen = new BrowserWindow({
-    width: 300,
-    height: 350,
+    width: 500,
+    height: 300,
     frame: false,
     transparent: true,
   });
@@ -57,10 +72,12 @@ const createLoadingScreen = () => {
   loadingScreen.on("closed", () => (loadingScreen = null));
 
   loadingScreen.webContents.on("did-finish-load", () => {
+    loadingScreen.focus();
     loadingScreen.show();
   });
 };
 
+// Ventana principal
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1024,
@@ -103,8 +120,11 @@ const createWindow = () => {
   mainWindow.on("closed", () => (mainWindow = null));
 };
 
+// Se ejecuta cuando inicia la app
 app.on("ready", () => {
+  // if (!isDev) {
   createLoadingScreen();
+  // }
   createWindow();
   autoUpdater.checkForUpdates();
   setInterval(() => {

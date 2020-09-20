@@ -77,6 +77,7 @@ body {
     z-index: -1;
     left: 0;
     opacity: 0.5;
+    display: none;
   }
 }
 .app_wrapper {
@@ -92,32 +93,6 @@ body {
     z-index: 15;
     animation: fadeIn 0.4s ease;
     // background: rgba(#161e29, 0.2);
-  }
-}
-
-.loading_container {
-  width: 100vw;
-  height: 100vh;
-
-  .loading {
-    @extend %abs_center;
-    color: white;
-    font-size: 1.5em;
-    color: lighten($gold, 20%);
-    text-align: center;
-    text-transform: uppercase;
-    font-family: $bolderFont;
-
-    &__circle {
-      animation: loading 2s linear infinite;
-      border: 2px solid lighten($gold, 10%);
-      @extend %abs_center;
-      background: rgba(0, 0, 0, 0.11);
-      width: 250px;
-      height: 250px;
-      border-radius: 50%;
-      border-bottom-color: rgba($gold, 0.2);
-    }
   }
 }
 
@@ -189,7 +164,7 @@ body {
   }
   &__button {
     display: inline-block;
-    margin-left: 4.5em;
+    margin-left: 1.5em;
     button {
       cursor: pointer;
       font-family: inherit;

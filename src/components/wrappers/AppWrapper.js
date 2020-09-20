@@ -262,15 +262,30 @@ export class AppWrapper extends Component {
   render() {
     const { assets, lcuConnector, configuration } = this.props;
     if (!assets.champions) {
-      return <Loading />;
+      return (
+        <React.Fragment>
+          {configuration.configurationVisible && <Configuration />}
+          <Loading />
+        </React.Fragment>
+      );
     }
 
     var currentPhase = lcuConnector.gameSession.phase;
 
+    var isNotTFT = true;
+
+    try {
+      if (lcuConnector.gameSession.map.gameMode == "TFT") {
+        isNotTFT = false;
+      }
+    } catch {
+      isNotTFT = true;
+    }
+
     return (
       <React.Fragment>
         {configuration.configurationVisible && <Configuration />}
-        {currentPhase == "InProgress" && lcuConnector.connected && (
+        {currentPhase == "InProgress" && lcuConnector.connected && isNotTFT && (
           <IngameHandler />
         )}
         <ConfigurationHandler />

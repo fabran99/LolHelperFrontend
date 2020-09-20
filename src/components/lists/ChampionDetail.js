@@ -7,16 +7,11 @@ import { icon_dict } from "../../helpers/iconDict";
 import RuneList from "../champExtraElements/RuneList";
 import ItemList from "../champExtraElements/ItemList";
 import CountersList from "../champExtraElements/CountersList";
-import BarRateStat from "../utility/BarRateStat";
-import {
-  radarDatasetStylesAvg,
-  radarOptions,
-  radarDatasetStylesSelected,
-  doughnutOptions,
-  doughnutDatasetStyles,
-} from "../../helpers/chartDefaults";
-import { getWinrate } from "../../helpers/general";
-import { Radar, Doughnut } from "react-chartjs-2";
+import Phases from "../champExtraElements/Phases";
+import SkillOrder from "../champExtraElements/SkillOrder";
+import RadarStats from "../champExtraElements/RadarStats";
+import DoughnutStats from "../champExtraElements/DoughnutStats";
+import WinBanPickrate from "../champExtraElements/WinBanPickrate";
 
 export class ChampionDetail extends Component {
   constructor(props) {
@@ -47,6 +42,8 @@ export class ChampionDetail extends Component {
       "champstats",
       "damagedistribution",
       "counters",
+      "gamephases",
+      "skillorder",
     ];
     if (general_elements.indexOf(visible_element) == -1) {
       if (visible_element.indexOf("Runas") != -1) {
@@ -73,98 +70,11 @@ export class ChampionDetail extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  // estadisticas
-  getRadarAvg() {
-    const { assets } = this.props;
-    const radarStats = ["kills", "deaths", "assists", "farmPerMin", "damage"];
-
-    var stats = assets.radar_stats.find((x) => x.elo == "high_elo");
-
-    var maxRadar = radarStats.map((stat) => {
-      return stats[stat].max;
-    });
-
-    var avgRadar = radarStats.map((stat, i) => {
-      return Math.round((stats[stat].mean * 100) / maxRadar[i]);
-    });
-    return avgRadar;
-  }
-
-  getStatsAspercent(champ) {
-    const { assets } = this.props;
-    const radarStats = ["kills", "deaths", "assists", "farmPerMin", "damage"];
-
-    var stats = assets.radar_stats.find((x) => x.elo == "high_elo");
-    var maxRadar = radarStats.map((stat) => {
-      return stats[stat].max;
-    });
-
-    var asPercent = radarStats.map((stat, i) => {
-      var max = maxRadar[i];
-      return (champ[stat] * 100) / max;
-    });
-    return asPercent;
-  }
-
   render() {
     const { champ_data, assets } = this.props;
     const { img_links } = assets;
 
     const { visible_element } = this.state;
-
-    // Estadisticas
-    var charts_states = ["champanalytics", "damagedistribution"];
-    if (charts_states.indexOf(visible_element) != -1) {
-      const radarLabels = ["Kills", "Deaths", "Assists", "CS/Min", "Damage"];
-
-      var radarDatasets = [
-        {
-          data: this.getRadarAvg(),
-          label: "Promedio",
-          ...radarDatasetStylesAvg,
-        },
-        {
-          data: this.getStatsAspercent(champ_data),
-          label: champ_data.name,
-          ...radarDatasetStylesSelected,
-        },
-      ];
-
-      var doughnutDataset = {
-        datasets: [
-          {
-            data: [
-              champ_data.damageTypes.physical,
-              champ_data.damageTypes.magic,
-              champ_data.damageTypes.true,
-            ],
-            ...doughnutDatasetStyles,
-          },
-        ],
-        labels: ["AD", "AP", "True"],
-      };
-
-      var radarData = {
-        labels: radarLabels,
-        datasets: radarDatasets,
-      };
-
-      var optionsRadar = {
-        ...radarOptions,
-        legend: {
-          display: false,
-        },
-      };
-    }
-
-    var winrate = getWinrate(champ_data, "");
-    const winRateContent = () => {
-      return (
-        <span>
-          Winrate <small>(Global)</small>
-        </span>
-      );
-    };
 
     return (
       <div className="championdetail">
@@ -208,6 +118,8 @@ export class ChampionDetail extends Component {
               <option value="champanalytics">Análisis del campeón</option>
               <option value="counters">Counters</option>
               <option value="damagedistribution">Distribución de daño</option>
+              <option value="gamephases">Winrate por minuto</option>
+              <option value="skillorder">Orden de habilidades</option>
 
               {champ_data.lanes.map((lane) => {
                 return (
@@ -255,19 +167,7 @@ export class ChampionDetail extends Component {
           {/* Winrate, banrate pickrate */}
           {visible_element == "champstats" && (
             <div className="fadeIn">
-              <div className="stats">
-                <BarRateStat value={winrate} title={winRateContent()} />
-                <BarRateStat
-                  value={champ_data.banRate}
-                  title={"Banrate"}
-                  color="pink"
-                />
-                <BarRateStat
-                  value={champ_data.pickRate}
-                  title={"Pickrate"}
-                  color="green"
-                />
-              </div>
+              <WinBanPickrate champ={champ_data} />
             </div>
           )}
 
@@ -281,21 +181,25 @@ export class ChampionDetail extends Component {
           {/* Analytics */}
           {visible_element == "champanalytics" && (
             <div className="fadeIn">
-              <div className="chart_container">
-                <div className="radar_container">
-                  <Radar data={radarData} options={optionsRadar} />
-                </div>
-              </div>
+              <RadarStats champ={champ_data} />
             </div>
           )}
           {/* damage distribution */}
           {visible_element == "damagedistribution" && (
             <div className="fadeIn">
-              <div className="chart_container">
-                <div className="doughnut_container">
-                  <Doughnut options={doughnutOptions} data={doughnutDataset} />
-                </div>
-              </div>
+              <DoughnutStats champ={champ_data} />
+            </div>
+          )}
+          {/* Phases del juego */}
+          {visible_element == "gamephases" && (
+            <div className="fadeIn">
+              <Phases champ={champ_data} />
+            </div>
+          )}
+          {/* Orden de skills */}
+          {visible_element == "skillorder" && (
+            <div className="fadeIn">
+              <SkillOrder champ={champ_data} />
             </div>
           )}
         </div>

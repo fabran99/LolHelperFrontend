@@ -56,7 +56,7 @@
   position: relative;
   display: block;
   overflow: hidden;
-  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.35);
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.45);
   // border: 1px solid $card_border_color;
   background: black;
   margin: 0 auto;
@@ -472,6 +472,10 @@
       background: $pink;
       background: linear-gradient(to right, $pink, darken($pink, 10%));
     }
+    &--orange {
+      background: $yellow;
+      background: linear-gradient(to right, $yellow, darken($yellow, 10%));
+    }
     &--green {
       background: $green;
       background: linear-gradient(to right, $green, darken($green, 10%));
@@ -793,5 +797,148 @@
 
   &:not(:last-child) {
     margin-right: 5px;
+  }
+}
+
+// Phases
+
+.phases {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+
+  &__title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: $skyblue;
+    text-align: left;
+    padding: 0.5em;
+    display: none;
+  }
+}
+
+// Skill Order
+.skill_order {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 1em;
+
+  $button_margin: 1.1em;
+
+  .early {
+    margin-bottom: 1.5em;
+
+    .level {
+      display: inline-block;
+
+      &:not(:last-child) {
+        margin-right: $button_margin;
+
+        .button {
+          &:after {
+            content: ">";
+            position: absolute;
+            right: -11px;
+            opacity: 0.7;
+            top: 50%;
+            font-size: 0.7em;
+            transform: translateY(-50%) scaleY(2);
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  .text {
+    font-size: 0.8em;
+    margin-top: 0.5em;
+    color: rgb(209, 209, 209);
+  }
+
+  .button {
+    padding: 0.5em 0.8em;
+    border-radius: 3px;
+    background: $row_item_background_active;
+    box-shadow: $main_page_shadow;
+    color: white;
+    font-size: 0.9em;
+    opacity: 0.8;
+    font-weight: bolder;
+    position: relative;
+
+    &--Q {
+      color: lighten($pink, 5%);
+    }
+    &--W {
+      color: lighten($skyblue, 5%);
+    }
+    &--E {
+      color: lighten($green, 5%);
+    }
+    &--R {
+      color: lighten($orange, 5%);
+    }
+  }
+
+  .max {
+    .button {
+      display: inline-block;
+      &:not(:last-child) {
+        margin-right: $button_margin;
+        &:after {
+          content: ">";
+          position: absolute;
+          right: -11px;
+          opacity: 0.7;
+          top: 50%;
+          font-size: 0.7em;
+          transform: translateY(-50%) scaleY(2);
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Loading screen
+.loading_container {
+  position: fixed;
+  top: 34px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 34px);
+  background: $dark_background_loading;
+  color: white;
+  font-family: "Montserrat";
+  letter-spacing: 3px;
+  font-size: 1.1em;
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -65%);
+    width: 210px;
+    animation: bardAnimation 1.8s ease infinite;
+  }
+
+  .text {
+    text-align: center;
+    top: 78%;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    position: absolute;
+    animation: fadeText 1s ease infinite;
+    width: 100%;
+    padding: 0 1em;
+    transform: none;
+    text-align: center;
+    left: 0;
   }
 }

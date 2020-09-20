@@ -45,6 +45,19 @@ export class Configuration extends Component {
       });
   }
 
+  escFunction(event) {
+    if (event.keyCode === 27) {
+      this.closeModal();
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this.escFunction.bind(this), false);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.escFunction.bind(this), false);
+  }
+
   render() {
     const { connection, configuration } = this.props;
 
@@ -77,12 +90,13 @@ export class Configuration extends Component {
           <div className="modal__content_data">
             <div className="configuration">
               <div className="row">
+                {/* Automaticas */}
                 <div className="col-6">
                   <div className="configuration__section">
                     <div className="configuration__title">
                       Acciones automáticas
                     </div>
-                    <div className="configuration__element">
+                    <label className="configuration__element configuration__element--switch">
                       <Switch
                         name="autoNavigate"
                         checked={autoNavigate}
@@ -92,8 +106,8 @@ export class Configuration extends Component {
                         Mostrar pestaña Ingame al iniciar la selección o la
                         partida.
                       </div>
-                    </div>
-                    <div className="configuration__element">
+                    </label>
+                    <label className="configuration__element configuration__element--switch">
                       <Switch
                         name="autoImportRunes"
                         checked={autoImportRunes}
@@ -102,8 +116,8 @@ export class Configuration extends Component {
                       <div className="configuration__element__name">
                         Importar runas automáticamente al confirmar campeón.
                       </div>
-                    </div>
-                    <div className="configuration__element">
+                    </label>
+                    <label className="configuration__element configuration__element--switch">
                       <Switch
                         name="autoImportBuild"
                         checked={autoImportBuild}
@@ -112,8 +126,8 @@ export class Configuration extends Component {
                       <div className="configuration__element__name">
                         Importar build automáticamente al confirmar campeón.
                       </div>
-                    </div>
-                    <div className="configuration__element">
+                    </label>
+                    <label className="configuration__element configuration__element--switch">
                       <Switch
                         name="autoAcceptMatch"
                         checked={autoAcceptMatch}
@@ -122,9 +136,11 @@ export class Configuration extends Component {
                       <div className="configuration__element__name">
                         Aceptar partida automáticamente.
                       </div>
-                    </div>
+                    </label>
                   </div>
                 </div>
+
+                {/* Manuales */}
                 <div className="col-6">
                   {connection && (
                     <div className="configuration__section">
@@ -133,8 +149,7 @@ export class Configuration extends Component {
                       </div>
                       <div className="configuration__element configuration__element--button">
                         <div className="configuration__element__name configuration__element__name--block ">
-                          Reiniciar interfaz del launcher (para cuando se
-                          cuelga)
+                          Resolucion de problemas
                         </div>
 
                         <button
@@ -144,7 +159,7 @@ export class Configuration extends Component {
                           onClick={this.restartUx.bind(this)}
                         >
                           <div className="configuration__button__border"></div>
-                          Aplicar
+                          Refrescar interfaz del launcher
                         </button>
                       </div>
                     </div>

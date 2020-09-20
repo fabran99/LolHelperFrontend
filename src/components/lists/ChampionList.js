@@ -192,6 +192,7 @@ export class ChampionList extends Component {
             handleInput={this.handleInput}
             lane={lane}
             order={order}
+            changeLane={this.changeLane}
           />
           {/* Lista */}
 

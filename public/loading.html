@@ -8,8 +8,20 @@
   </head>
   <body>
     <div class="loading_container">
-      <div class="circle"></div>
-      <div class="text">Bard App</div>
+      <div class="text" id="text">Cargando...</div>
+      <img src="./logoLoading.png" alt="" />
     </div>
+
+    <script>
+      var texts = [
+        // "Buscando campanas...",
+        // "Cazando meeps...",
+        "Cargando...",
+        // "Iniciando...",
+        // "Campaneando...",
+      ];
+      var current_text = texts[Math.floor(Math.random() * texts.length)];
+      document.getElementById("text").innerHTML = current_text;
+    </script>
   </body>
 </html>

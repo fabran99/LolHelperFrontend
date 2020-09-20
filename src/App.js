@@ -30,7 +30,7 @@ export class App extends Component {
         <Router>
           <div className="App">
             <ToastContainer />
-            <Particles params={particles_config} />
+            {/* <Particles params={particles_config} /> */}
             <TopBar />
 
             <AppWrapper>

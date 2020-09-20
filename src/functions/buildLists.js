@@ -7,7 +7,7 @@ export const parseBuild = (champ) => {
 
   champ.info_by_lane.forEach((lanedata) => {
     var buildObject = {
-      title: `Lol Helper ${champ.name} (${lanedata.lane})`,
+      title: `Bard App: ${champ.name} (${lanedata.lane})`,
       champion: champ.key,
       type: "custom",
       map: "any",
