@@ -18,6 +18,7 @@ import { electron } from "../../helpers/outsideObjects";
 import { toast } from "react-toastify";
 import IngameHandler from "./IngameHandler";
 import ConfigurationHandler from "./ConfigurationHandler";
+import Configuration from "../configuration/Configuration";
 
 export class AppWrapper extends Component {
   constructor(props) {
@@ -152,7 +153,7 @@ export class AppWrapper extends Component {
         </div>
       );
     };
-    this.toastUpdate = toast.info(UpdateComponent, {
+    this.toastUpdate = toast(UpdateComponent, {
       position: "bottom-left",
       autoClose: false,
       closeOnClick: false,
@@ -259,16 +260,32 @@ export class AppWrapper extends Component {
   }
 
   render() {
-    const { assets, lcuConnector } = this.props;
+    const { assets, lcuConnector, configuration } = this.props;
     if (!assets.champions) {
-      return <Loading />;
+      return (
+        <React.Fragment>
+          {configuration.configurationVisible && <Configuration />}
+          <Loading />
+        </React.Fragment>
+      );
     }
 
     var currentPhase = lcuConnector.gameSession.phase;
 
+    var isNotTFT = true;
+
+    try {
+      if (lcuConnector.gameSession.map.gameMode == "TFT") {
+        isNotTFT = false;
+      }
+    } catch {
+      isNotTFT = true;
+    }
+
     return (
       <React.Fragment>
-        {currentPhase == "InProgress" && lcuConnector.connected && (
+        {configuration.configurationVisible && <Configuration />}
+        {currentPhase == "InProgress" && lcuConnector.connected && isNotTFT && (
           <IngameHandler />
         )}
         <ConfigurationHandler />

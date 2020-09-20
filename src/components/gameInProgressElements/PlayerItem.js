@@ -380,13 +380,13 @@ export class PlayerItem extends Component {
                   })}
                 />
               )}
-              {player && player.level && (
-                <div className="player__level">{player.level}</div>
-              )}
             </div>
           </CustomTooltip>
 
           <div className="player__data" onClick={this.openModal.bind(this)}>
+            {player && player.level && (
+              <div className="player__level">{player.level}</div>
+            )}
             <div className="player__spells">
               {player_spells.map((spell) => {
                 return (

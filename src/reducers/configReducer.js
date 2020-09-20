@@ -16,7 +16,8 @@ var initialState = {
   dontAutoImportBuildNow: false,
   champSelectionVisibleData: "runes",
   savingBuild: false,
-  // Version
+  // Configuration modal
+  configurationVisible: false,
 };
 
 var cached_config = window.localStorage.getItem("config");
@@ -39,6 +40,7 @@ if (cached_config) {
 
   initialState = { ...initialState, ...currentConfig };
   initialState.autoAskLane = "";
+  initialState.configurationVisible = false;
 } else {
   window.localStorage.setItem("config", JSON.stringify(initialState));
 }

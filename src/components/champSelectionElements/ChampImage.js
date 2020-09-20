@@ -5,25 +5,18 @@ import { spellsFromChamp } from "../../functions/assetParser";
 import CustomTooltip from "../utility/CustomTooltip";
 import { getCurrentPlayer } from "../../functions/gameSession";
 import { parseBuild } from "../../functions/buildLists";
-import RuneList from "./RuneList";
-import ItemList from "./ItemList";
-import CountersList from "./CountersList";
-import BarRateStat from "../utility/BarRateStat";
+import RuneList from "../champExtraElements/RuneList";
+import Phases from "../champExtraElements/Phases";
+import ItemList from "../champExtraElements/ItemList";
+import SkillOrder from "../champExtraElements/SkillOrder";
+import CountersList from "../champExtraElements/CountersList";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { electron } from "../../helpers/outsideObjects";
 import { updateConfig } from "../../actions/configActions";
-import {
-  radarDatasetStylesAvg,
-  radarOptions,
-  radarDatasetStylesSelected,
-  doughnutOptions,
-  doughnutDatasetStyles,
-} from "../../helpers/chartDefaults";
 import classnames from "classnames";
-
-import { getWinrate } from "../../helpers/general";
-
-import { Radar, Doughnut } from "react-chartjs-2";
+import RadarStats from "../champExtraElements/RadarStats";
+import DoughnutStats from "../champExtraElements/DoughnutStats";
+import WinBanPickrate from "../champExtraElements/WinBanPickrate";
 
 export class ChampImage extends Component {
   constructor(props) {
@@ -188,39 +181,6 @@ export class ChampImage extends Component {
     return getCurrentPlayer(champSelect);
   }
 
-  // estadisticas
-  getRadarAvg() {
-    const { assets } = this.props;
-    const radarStats = ["kills", "deaths", "assists", "farmPerMin", "damage"];
-
-    var stats = assets.radar_stats.find((x) => x.elo == "high_elo");
-
-    var maxRadar = radarStats.map((stat) => {
-      return stats[stat].max;
-    });
-
-    var avgRadar = radarStats.map((stat, i) => {
-      return Math.round((stats[stat].mean * 100) / maxRadar[i]);
-    });
-    return avgRadar;
-  }
-
-  getStatsAspercent(champ) {
-    const { assets, configuration } = this.props;
-    const radarStats = ["kills", "deaths", "assists", "farmPerMin", "damage"];
-
-    var stats = assets.radar_stats.find((x) => x.elo == "high_elo");
-    var maxRadar = radarStats.map((stat) => {
-      return stats[stat].max;
-    });
-
-    var asPercent = radarStats.map((stat, i) => {
-      var max = maxRadar[i];
-      return (champ[stat] * 100) / max;
-    });
-    return asPercent;
-  }
-
   render() {
     const { champ, assets, configuration } = this.props;
     const {
@@ -246,60 +206,6 @@ export class ChampImage extends Component {
         </div>
       );
     }
-
-    // Estadisticas
-    var charts_states = ["champanalytics", "damagedistribution"];
-    if (charts_states.indexOf(visibleData) != -1) {
-      const radarLabels = ["Kills", "Deaths", "Assists", "CS/Min", "Damage"];
-
-      var radarDatasets = [
-        {
-          data: this.getRadarAvg(),
-          label: "Promedio",
-          ...radarDatasetStylesAvg,
-        },
-        {
-          data: this.getStatsAspercent(champ),
-          label: "Campeón actual",
-          ...radarDatasetStylesSelected,
-        },
-      ];
-
-      var doughnutDataset = {
-        datasets: [
-          {
-            data: [
-              champ.damageTypes.physical,
-              champ.damageTypes.magic,
-              champ.damageTypes.true,
-            ],
-            ...doughnutDatasetStyles,
-          },
-        ],
-        labels: ["AD", "AP", "True"],
-      };
-
-      var radarData = {
-        labels: radarLabels,
-        datasets: radarDatasets,
-      };
-
-      var optionsRadar = {
-        ...radarOptions,
-        legend: {
-          display: false,
-        },
-      };
-    }
-
-    var winrate = getWinrate(champ, lane);
-    const winRateContent = () => {
-      return (
-        <span>
-          Winrate <small>({lane})</small>
-        </span>
-      );
-    };
 
     // Runas
     var noAutoRunes = configuration.dontAutoImportRunesNow;
@@ -350,7 +256,7 @@ export class ChampImage extends Component {
 
     return (
       <div className="selectChampImage">
-        <div className="detailcard detailcard--visible">
+        <div className="detailcard detailcard--squared detailcard--visible">
           <div className="detailcard__laneselector">
             <div className="detailcard__laneselector__border"></div>
             <select
@@ -465,14 +371,16 @@ export class ChampImage extends Component {
               <option value="build">Build</option>
               <option value="counters">Counters</option>
               <option value="champstats">Estadísticas del campeón</option>
+              <option value="skillorder">Orden de habilidades</option>
               <option value="champanalytics">Análisis del campeón</option>
+              <option value="gamephases">Winrate por minuto</option>
               <option value="damagedistribution">Distribución de daño</option>
             </select>
           </div>
           {/* Runas */}
           {visibleData == "runes" && (
             <div className="fadeIn">
-              <RuneList champ={champ} />
+              <RuneList runeType="champSelection" champ={champ} />
             </div>
           )}
           {/* Counters */}
@@ -484,46 +392,39 @@ export class ChampImage extends Component {
           {/* items */}
           {visibleData == "build" && (
             <div className="fadeIn">
-              <ItemList champ={champ} />
+              <ItemList buildType="champSelection" champ={champ} />
+            </div>
+          )}
+          {/* Phases */}
+          {visibleData == "gamephases" && (
+            <div className="fadeIn">
+              <Phases champ={champ} />
             </div>
           )}
           {/* Winrate, banrate pickrate */}
           {visibleData == "champstats" && (
             <div className="fadeIn">
-              <div className="stats">
-                <BarRateStat value={winrate} title={winRateContent()} />
-                <BarRateStat
-                  value={champ.banRate}
-                  title={"Banrate"}
-                  color="pink"
-                />
-                <BarRateStat
-                  value={champ.pickRate}
-                  title={"Pickrate"}
-                  color="green"
-                />
-              </div>
+              <WinBanPickrate champ={champ} useConfig />
             </div>
           )}
 
           {/* Analytics */}
           {visibleData == "champanalytics" && (
             <div className="fadeIn">
-              <div className="chart_container">
-                <div className="radar_container">
-                  <Radar data={radarData} options={optionsRadar} />
-                </div>
-              </div>
+              <RadarStats champ={champ} />
             </div>
           )}
           {/* damage distribution */}
           {visibleData == "damagedistribution" && (
             <div className="fadeIn">
-              <div className="chart_container">
-                <div className="doughnut_container">
-                  <Doughnut options={doughnutOptions} data={doughnutDataset} />
-                </div>
-              </div>
+              <DoughnutStats champ={champ} />
+            </div>
+          )}
+
+          {/* Orden de skills */}
+          {visibleData == "skillorder" && (
+            <div className="fadeIn">
+              <SkillOrder champ={champ} />
             </div>
           )}
         </div>

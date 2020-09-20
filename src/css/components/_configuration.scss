@@ -1,33 +1,58 @@
 .configuration {
+  z-index: 1000;
   &__section {
     margin-bottom: 2px;
   }
   &__title {
     text-transform: uppercase;
-    font-weight: bolder;
-    color: lighten($gold, 20%);
-    font-size: 1.1em;
+    opacity: 0.98;
+    font-size: 0.9em;
+    color: lighten($gold, 25%);
     margin-bottom: 1em;
     border-bottom: 1px solid rgba(255, 255, 255, 0.123);
     padding-bottom: 0.5em;
+    font-family: $bolderFont;
   }
 
   &__element {
     display: flex;
     align-items: center;
     margin-bottom: 1em;
+
+    &--switch {
+      .configuration__element__name {
+        opacity: 0.6;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    &--button {
+      display: block;
+    }
     &__name {
       display: inline-block;
-      font-size: 0.85em;
+      font-size: 0.75em;
       margin-left: 1em;
-      color: lighten($gold, 25%);
+      color: lighten($gold, 45%);
       opacity: 0.9;
+      transition: all 0.2s ease;
+
+      &--block {
+        display: block;
+        width: 100%;
+        margin-left: 0;
+      }
     }
   }
 
   &__button {
     border: none;
     display: inline-block;
+    margin-top: 1em;
     text-align: center;
     cursor: pointer;
     z-index: 10;

@@ -9,9 +9,14 @@ export class Home extends Component {
     const { assets } = this.props;
     return (
       <AppContent>
-        <ChampRanking />
-        <div className="header_text mt-2">Campeones</div>
-        <ChampionList list={assets.champions} />
+        <div className="home">
+          <ChampRanking />
+          <div className="header_text header_text--low_margin d-none">
+            Campeones
+          </div>
+          <div className="home__separator"></div>
+          {assets.champions && <ChampionList list={assets.champions} />}
+        </div>
       </AppContent>
     );
   }

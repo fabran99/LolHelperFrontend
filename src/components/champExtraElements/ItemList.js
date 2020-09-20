@@ -5,18 +5,37 @@ import CustomTooltip from "../utility/CustomTooltip";
 
 export class ItemList extends Component {
   render() {
-    const { assets, champ, configuration } = this.props;
-    const { laneSelectedForRecommendations: lane } = configuration;
+    const { assets, champ, configuration, buildType } = this.props;
+    var current_champ_laneinfo = null;
 
-    // Filtro por la linea actual
-    var current_lane = lane;
+    if (buildType == "champSelection") {
+      const { laneSelectedForRecommendations: lane } = configuration;
 
-    if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
-      current_lane = champ.lanes[0];
+      // Filtro por la linea actual
+      var current_lane = lane;
+
+      if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
+        current_lane = champ.lanes[0];
+      }
+      current_champ_laneinfo = champ.info_by_lane.find(
+        (el) => el.lane == current_lane
+      );
+    } else if (buildType == "home") {
+      // Filtro por la linea actual
+      var current_lane = this.props.lane;
+
+      if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
+        current_lane = champ.lanes[0];
+      }
+      current_champ_laneinfo = champ.info_by_lane.find(
+        (el) => el.lane == current_lane
+      );
     }
-    var current_champ_laneinfo = champ.info_by_lane.find(
-      (el) => el.lane == current_lane
-    );
+
+    if (!current_champ_laneinfo) {
+      return null;
+    }
+
     return (
       <div className="build">
         <div className="build__section">
@@ -24,6 +43,12 @@ export class ItemList extends Component {
           <div className="build__list">
             {current_champ_laneinfo.build.items.map((item, i) => {
               var itemInfo = assets.items.find((x) => x.id == item);
+              var category = "";
+
+              if (itemInfo.tags && itemInfo.tags.length > 0) {
+                category = itemInfo.tags[0];
+              }
+
               return (
                 <CustomTooltip
                   key={item}
@@ -48,7 +73,13 @@ export class ItemList extends Component {
                   }
                 >
                   <div className="build__item">
-                    <div className="build__item__container">
+                    <div className={`build__item__container ${category}`}>
+                      <img
+                        src={getItem(assets.img_links, itemInfo.id)}
+                        alt=""
+                      />
+                    </div>
+                    <div className="build__item__background">
                       <img
                         src={getItem(assets.img_links, itemInfo.id)}
                         alt=""
@@ -91,6 +122,12 @@ export class ItemList extends Component {
                 >
                   <div className="build__item">
                     <div className="build__item__container">
+                      <img
+                        src={getItem(assets.img_links, itemInfo.id)}
+                        alt=""
+                      />
+                    </div>
+                    <div className="build__item__background">
                       <img
                         src={getItem(assets.img_links, itemInfo.id)}
                         alt=""
@@ -146,7 +183,13 @@ export class ItemList extends Component {
                         src={getItem(assets.img_links, itemInfo.id)}
                         alt=""
                       />
-                    </div>{" "}
+                    </div>
+                    <div className="build__item__background">
+                      <img
+                        src={getItem(assets.img_links, itemInfo.id)}
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </CustomTooltip>
               );
@@ -182,7 +225,13 @@ export class ItemList extends Component {
                         src={getItem(assets.img_links, itemInfo.id)}
                         alt=""
                       />
-                    </div>{" "}
+                    </div>
+                    <div className="build__item__background">
+                      <img
+                        src={getItem(assets.img_links, itemInfo.id)}
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </CustomTooltip>
               );

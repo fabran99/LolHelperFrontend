@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { RiArrowDropUpLine } from "react-icons/ri";
-
+import { withRouter } from "react-router-dom";
 import img_placeholder from "../../img/placeholder.svg";
 import ListFilter from "./ListFilter";
 import ListRow from "./ListRow";
@@ -25,12 +24,6 @@ export class ChampionList extends Component {
   scrollTop = () => {
     if (this.listRef && this.listRef.current) {
       this.listRef.current.scrollTo({ top: 0 });
-    }
-  };
-
-  changeCurrentChamp = (current_champ) => {
-    if (!this.state.champ_locked) {
-      this.setState({ current_champ });
     }
   };
 
@@ -127,6 +120,25 @@ export class ChampionList extends Component {
         }
       }
     }
+
+    // Manejo cambio desde ranking
+    var currentSearch = this.props.history.location.hash;
+    if (currentSearch) {
+      let championId = currentSearch.split("#")[1];
+      if (championId) {
+        this.props.history.push("/");
+
+        this.setState(
+          {
+            lane: "",
+            search: "",
+          },
+          () => {
+            this.lockChamp(championId);
+          }
+        );
+      }
+    }
   }
 
   handleInput = (e) => {
@@ -142,12 +154,17 @@ export class ChampionList extends Component {
     );
   };
 
+  changeLane = (lane) => {
+    this.setState({ lane }, () => {
+      this.scrollTop();
+    });
+  };
+
   render() {
     const { current_champ, search, order_var, order, lane } = this.state;
     const { assets } = this.props;
     // Busco el champ seleccionado
     var list = this.filterList();
-
     var champ_data = list.find((champ) => champ.championId == current_champ);
     if (!champ_data && list.length) {
       champ_data = list[0];
@@ -168,14 +185,6 @@ export class ChampionList extends Component {
           </div>
         )}
         <div className="championlist__container">
-          {this.props.list && list.length > 10 ? (
-            <div
-              className="championlist__up"
-              onClick={this.scrollTop.bind(this)}
-            >
-              <RiArrowDropUpLine />
-            </div>
-          ) : null}
           {/* Filtros */}
           <ListFilter
             search={search}
@@ -183,6 +192,7 @@ export class ChampionList extends Component {
             handleInput={this.handleInput}
             lane={lane}
             order={order}
+            changeLane={this.changeLane}
           />
           {/* Lista */}
 
@@ -199,6 +209,7 @@ export class ChampionList extends Component {
                     current_champ={current_champ}
                     lockChamp={this.lockChamp}
                     lane={lane}
+                    changeLane={this.changeLane}
                   />
                 );
               })
@@ -214,4 +225,4 @@ const mapStateToProps = (state) => ({
   assets: state.assets,
 });
 
-export default connect(mapStateToProps, null)(ChampionList);
+export default connect(mapStateToProps, null)(withRouter(ChampionList));

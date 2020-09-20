@@ -7,6 +7,7 @@ import { getSquare } from "../../helpers/getImgLinks";
 import { getLaneFromRole, numberToDots } from "../../helpers/general";
 import CustomTooltip from "../utility/CustomTooltip";
 import LaneRateStat from "../utility/LaneRateStat";
+import MiniLoader from "../utility/MiniLoader";
 
 const LANES = ["Mid", "Jungla", "ADC", "Support", "Top"];
 
@@ -25,7 +26,7 @@ export class PlayerStats extends Component {
     const { stats, assets, masteryLevels } = this.props;
 
     if (!stats) {
-      return null;
+      return <MiniLoader />;
     }
 
     return (

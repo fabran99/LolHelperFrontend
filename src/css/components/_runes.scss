@@ -1,7 +1,7 @@
 .runes {
   width: 100%;
   padding: 0 0.5em;
-  margin-top: 1em;
+  padding-top: 1em;
 
   .runeList {
     position: relative;
@@ -15,7 +15,7 @@
       width: 75%;
       height: 7px;
       background: $back_bar;
-      z-index: -1;
+      z-index: 0;
       outline: 1px solid lighten($back_bar, 20%);
       border: 1px solid darken($back_bar, 25%);
     }
@@ -27,6 +27,7 @@
       position: relative;
       height: 31px;
       width: 31px;
+      z-index: 4;
 
       &:first-child {
         .image {
@@ -63,10 +64,11 @@
         );
         @extend %abs_center;
         cursor: pointer;
+        transition: all 0.2s ease;
 
         img {
           transition: all 0.4s ease;
-          width: 100%;
+          width: 105%;
           @extend %abs_center;
         }
       }
@@ -115,7 +117,11 @@
         }
         .image {
           border-color: $card_supp;
-          box-shadow: 0 0 10px 5px rgba($card_supp, 0.1);
+          box-shadow: 0 0 8px 4px rgba($card_supp, 0.07);
+
+          &:hover {
+            box-shadow: 0 0 12px 5px rgba($card_supp, 0.2);
+          }
         }
       }
     }
@@ -126,7 +132,11 @@
         }
         .image {
           border-color: $gold;
-          box-shadow: 0 0 10px 5px rgba($gold, 0.1);
+          box-shadow: 0 0 8px 4px rgba($gold, 0.07);
+
+          &:hover {
+            box-shadow: 0 0 12px 5px rgba($gold, 0.2);
+          }
         }
       }
     }
@@ -137,7 +147,11 @@
         }
         .image {
           border-color: $pink;
-          box-shadow: 0 0 10px 5px rgba($pink, 0.1);
+          box-shadow: 0 0 8px 4px rgba($pink, 0.07);
+
+          &:hover {
+            box-shadow: 0 0 12px 5px rgba($pink, 0.2);
+          }
         }
       }
     }
@@ -148,7 +162,11 @@
         }
         .image {
           border-color: $violet;
-          box-shadow: 0 0 10px 5px rgba($violet, 0.1);
+          box-shadow: 0 0 8px 4px rgba($violet, 0.07);
+
+          &:hover {
+            box-shadow: 0 0 12px 5px rgba($violet, 0.2);
+          }
         }
       }
     }
@@ -159,7 +177,11 @@
         }
         .image {
           border-color: $skyblue;
-          box-shadow: 0 0 10px 5px rgba($skyblue, 0.1);
+          box-shadow: 0 0 8px 4px rgba($skyblue, 0.07);
+
+          &:hover {
+            box-shadow: 0 0 12px 5px rgba($skyblue, 0.2);
+          }
         }
       }
     }
@@ -250,9 +272,10 @@
 .build {
   text-align: left;
   padding: 0 0.7em;
-  margin-top: 0.8em;
+  padding-top: 0.8em;
+  z-index: 2;
   &__section {
-    margin-bottom: 0.6em;
+    margin-bottom: 1em;
   }
 
   .buildrow {
@@ -277,13 +300,14 @@
     display: flex;
     position: relative;
     width: 100%;
+    z-index: 2;
     &:after {
       content: "";
       @extend %abs_center;
       width: 75%;
       height: 7px;
       background: $back_bar;
-      z-index: -1;
+      z-index: 0;
       outline: 1px solid lighten($back_bar, 20%);
       border: 1px solid darken($back_bar, 25%);
     }
@@ -292,28 +316,54 @@
   &__item {
     display: inline-block;
     flex: 20% 1;
-    width: 37px;
-    height: 37px;
+    width: 35px;
+    height: 35px;
     position: relative;
+    z-index: 10;
 
     &__container {
       border-radius: 50%;
       cursor: pointer;
-      border: 3px solid darken($back_bar, 1%);
+      border: 2px solid darken($back_bar, 1%);
       background: radial-gradient(
         circle,
         lighten($content_background, 5%) 0%,
         $content_background 90%
       );
       position: absolute;
-      width: 37px;
-      height: 37px;
+      width: 35px;
+      height: 35px;
       overflow: hidden;
 
       img {
         position: absolute;
         @extend %abs_center;
         width: 100%;
+      }
+    }
+
+    &:hover {
+      .build__item__background {
+        img {
+          opacity: 0.35;
+        }
+      }
+    }
+
+    &__background {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      z-index: -1;
+
+      img {
+        position: absolute;
+        @extend %abs_center;
+        width: 105%;
+        filter: blur(6px) brightness(1.2);
+        border-radius: 50%;
+        opacity: 0.12;
+        transition: filter 0.3s ease;
       }
     }
   }

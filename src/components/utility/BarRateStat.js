@@ -31,7 +31,7 @@ export class BarRateStat extends Component {
   }
 
   render() {
-    var { title, color } = this.props;
+    var { title, color, noPercent, value_text } = this.props;
     var { value } = this.state;
     color = color ? `barstat__fill--${color}` : "";
 
@@ -44,7 +44,9 @@ export class BarRateStat extends Component {
           ></div>
         </div>
         <div className="barstat__name">{title}</div>
-        <div className="barstat__value">{value} %</div>
+        <div className="barstat__value">
+          {value_text ? value_text : value} {!noPercent ? "%" : ""}
+        </div>
       </div>
     );
   }

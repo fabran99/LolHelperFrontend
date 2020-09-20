@@ -72,3 +72,43 @@ export const doughnutDatasetStyles = {
   borderColor: "rgba(200, 200,200,0.4)",
   backgroundColor: ["#f13242", "#14a3e6", "#69fd89"],
 };
+
+export const lineOptions = {
+  legend: {
+    display: false,
+    labels: {
+      display: false,
+    },
+    position: "bottom",
+  },
+  tooltips: {
+    enabled: false,
+  },
+  // responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    yAxes: [
+      {
+        display: false,
+        ticks: {
+          beginAtZero: true,
+          min: 0,
+          max: 100,
+          stepSize: 10,
+        },
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+      },
+    ],
+    xAxes: [
+      {
+        type: "linear",
+        position: "bottom",
+        gridLines: {
+          color: "rgba(0, 0, 0, 0)",
+        },
+      },
+    ],
+  },
+};

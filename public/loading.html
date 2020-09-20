@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading screen</title>
+    <link rel="stylesheet" href="loading.css" />
+  </head>
+  <body>
+    <div class="loading_container">
+      <div class="text" id="text">Cargando...</div>
+      <img src="./logoLoading.png" alt="" />
+    </div>
+
+    <script>
+      var texts = [
+        // "Buscando campanas...",
+        // "Cazando meeps...",
+        "Cargando...",
+        // "Iniciando...",
+        // "Campaneando...",
+      ];
+      var current_text = texts[Math.floor(Math.random() * texts.length)];
+      document.getElementById("text").innerHTML = current_text;
+    </script>
+  </body>
+</html>

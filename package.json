@@ -1,14 +1,19 @@
 {
-  "name": "lol_stats_app",
-  "version": "0.2.5",
-  "description": "Lol app",
+  "name": "bard_app",
+  "version": "0.2.10",
+  "description": "Aplicacion de estadisticas para league of legends",
   "author": "fabran99",
   "main": "./public/electron.js",
   "repository": "https://github.com/fabran99/LolHelperFrontend",
   "build": {
-    "appId": "com.electron.lolhelper",
+    "appId": "com.electron.bardapp",
     "win": {
-      "icon": "build/logo512.png"
+      "icon": "build/icon.ico"
+    },
+    "productName": "Bard App",
+    "nsis": {
+      "installerIcon": "build/installerIcon.ico",
+      "runAfterFinish": false
     }
   },
   "homepage": "./",
