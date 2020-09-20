@@ -42,6 +42,8 @@
   }
 }
 
+$background_color: #0e1822;
+
 .loading_container {
   position: fixed;
   top: 0;
@@ -49,7 +51,7 @@
   -webkit-app-region: drag;
   width: 100vw;
   height: 100vh;
-  background: #141c25;
+  background: $background_color;
   color: white;
   font-family: "Montserrat";
   letter-spacing: 3px;

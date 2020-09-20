@@ -27,15 +27,10 @@ html {
 body {
   font-family: "Source Sans Pro";
   overflow: hidden;
-  border-radius: $border_radius;
   min-height: 750px;
   min-width: 1200px;
-  background: $content_background;
-  background: linear-gradient(
-    $content_background,
-    darken($content_background, 1%)
-  );
   background-size: cover;
+  // background: $dark_background;
 }
 
 ::-webkit-scrollbar-track {
