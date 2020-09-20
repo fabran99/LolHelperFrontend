@@ -32,3 +32,33 @@
 .fadeIn {
   animation: fadeIn 0.4s ease;
 }
+
+@keyframes bardAnimation {
+  0% {
+    transform: translate(-50%, -65%) rotate(0);
+  }
+  20% {
+    transform: translate(-50%, -65%) rotate(5deg);
+  }
+  40% {
+    transform: translate(-50%, -65%) rotate(-5deg);
+  }
+  65% {
+    transform: translate(-50%, -65%) rotate(360deg);
+  }
+  100% {
+    transform: translate(-50%, -65%) rotate(360deg);
+  }
+}
+
+@keyframes fadeText {
+  0% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}

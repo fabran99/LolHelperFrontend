@@ -2,14 +2,13 @@
 .top_bar {
   width: 100%;
   background: rgba($row_item_background_active, 0.6);
+  // background: darken($dark_background_loading, 2%);
   color: white;
   position: relative;
   -webkit-app-region: drag;
-  border-top-right-radius: $border_radius;
-  border-top-left-radius: $border_radius;
-  z-index: 100;
+  z-index: 10;
   padding: 0.3em 0.5em;
-  height: 37px;
+  height: 33px;
 
   .navbar_logo {
     color: white;
@@ -34,51 +33,38 @@
   .icons {
     position: absolute;
     right: 0;
-    top: 50%;
+    top: 55%;
     transform: translateY(-50%);
     font-size: 0.9em;
     -webkit-app-region: no-drag;
 
     div {
-      width: 37px;
-      height: 37px;
+      width: 33px;
+      height: 33px;
       display: inline-block;
       cursor: pointer;
+      // color: $text_color;
+      opacity: 0.7;
 
       &:hover {
         background: rgba(255, 255, 255, 0.048);
+        opacity: 1;
+      }
+
+      svg {
+        @extend %abs_center;
       }
 
       &.minimize {
         position: relative;
-        span {
-          @extend %abs_center;
-          width: 15px;
-          top: 65%;
-          height: 2px;
-          background: rgba(255, 255, 255, 0.5);
-          display: block;
-        }
+      }
+
+      &.configuration {
+        font-size: 0.9em;
+        position: relative;
       }
       &.close {
         position: relative;
-
-        &:hover {
-          background: rgb(170, 23, 23);
-        }
-        span {
-          @extend %abs_center;
-          width: 15px;
-          top: 55%;
-          transform: translateX(-50%) translateY(-50%) rotate(45deg);
-          height: 2px;
-          background: rgba(255, 255, 255, 0.5);
-          display: block;
-
-          &:nth-child(2) {
-            transform: translateX(-50%) translateY(-50%) rotate(-45deg);
-          }
-        }
       }
     }
   }
@@ -89,34 +75,36 @@
     top: 50%;
     transform: translateY(-50%);
     -webkit-app-region: no-drag;
-    a {
+    a,
+    span {
       text-decoration: none;
       display: inline-block;
       font-family: inherit;
-      color: white;
+      color: $text_color;
       // text-transform: uppercase;
       font-size: 0.75em;
       padding: 1em 1em;
       cursor: pointer;
-      color: white;
-      opacity: 0.4;
+      // color: white;
+      opacity: 0.6;
 
       &:hover:not(.active) {
-        opacity: 0.5;
+        opacity: 0.9;
       }
 
       &.active {
         opacity: 1;
+        color: lighten($text_color, 10%);
       }
     }
   }
 
   .navbar_summoner {
     position: absolute;
-    right: 85px;
+    right: 110px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.75em;
+    font-size: 0.7em;
     opacity: 0.6;
     animation: fadeIn 0.2s ease;
   }

@@ -30,7 +30,7 @@ export class App extends Component {
         <Router>
           <div className="App">
             <ToastContainer />
-            <Particles params={particles_config} />
+            {/* <Particles params={particles_config} /> */}
             <TopBar />
 
             <AppWrapper>
@@ -49,11 +49,11 @@ export class App extends Component {
                     render={(props) => <Ingame {...props} />}
                   />
                   {/* Configuration */}
-                  <Route
+                  {/* <Route
                     exact
                     path="/configuration"
                     render={(props) => <Configuration {...props} />}
-                  />
+                  /> */}
 
                   {/* 404 */}
                   <Route render={(props) => <Home {...props} />} />

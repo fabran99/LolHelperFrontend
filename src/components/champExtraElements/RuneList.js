@@ -1,19 +1,43 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import CustomTooltip from "../utility/CustomTooltip";
-import { runesFromChamp } from "../../functions/assetParser";
+import { runesFromChamp, runesFromPlayer } from "../../functions/assetParser";
 
 export class RuneList extends Component {
   render() {
-    const { assets, champ, lane } = this.props;
+    const { assets, champ, configuration, runeType, runes, lane } = this.props;
+    var working_runes = null;
 
-    var current_lane = lane;
+    // En la seleccion de campeones uso las runas del champ seleccionado
+    if (runeType == "champSelection") {
+      let { laneSelectedForRecommendations: lane } = configuration;
 
-    if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
-      current_lane = champ.lanes[0];
+      let current_lane = lane;
+
+      if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
+        current_lane = champ.lanes[0];
+      }
+
+      working_runes = runesFromChamp(champ, assets, current_lane);
+    } else if (runeType == "gameInProgress") {
+      // Si estoy en partida muestro las que setea el jugador
+      working_runes = runesFromPlayer(runes, assets);
+      if (!runes) {
+        return null;
+      }
+    } else if (runeType == "home") {
+      var current_lane = lane;
+
+      if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
+        current_lane = champ.lanes[0];
+      }
+
+      var working_runes = runesFromChamp(champ, assets, current_lane);
     }
 
-    var working_runes = runesFromChamp(champ, assets, current_lane);
+    if (!working_runes) {
+      return null;
+    }
 
     return (
       <div className="runes">
@@ -114,6 +138,7 @@ export class RuneList extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
+  configuration: state.configuration,
 });
 
 export default connect(mapStateToProps, null)(RuneList);

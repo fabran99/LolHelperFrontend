@@ -1,6 +1,17 @@
 import React, { Component } from "react";
+import jungle_icon from "../../img/jungla_icon.png";
+import adc_icon from "../../img/adc_icon.png";
+import all_icon from "../../img/all_icon.png";
+import mid_icon from "../../img/mid_icon.png";
+import support_icon from "../../img/support_icon.png";
+import top_icon from "../../img/top_icon.png";
+import CustomTooltip from "../utility/CustomTooltip";
+import classnames from "classnames";
 
 export class ListFilter extends Component {
+  changeLane(lane) {
+    this.props.changeLane(lane);
+  }
   render() {
     const { search, order_var, handleInput, lane, order } = this.props;
     return (
@@ -31,15 +42,68 @@ export class ListFilter extends Component {
             <option value="desc">Descendente</option>
           </select>
         </div>
-        <div className="championlist__filters__select">
-          <select value={lane} onChange={handleInput} name="lane">
-            <option value="">Cualquier línea</option>
-            <option value="Top">Top</option>
-            <option value="ADC">Adc</option>
-            <option value="Support">Support</option>
-            <option value="Mid">Mid</option>
-            <option value="Jungla">Jungla</option>
-          </select>
+
+        <div className="championlist__filters__iconlist">
+          <CustomTooltip title="Cualquier linea">
+            <div
+              className={classnames("icon_element", {
+                "icon_element--selected": lane == "",
+              })}
+              onClick={this.changeLane.bind(this, "")}
+            >
+              <img src={all_icon} alt="" />
+            </div>
+          </CustomTooltip>
+          <CustomTooltip title="Top">
+            <div
+              className={classnames("icon_element", {
+                "icon_element--selected": lane == "Top",
+              })}
+              onClick={this.changeLane.bind(this, "Top")}
+            >
+              <img src={top_icon} alt="" />
+            </div>
+          </CustomTooltip>
+          <CustomTooltip title="Mid">
+            <div
+              className={classnames("icon_element", {
+                "icon_element--selected": lane == "Mid",
+              })}
+              onClick={this.changeLane.bind(this, "Mid")}
+            >
+              <img src={mid_icon} alt="" />
+            </div>
+          </CustomTooltip>
+          <CustomTooltip title="Adc">
+            <div
+              className={classnames("icon_element", {
+                "icon_element--selected": lane == "ADC",
+              })}
+              onClick={this.changeLane.bind(this, "ADC")}
+            >
+              <img src={adc_icon} alt="" />
+            </div>
+          </CustomTooltip>
+          <CustomTooltip title="Support">
+            <div
+              className={classnames("icon_element", {
+                "icon_element--selected": lane == "Support",
+              })}
+              onClick={this.changeLane.bind(this, "Support")}
+            >
+              <img src={support_icon} alt="" />
+            </div>
+          </CustomTooltip>
+          <CustomTooltip title="Jungla">
+            <div
+              className={classnames("icon_element", {
+                "icon_element--selected": lane == "Jungla",
+              })}
+              onClick={this.changeLane.bind(this, "Jungla")}
+            >
+              <img src={jungle_icon} alt="" />
+            </div>
+          </CustomTooltip>
         </div>
       </div>
     );

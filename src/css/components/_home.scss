@@ -44,6 +44,11 @@
     margin: 1.5em auto;
     height: 1px;
     width: 100%;
-    background: rgba($row_item_background_active, 0.9);
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba($row_item_background_active, 0.9),
+      transparent
+    );
   }
 }

@@ -9,13 +9,14 @@ import { getLoading, getSpell } from "../../helpers/getImgLinks";
 import CustomTooltip from "../utility/CustomTooltip";
 import { secondsToTime } from "../../helpers/general";
 import imgPlaceholder from "../../img/placeholder.svg";
-import RuneList from "./RuneList";
+import RuneList from "../champExtraElements/RuneList";
+import SkillOrder from "../champExtraElements/SkillOrder";
 
 export class ChampImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentOption: "runes",
+      currentOption: "skillorder",
     };
   }
 
@@ -231,6 +232,7 @@ export class ChampImage extends Component {
                   onChange={this.handleInput.bind(this)}
                 >
                   <option value="runes">Runas actuales</option>
+                  <option value="skillorder">Orden de habilidades</option>
                   {/* <option value="champstats">Estadisticas actuales</option> */}
                 </select>
               </div>
@@ -239,7 +241,12 @@ export class ChampImage extends Component {
 
           {activePlayer && currentOption == "runes" && (
             <div className="fadeIn">
-              <RuneList runes={runes} />
+              <RuneList runeType="gameInProgress" runes={runes} />
+            </div>
+          )}
+          {activePlayer && currentOption == "skillorder" && (
+            <div className="fadeIn">
+              <SkillOrder champ={champ} />
             </div>
           )}
         </div>

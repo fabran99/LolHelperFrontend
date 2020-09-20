@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import AppContent from "../wrappers/AppContent";
 import ChampSelect from "./ChampSelect";
 import NotIngame from "./NotIngame";
@@ -8,8 +9,12 @@ import GameInProgress from "./GameInProgress";
 
 export class Ingame extends Component {
   render() {
-    const { gameSession } = this.props;
+    const { gameSession, assets } = this.props;
     var lobbyPhases = ["Lobby", "Matchmaking", "ReadyCheck"];
+    if (!assets || assets.champions.length == 0) {
+      return <Redirect to="/" />;
+    }
+
     if (gameSession.phase == "ChampSelect") {
       return (
         <AppContent>
@@ -22,7 +27,10 @@ export class Ingame extends Component {
           <Lobby />
         </AppContent>
       );
-    } else if (gameSession.phase == "InProgress") {
+    } else if (
+      gameSession.phase == "InProgress" &&
+      gameSession.map.gameMode != "TFT"
+    ) {
       return (
         <AppContent>
           <GameInProgress />
@@ -40,6 +48,7 @@ export class Ingame extends Component {
 
 const mapStateToProps = (state) => ({
   gameSession: state.lcuConnector.gameSession,
+  assets: state.assets,
 });
 
 export default connect(mapStateToProps, null)(Ingame);

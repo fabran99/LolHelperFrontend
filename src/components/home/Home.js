@@ -15,7 +15,7 @@ export class Home extends Component {
             Campeones
           </div>
           <div className="home__separator"></div>
-          <ChampionList list={assets.champions} />
+          {assets.champions && <ChampionList list={assets.champions} />}
         </div>
       </AppContent>
     );

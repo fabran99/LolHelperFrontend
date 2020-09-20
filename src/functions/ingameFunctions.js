@@ -518,7 +518,6 @@ export const getNextBaronTime = (ingame) => {
   if (ingame && ingame.gameData && ingame.gameData.gameTime) {
     timer = Math.round(ingame.gameData.gameTime);
   } else {
-    console.log(2);
     return false;
   }
 

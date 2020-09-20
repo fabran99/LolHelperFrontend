@@ -56,7 +56,7 @@
   position: relative;
   display: block;
   overflow: hidden;
-  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.35);
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.45);
   // border: 1px solid $card_border_color;
   background: black;
   margin: 0 auto;
@@ -234,7 +234,7 @@
         font-weight: 700;
         letter-spacing: 0.05em;
         line-height: 100%;
-        font-size: 11px;
+        font-size: 10px;
         color: rgb(160, 155, 140);
         text-overflow: ellipsis;
         text-transform: capitalize;
@@ -245,9 +245,9 @@
         border-image: initial;
         border-left: none;
         overflow: hidden;
-        padding: 5px 6px;
+        padding: 5.5px 6px;
         text-transform: uppercase;
-        margin-right: 1em;
+        margin-right: 0.8em;
       }
     }
 
@@ -472,6 +472,10 @@
       background: $pink;
       background: linear-gradient(to right, $pink, darken($pink, 10%));
     }
+    &--orange {
+      background: $yellow;
+      background: linear-gradient(to right, $yellow, darken($yellow, 10%));
+    }
     &--green {
       background: $green;
       background: linear-gradient(to right, $green, darken($green, 10%));
@@ -666,8 +670,8 @@
 // Inputs
 .switch {
   display: inline-block;
-  width: 22px;
-  height: 22px;
+  width: 15px;
+  height: 15px;
   position: relative;
   background: $lolbutton_background;
   cursor: pointer;
@@ -705,7 +709,7 @@
       display: block;
       @extend %abs_center;
       width: 8px;
-      height: 2px;
+      height: 1px;
       background: white;
       opacity: 0.2;
       transition: all 0.2s ease;
@@ -732,158 +736,6 @@
       span {
         opacity: 0.4;
       }
-    }
-  }
-}
-
-// Lobby
-.lobbyContainer {
-  .lobby {
-    width: 100%;
-    align-self: center;
-
-    &__list {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 2.5em;
-
-      .player {
-        display: flex;
-        flex: 20%;
-        width: 20%;
-        text-align: center;
-        position: relative;
-        margin-bottom: 2em;
-        transform: translateY(60%);
-
-        &--multiteam {
-          transform: translateY(0);
-        }
-
-        &__data {
-          width: 150px;
-          text-align: center;
-          cursor: pointer;
-          margin: 0 auto;
-          background: black;
-          background: linear-gradient(
-            to bottom,
-            rgba($ranking_border_color, 0.2),
-            rgba($back_bar, 0.2)
-          );
-          padding: 1em;
-          height: 220px;
-          display: flex;
-          align-items: center;
-          position: relative;
-          box-shadow: 0px 3px 15px 7px rgba(0, 0, 0, 0.24);
-          border-radius: 2px;
-
-          &:hover {
-            background: linear-gradient(
-              to bottom,
-              rgba($ranking_border_color, 0.3),
-              rgba($back_bar, 0.3)
-            );
-          }
-        }
-
-        &__level {
-          @extend %abs_center;
-          top: 130px;
-          z-index: 2;
-          background: darken($back_bar, 10%);
-          padding: 0.2em 0.5em;
-          border-radius: 3px;
-          font-size: 0.8em;
-          animation: fadeIn 0.4s ease;
-        }
-
-        &__image {
-          width: 85px;
-          height: 85px;
-          margin: 0 auto;
-          overflow: hidden;
-          position: relative;
-          border-radius: 50%;
-          border: 3px solid lighten($back_bar, 5%);
-          transform: translateY(-20px);
-
-          &--local {
-            border-color: $gold;
-          }
-          img {
-            @extend %abs_center;
-            width: 105%;
-          }
-        }
-
-        &__name {
-          @extend %abs_center;
-          top: 100%;
-          font-size: 0.85em;
-          white-space: nowrap;
-          max-width: 130px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          transform: translateX(-50%) translateY(-60px);
-        }
-      }
-    }
-  }
-
-  .autoLaneSelector {
-    position: absolute;
-    top: 140px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    select {
-      font-size: 0.9em;
-      font-family: inherit;
-      padding: 0.6em 1em;
-      border: none;
-      color: white;
-      border-radius: 1px;
-      background: linear-gradient(
-        to bottom,
-        rgba($ranking_border_color, 0.2),
-        rgba($back_bar, 0.2)
-      );
-      outline: none;
-      cursor: pointer;
-      text-align: left;
-      width: 150px;
-      transition: all 0.1s ease;
-      outline: none;
-      background: $row_item_background;
-      transition: all 0.3s ease;
-      box-shadow: $main_page_shadow;
-      border-radius: 1.5px;
-
-      option {
-        background: darken($ranking_border_color, 10%);
-        color: white;
-      }
-
-      &:hover {
-        cursor: pointer;
-        background: lighten($row_item_background, 2%);
-      }
-
-      option {
-        background: $row_item_background;
-        line-height: 3em;
-        border-bottom: 1px solid grey;
-        font-weight: lighter;
-        outline: none;
-        display: inline-block;
-        padding: 0.5em;
-      }
-
-      box-shadow: 0px 3px 15px 7px rgba(0, 0, 0, 0.24);
     }
   }
 }
@@ -945,5 +797,148 @@
 
   &:not(:last-child) {
     margin-right: 5px;
+  }
+}
+
+// Phases
+
+.phases {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+
+  &__title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: $skyblue;
+    text-align: left;
+    padding: 0.5em;
+    display: none;
+  }
+}
+
+// Skill Order
+.skill_order {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 1em;
+
+  $button_margin: 1.1em;
+
+  .early {
+    margin-bottom: 1.5em;
+
+    .level {
+      display: inline-block;
+
+      &:not(:last-child) {
+        margin-right: $button_margin;
+
+        .button {
+          &:after {
+            content: ">";
+            position: absolute;
+            right: -11px;
+            opacity: 0.7;
+            top: 50%;
+            font-size: 0.7em;
+            transform: translateY(-50%) scaleY(2);
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  .text {
+    font-size: 0.8em;
+    margin-top: 0.5em;
+    color: rgb(209, 209, 209);
+  }
+
+  .button {
+    padding: 0.5em 0.8em;
+    border-radius: 3px;
+    background: $row_item_background_active;
+    box-shadow: $main_page_shadow;
+    color: white;
+    font-size: 0.9em;
+    opacity: 0.8;
+    font-weight: bolder;
+    position: relative;
+
+    &--Q {
+      color: lighten($pink, 5%);
+    }
+    &--W {
+      color: lighten($skyblue, 5%);
+    }
+    &--E {
+      color: lighten($green, 5%);
+    }
+    &--R {
+      color: lighten($orange, 5%);
+    }
+  }
+
+  .max {
+    .button {
+      display: inline-block;
+      &:not(:last-child) {
+        margin-right: $button_margin;
+        &:after {
+          content: ">";
+          position: absolute;
+          right: -11px;
+          opacity: 0.7;
+          top: 50%;
+          font-size: 0.7em;
+          transform: translateY(-50%) scaleY(2);
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Loading screen
+.loading_container {
+  position: fixed;
+  top: 34px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 34px);
+  background: $dark_background_loading;
+  color: white;
+  font-family: "Montserrat";
+  letter-spacing: 3px;
+  font-size: 1.1em;
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -65%);
+    width: 210px;
+    animation: bardAnimation 1.8s ease infinite;
+  }
+
+  .text {
+    text-align: center;
+    top: 78%;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    position: absolute;
+    animation: fadeText 1s ease infinite;
+    width: 100%;
+    padding: 0 1em;
+    transform: none;
+    text-align: center;
+    left: 0;
   }
 }
