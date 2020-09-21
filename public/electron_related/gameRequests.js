@@ -179,7 +179,7 @@ const getMatchlist = async (event, data) => {
 
   var parsedResult = await result.json();
   var games = [];
-  var end = Math.min(20, parsedResult.length);
+  var end = Math.min(50, parsedResult.length);
   for (let i = 0; i < end; i++) {
     let current_game = parsedResult[parsedResult.length - i - 1];
     let current_stats = current_game.stats["CareerStats.js"];
