@@ -1,6 +1,6 @@
 ## Bard App (Work in progress)
 
-![enter image description here](./imgs/img0.png)
+![Logo de Bard App](./imgs/img0.png)
 
 **Aplicación de escritorio con estadísticas en tiempo real y utilidades de League of Legends**
 
