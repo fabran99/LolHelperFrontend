@@ -54,6 +54,10 @@ export class MatchList extends Component {
                 .unix(item.timestamp / 1000)
                 .format("DD/MM/YYYY HH:mm");
 
+              if (!champData) {
+                return null;
+              }
+
               const tooltipData = () => {
                 return (
                   <div className="tooltip">
