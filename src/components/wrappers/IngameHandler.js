@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { updateGameinfo } from "../../actions/ingameActions";
+import { updateGameinfo } from "../../redux/ingame/ingame.actions";
 import { electron } from "../../helpers/outsideObjects";
 
 export class IngameHandler extends Component {

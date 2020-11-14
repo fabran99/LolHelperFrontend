@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/config/config.actions";
 import { toast } from "react-toastify";
 import { electron } from "../../helpers/outsideObjects";
 

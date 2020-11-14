@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import LobbyPlayerItem from "../lobby/LobbyPlayerItem";
 import { getGameName } from "../../functions/gameSession";
 
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/config/config.actions";
 import Loading from "../utility/Loading";
 
 export class Lobby extends Component {

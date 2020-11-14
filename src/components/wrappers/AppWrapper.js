@@ -10,10 +10,10 @@ import {
   champselectchange,
   gamesessionChange,
   lobbyChange,
-} from "../../actions/lcuConnectorActions";
-import { updateSummoner } from "../../actions/summonerActions";
-import { updateConfig } from "../../actions/configActions";
-import { getAssets } from "../../actions/assetsActions";
+} from "../../redux/lcuConnector/lcuConnector.actions";
+import { updateSummoner } from "../../redux/summoner/summoner.actions";
+import { updateConfig } from "../../redux/config/config.actions";
+import { getAssets } from "../../redux/assets/assets.actions";
 import { electron } from "../../helpers/outsideObjects";
 import { toast } from "react-toastify";
 import IngameHandler from "./IngameHandler";

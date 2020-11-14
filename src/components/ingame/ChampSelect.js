@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { getGameName, getSelectedChamp } from "../../functions/gameSession";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/config/config.actions";
 
 import ChampImage from "../champSelectionElements/ChampImage";
 import TeamsList from "../champSelectionElements/TeamsList";

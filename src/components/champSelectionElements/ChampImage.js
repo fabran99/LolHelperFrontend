@@ -12,7 +12,7 @@ import SkillOrder from "../champExtraElements/SkillOrder";
 import CountersList from "../champExtraElements/CountersList";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { electron } from "../../helpers/outsideObjects";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/config/config.actions";
 import classnames from "classnames";
 import RadarStats from "../champExtraElements/RadarStats";
 import DoughnutStats from "../champExtraElements/DoughnutStats";
