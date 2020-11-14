@@ -1,23 +1,19 @@
 const { request } = require("league-connect");
+const { LauncherHandler } = require("./lcuHandler/lcuHandler");
 
 const handleChampSelect = (currentWindow, auth, socket) => {
   const url = "/lol-champ-select/v1/session";
-  request(
-    {
-      url,
-      method: "GET",
-    },
-    auth
-  )
+  var handler = new LauncherHandler(auth);
+
+  handler
+    .getChampSelectData()
     .then((res) => {
-      res.json().then((res) => {
-        if (!res.errorCode) {
-          currentWindow.webContents.send("CHAMPSELECT_CHANGE", {
-            data: res,
-            event: res,
-          });
-        }
-      });
+      if (!res.errorCode) {
+        currentWindow.webContents.send("CHAMPSELECT_CHANGE", {
+          data: res,
+          event: res,
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -27,24 +23,20 @@ const handleChampSelect = (currentWindow, auth, socket) => {
     currentWindow.webContents.send("CHAMPSELECT_CHANGE", { data, event });
   });
 };
+
 const handleGameLobby = (currentWindow, auth, socket) => {
   const url = "/lol-lobby/v2/lobby";
-  request(
-    {
-      url,
-      method: "GET",
-    },
-    auth
-  )
+  var handler = new LauncherHandler(auth);
+
+  handler
+    .getLobbyData()
     .then((res) => {
-      res.json().then((res) => {
-        if (!res.errorCode) {
-          currentWindow.webContents.send("LOBBY_CHANGE", {
-            data: res,
-            event: res,
-          });
-        }
-      });
+      if (!res.errorCode) {
+        currentWindow.webContents.send("LOBBY_CHANGE", {
+          data: res,
+          event: res,
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -57,22 +49,17 @@ const handleGameLobby = (currentWindow, auth, socket) => {
 
 const handleGameSession = (currentWindow, auth, socket) => {
   const url = "/lol-gameflow/v1/session";
-  request(
-    {
-      url,
-      method: "GET",
-    },
-    auth
-  )
+  var handler = new LauncherHandler(auth);
+
+  handler
+    .getSessionData()
     .then((res) => {
-      res.json().then((res) => {
-        if (!res.errorCode) {
-          currentWindow.webContents.send("GAMESESSION_CHANGE", {
-            data: res,
-            event: res,
-          });
-        }
-      });
+      if (!res.errorCode) {
+        currentWindow.webContents.send("GAMESESSION_CHANGE", {
+          data: res,
+          event: res,
+        });
+      }
     })
     .catch((err) => {
       console.log(err);

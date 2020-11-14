@@ -1,32 +1,37 @@
 const { request } = require("league-connect");
 const rp = require("request-promise");
+const {
+  RuneHandler,
+  SummonersHandler,
+  LauncherHandler,
+} = require("./lcuHandler/lcuHandler");
 
 // Runes
-const parseRunepage = (runepage, champName, make_current) => {
-  make_current = make_current || false;
+const parseRunePage = (runePage, pageName, makeCurrent) => {
+  makeCurrent = makeCurrent || false;
 
   var edited = {
-    primaryStyleId: runepage.primary.main,
-    subStyleId: runepage.secondary.main,
+    primaryStyleId: runePage.primary.main,
+    subStyleId: runePage.secondary.main,
     selectedPerkIds: [],
   };
 
   for (let i = 0; i < 4; i++) {
-    edited.selectedPerkIds.push(runepage.primary[`perk${i}`]);
+    edited.selectedPerkIds.push(runePage.primary[`perk${i}`]);
   }
   for (let i = 4; i < 6; i++) {
-    edited.selectedPerkIds.push(runepage.secondary[`perk${i}`]);
+    edited.selectedPerkIds.push(runePage.secondary[`perk${i}`]);
   }
 
   for (let i = 0; i < 3; i++) {
-    edited.selectedPerkIds.push(runepage.perks[`statPerk${i}`]);
+    edited.selectedPerkIds.push(runePage.perks[`statPerk${i}`]);
   }
 
-  if (make_current) {
+  if (makeCurrent) {
     edited.isActive = true;
   }
 
-  edited.name = `${champName}`;
+  edited.name = `${pageName}`;
 
   return edited;
 };
@@ -35,129 +40,48 @@ const updateRunePage = async (event, data) => {
   var data = JSON.parse(data);
   const { runePage, champName, connection } = data;
 
-  var rpage = parseRunepage(runePage, champName, true);
+  const handler = new RuneHandler(connection);
+  var rpage = parseRunePage(runePage, champName, true);
 
-  var pageList = await request(
-    {
-      url: "/lol-perks/v1/pages",
-      method: "GET",
-    },
-    connection
-  );
-
-  pageList = await pageList.json();
-  var editable = pageList.filter((item) => {
-    return item.isEditable;
-  });
-
-  if (!editable.length) {
-    var postPage = await request(
-      {
-        url: `/lol-perks/v1/pages`,
-        method: "POST",
-        body: rpage,
-      },
-      connection
-    );
-
-    postPage = await postPage.json();
-
-    return postPage;
-  } else {
-    // Busco una runa con el nombre del champ
-    var editable_and_active = editable.find((x) => x.name == champName);
-    if (!editable_and_active) {
-      // Reviso si alguna de las editables esta activa
-      editable_and_active = editable.find((x) => x.isActive);
-    }
-    var to_edit = editable_and_active ? editable_and_active : editable[0];
-
-    to_edit = { ...rpage, id: to_edit.id };
-    // Mando a actualizar
-    var deletePage = await request(
-      {
-        url: `/lol-perks/v1/pages/${to_edit.id}`,
-        method: "DELETE",
-        body: to_edit,
-      },
-      connection
-    );
-
-    var postPage = await request(
-      {
-        url: `/lol-perks/v1/pages`,
-        method: "POST",
-        body: to_edit,
-      },
-      connection
-    );
-
-    postPage = await postPage.json();
-
-    return postPage;
-  }
+  var updated_rune = await handler.setRunePage(rpage);
+  return updated_rune;
 };
 
 // Player info
 const getSummonerInfoById = async (event, data) => {
   const { summonerId, connection } = JSON.parse(data);
-  var result = await request(
-    {
-      url: `/lol-summoner/v1/summoners/${summonerId}`,
-      method: "GET",
-      json: true,
-    },
-    connection
-  );
-
-  var parsedResult = await result.json();
-  return parsedResult;
+  var summHandler = new SummonersHandler(connection);
+  var result = await summHandler.getSummonerDataById(summonerId);
+  return result;
 };
 
 const getSummonerMasteries = async (event, data) => {
   const { summonerId, connection } = JSON.parse(data);
-
-  var result = await request(
-    {
-      url: `/lol-collections/v1/inventories/${summonerId}/champion-mastery/`,
-      method: "GET",
-      json: true,
-    },
-    connection
-  );
-
-  var parsedResult = await result.json();
-  return parsedResult;
+  var summHandler = new SummonersHandler(connection);
+  var result = await summHandler.getSummonerMasteriesById(summonerId);
+  return result;
 };
 
 const getBestChampsBySummoner = async (event, data) => {
   const { summonerId, connection } = JSON.parse(data);
-  var result = await request(
-    {
-      url: `/lol-collections/v1/inventories/${summonerId}/champion-mastery/top?limit=3`,
-      method: "GET",
-      json: true,
-    },
-    connection
-  );
-
-  var parsedResult = await result.json();
-  return parsedResult;
+  var summHandler = new SummonersHandler(connection);
+  var data = await summHandler.getSummonerMasteriesById(summonerId, (top = 3));
+  return data;
 };
 
 const getRankedStatsByPuuid = async (event, data) => {
   const { puuid, connection } = JSON.parse(data);
-  var result = await request(
-    {
-      url: `/lol-ranked/v1/ranked-stats?puuids=["${puuid}"]`,
-      method: "GET",
-      json: true,
-    },
-    connection
-  );
+  var summHandler = new SummonersHandler(connection);
+  var result = await summHandler.getRankedStatsByPuuid(puuid);
+  return result;
+};
 
-  var parsedResult = await result.json();
-  return parsedResult;
+const getCurrentSummonerData = async (event, data) => {
+  const { connection } = JSON.parse(data);
+
+  var summHandler = new SummonersHandler(connection);
+  var result = await summHandler.getCurrentSummonerData();
+  return result;
 };
 
 const millisToMinutesAndSeconds = (millis) => {
@@ -168,16 +92,10 @@ const millisToMinutesAndSeconds = (millis) => {
 
 const getMatchlist = async (event, data) => {
   const { puuid, connection } = JSON.parse(data);
-  var result = await request(
-    {
-      url: `/lol-career-stats/v1/summoner-games/${puuid}`,
-      method: "GET",
-      json: true,
-    },
-    connection
-  );
 
-  var parsedResult = await result.json();
+  var summHandler = new SummonersHandler(connection);
+  var parsedResult = await summHandler.getMatchlistByPuuid(puuid);
+
   var games = [];
   var end = Math.min(50, parsedResult.length);
   for (let i = 0; i < end; i++) {
@@ -223,14 +141,8 @@ const getMatchlist = async (event, data) => {
 // launcher actions
 const checkReadyForMatch = async (event, data) => {
   const { connection } = JSON.parse(data);
-  var result = await request(
-    {
-      url: `/lol-matchmaking/v1/ready-check/accept`,
-      method: "POST",
-      json: true,
-    },
-    connection
-  );
+  var handler = new LauncherHandler(connection);
+  var result = await handler.checkReadyForMatch();
 
   return result;
 };
@@ -241,69 +153,30 @@ const AskLane = async (event, data) => {
   if (!id) {
     return null;
   }
-  var result = await request(
-    {
-      url: `/lol-chat/v1/conversations/${id}/messages`,
-      method: "POST",
-      json: true,
-      body: {
-        body: lane,
-      },
-    },
-    connection
-  );
 
-  result = await result.json();
+  var handler = new LauncherHandler(connection);
+  var result = await handler.writeInChat(id, lane);
+
   return result;
 };
 
 const restartUx = async (event, data) => {
   const { connection } = JSON.parse(data);
 
-  var result = await request(
-    {
-      url: `/riotclient/kill-and-restart-ux`,
-      method: "POST",
-      json: true,
-    },
-    connection
-  );
-
-  result = await result;
-  return result;
-};
-
-const getCurrentSummonerData = async (event, data) => {
-  const { connection } = JSON.parse(data);
-
-  var result = await request(
-    {
-      url: `/lol-summoner/v1/current-summoner`,
-      method: "GET",
-      json: true,
-    },
-    connection
-  );
-
-  result = await result.json();
+  var handler = new LauncherHandler(connection);
+  var result = await handler.restartUx();
 
   return result;
 };
 
 const getCurrentGameData = async (event, data) => {
-  var options = {
-    method: "GET",
-    uri: `https://127.0.0.1:2999/liveclientdata/allgamedata`,
-    resolveWithFullResponse: true,
-    strictSSL: false,
-  };
-
-  var result = await rp(options);
-  return result.body;
+  var handler = new LauncherHandler(connection);
+  var result = await handler.getCurrentGameData();
+  return result;
 };
 
 module.exports = {
-  parseRunepage,
+  parseRunePage,
   updateRunePage,
   getSummonerInfoById,
   getBestChampsBySummoner,
