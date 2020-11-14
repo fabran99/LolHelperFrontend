@@ -1,41 +1,34 @@
 const { request } = require("league-connect");
 const rp = require("request-promise");
-const fs = require("fs");
 
-const buildRoute = `C:\\Riot Games\\League of Legends\\Config\\Champions`;
-
-const simpleGet = async (url) => {
-  var result = await request(
-    {
-      url,
-      method: "GET",
-    },
-    this.connection
-  );
-
-  result = result.json();
-
-  return result;
-};
-
-// ==========================
-// Runas
-// ==========================
-class RuneHandler {
+class GenericHandler {
   constructor(connection) {
     this.connection = connection;
   }
 
-  // Retorna lista de paginas de runas
-  async getRunePages() {
-    var pageList = await request(
+  async genericGet(url) {
+    var result = await request(
       {
-        url: "/lol-perks/v1/pages",
+        url,
         method: "GET",
+        json: true,
       },
       this.connection
     );
-    pageList = await pageList.json();
+
+    result = result.json();
+
+    return result;
+  }
+}
+
+// ==========================
+// Runas
+// ==========================
+class RuneHandler extends GenericHandler {
+  // Retorna lista de paginas de runas
+  async getRunePages() {
+    var pageList = await this.genericGet("/lol-perks/v1/pages");
     return pageList;
   }
 
@@ -159,24 +152,14 @@ class RuneHandler {
 // ==========================
 // Jugadores
 // ==========================
-class SummonersHandler {
-  constructor(connection) {
-    this.connection = connection;
-  }
-
+class SummonersHandler extends GenericHandler {
   // Info de un jugador por su summonerId
   async getSummonerDataById(summonerId) {
-    var result = await request(
-      {
-        url: `/lol-summoner/v1/summoners/${summonerId}`,
-        method: "GET",
-        json: true,
-      },
-      this.connection
+    var result = await this.genericGet(
+      `/lol-summoner/v1/summoners/${summonerId}`
     );
 
-    var parsedResult = await result.json();
-    return parsedResult;
+    return result;
   }
 
   // Maestrias de un jugador por su summonerId
@@ -186,61 +169,30 @@ class SummonersHandler {
     if (top) {
       url = `${url}top?limit=${top}`;
     }
-    var result = await request(
-      {
-        url,
-        method: "GET",
-        json: true,
-      },
-      this.connection
-    );
-
-    var parsedResult = await result.json();
-    return parsedResult;
+    var result = await this.genericGet(url);
+    return result;
   }
 
   // Estadisticas de ranked de jugador por su puuid
   async getRankedStatsByPuuid(puuid) {
-    var result = await request(
-      {
-        url: `/lol-ranked/v1/ranked-stats?puuids=["${puuid}"]`,
-        method: "GET",
-        json: true,
-      },
-      this.connection
+    var result = await this.genericGet(
+      `/lol-ranked/v1/ranked-stats?puuids=["${puuid}"]`
     );
-
-    var parsedResult = await result.json();
-    return parsedResult;
+    return result;
   }
 
   // Retorna la lista de partidas de un jugador por su puuid
   async getMatchlistByPuuid(puuid) {
-    var result = await request(
-      {
-        url: `/lol-career-stats/v1/summoner-games/${puuid}`,
-        method: "GET",
-        json: true,
-      },
-      this.connection
+    var result = await this.genericGet(
+      `/lol-career-stats/v1/summoner-games/${puuid}`
     );
 
-    var parsedResult = await result.json();
-    return parsedResult;
+    return result;
   }
 
   // Estadisticas del jugador actual
   async getCurrentSummonerData() {
-    var result = await request(
-      {
-        url: `/lol-summoner/v1/current-summoner`,
-        method: "GET",
-        json: true,
-      },
-      this.connection
-    );
-
-    result = await result.json();
+    var result = await this.genericGet(`/lol-summoner/v1/current-summoner`);
 
     return result;
   }
@@ -249,11 +201,7 @@ class SummonersHandler {
 // ==========================
 // Eventos del launcher
 // ==========================
-class LauncherHandler {
-  constructor(connection) {
-    this.connection = connection;
-  }
-
+class LauncherHandler extends GenericHandler {
   // Acepta la partida una vez salta el evento
   async checkReadyForMatch() {
     var result = await request(
@@ -333,44 +281,19 @@ class LauncherHandler {
 
   // Solicita datos de la seleccion
   async getChampSelectData() {
-    var result = await request(
-      {
-        url: "/lol-champ-select/v1/session",
-        method: "GET",
-      },
-      this.connection
-    );
-
-    result = result.json();
-
+    var result = await this.genericGet("/lol-champ-select/v1/session");
     return result;
   }
 
   // Solicita datos del lobby
   async getLobbyData() {
-    var result = await request(
-      {
-        url: "/lol-lobby/v2/lobby",
-        method: "GET",
-      },
-      this.connection
-    );
-
-    result = result.json();
+    var result = await this.genericGet("/lol-lobby/v2/lobby");
     return result;
   }
 
   // Solicita datos de la sesion
   async getSessionData() {
-    var result = await request(
-      {
-        url: "/lol-gameflow/v1/session",
-        method: "GET",
-      },
-      this.connection
-    );
-
-    result = result.json();
+    var result = await this.genericGet("/lol-gameflow/v1/session");
     return result;
   }
 }

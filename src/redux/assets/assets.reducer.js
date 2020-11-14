@@ -1,4 +1,4 @@
-import { GET_ASSETS, ERROR_GET_ASSETS } from "../actions/types";
+import { GET_ASSETS, ERROR_GET_ASSETS } from "./assets.types";
 var currentVersion = process.env.REACT_APP_VERSION;
 var initialState = {
   champions: null,

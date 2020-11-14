@@ -170,7 +170,7 @@ const restartUx = async (event, data) => {
 };
 
 const getCurrentGameData = async (event, data) => {
-  var handler = new LauncherHandler(connection);
+  var handler = new LauncherHandler(null);
   var result = await handler.getCurrentGameData();
   return result;
 };

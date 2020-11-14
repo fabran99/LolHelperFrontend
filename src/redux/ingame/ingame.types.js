@@ -1,0 +1,1 @@
+export const UPDATE_GAMEINFO = "UPDATE_GAMEINFO";
