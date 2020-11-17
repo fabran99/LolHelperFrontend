@@ -1,0 +1,36 @@
+@import "../../../sass/base.scss";
+
+.linklist {
+  padding: 6px;
+  background: rgba($mainDark, 0.6);
+
+  .link {
+    display: block;
+    width: 32px;
+    height: 32px;
+    position: relative;
+    background: $secondaryDark;
+
+    &:hover {
+      background: lighten($secondaryDark, 5%);
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1px;
+    }
+
+    &__content {
+      @extend %abs_center;
+      color: $textInactive;
+      font-size: 0.9em;
+    }
+
+    &--active,
+    &--active:hover {
+      background: white;
+      .link__content {
+        color: $mainDark;
+      }
+    }
+  }
+}

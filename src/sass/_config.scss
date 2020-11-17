@@ -1,0 +1,24 @@
+// Border radius
+$mainBorderRadius: 15px;
+$smallBorderRadius: 5px;
+
+// Paddings
+$mainPadding: 25px;
+$smallPadding: 10px;
+$pagePadding: 100px;
+
+// Sizes
+$navigationWidth: 65px;
+$topbarHeight: 65px;
+$topbarWidth: calc(100vw - 130px);
+
+// Extends
+%abs_center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+
+// Shadows
+$mainShadow: 0px 2px 3px 0px rgba(11, 12, 12, 0.5);

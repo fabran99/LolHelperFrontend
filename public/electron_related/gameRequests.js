@@ -84,10 +84,53 @@ const getCurrentSummonerData = async (event, data) => {
   return result;
 };
 
-const millisToMinutesAndSeconds = (millis) => {
-  var minutes = Math.floor(millis / 60000);
-  var seconds = ((millis % 60000) / 1000).toFixed(0);
-  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+const getSummonerDetail = async (event, data) => {
+  const { connection, summoner: basicData } = JSON.parse(data);
+  const { puuid, summonerId } = basicData;
+
+  try {
+    // Traigo datos de ranked
+    var rankedStats = await getRankedStatsByPuuid(
+      null,
+      JSON.stringify({ puuid, connection })
+    );
+
+    var key = puuid || Object.keys(rankedStats)[0];
+    var rankData = rankedStats[key].queueMap["RANKED_SOLO_5x5"];
+    var { tier, wins, division } = rankData;
+    var isInPromo = rankData.miniSeriesProgress != "";
+
+    rankedStats = {
+      tier,
+      wins,
+      division,
+      isInPromo,
+    };
+
+    // Traigo lista de partidas
+    var matchlist = await getMatchlist(
+      null,
+      JSON.stringify({ puuid, connection })
+    );
+
+    // Traigo lista de maestrias
+    var masteries = await getSummonerMasteries(
+      null,
+      JSON.stringify({
+        summonerId,
+        connection,
+      })
+    );
+
+    var summDetail = {
+      ...rankedStats,
+      matchlist,
+      masteries,
+    };
+    return summDetail;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const getMatchlist = async (event, data) => {
@@ -97,7 +140,7 @@ const getMatchlist = async (event, data) => {
   var parsedResult = await summHandler.getMatchlistByPuuid(puuid);
 
   var games = [];
-  var end = Math.min(50, parsedResult.length);
+  var end = Math.min(30, parsedResult.length);
   for (let i = 0; i < end; i++) {
     let current_game = parsedResult[parsedResult.length - i - 1];
     let current_stats = current_game.stats["CareerStats.js"];
@@ -175,6 +218,13 @@ const getCurrentGameData = async (event, data) => {
   return result;
 };
 
+// Utility
+const millisToMinutesAndSeconds = (millis) => {
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+};
+
 module.exports = {
   parseRunePage,
   updateRunePage,
@@ -188,4 +238,5 @@ module.exports = {
   restartUx,
   getCurrentSummonerData,
   getCurrentGameData,
+  getSummonerDetail,
 };

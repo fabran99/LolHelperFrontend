@@ -1,0 +1,202 @@
+@import "../../../sass/base.scss";
+
+.topbar {
+  position: fixed;
+  top: 0;
+  width: $topbarWidth;
+  height: $topbarHeight;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-app-region: drag;
+  z-index: 50;
+}
+
+// Summoner summary
+
+.summoner_summary {
+  position: absolute;
+  top: 50%;
+  right: 35px;
+  -webkit-app-region: no-drag;
+  transform: translateY(-50%);
+  text-align: right;
+
+  // Tarjeta
+  &__card {
+    z-index: 2;
+    position: relative;
+    animation: fadeIn 0.5s ease;
+    width: 200px;
+    cursor: pointer;
+    padding: 5px 0;
+    padding-right: 4px;
+    background: lighten($secondaryDark, 2%);
+    transition: all 0.01s linear;
+    box-shadow: $mainShadow;
+
+    &:before {
+      content: "";
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 5px;
+      background: $skyblue;
+      filter: grayscale(30%);
+      position: absolute;
+    }
+
+    &:hover,
+    &.active {
+      background: $secondaryDark;
+    }
+
+    .row {
+      align-items: center;
+
+      .col-8 {
+        padding-right: 0;
+      }
+    }
+
+    &__icon {
+      width: 100%;
+      width: 40px;
+      transform: translateX(-5px);
+
+      .icon {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        background: $mainDark;
+        border-radius: 50%;
+        z-index: 11;
+
+        img {
+          @extend %abs_center;
+          width: 70%;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    &__name {
+      color: white;
+      font-weight: 600;
+      font-size: 0.7em;
+      font-family: "Poppins";
+      text-transform: uppercase;
+    }
+
+    &__subtitle {
+      font-size: 0.6em;
+      color: $textInactive;
+    }
+  }
+
+  // Detalle
+
+  &__detail {
+    animation: fadeInTop 0.3s ease;
+    position: absolute;
+    top: 100%;
+    border-top: 1px solid $mainDark;
+    background: darken($secondaryDark, 1.5%);
+    width: 200px;
+    box-shadow: $mainShadow;
+    font-family: "Poppins";
+
+    &:before {
+      content: "";
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 5px;
+      background: lighten($secondaryDark, 8%);
+      position: absolute;
+      z-index: 10;
+    }
+
+    .content {
+      .section {
+        text-align: right;
+        position: relative;
+
+        &:not(:last-child) {
+          border-bottom: 1px solid $secondaryDark;
+        }
+
+        &:hover {
+          background: $secondaryDark;
+          cursor: pointer;
+
+          .section__content {
+            transform: translateX(-100%);
+            opacity: 1;
+          }
+
+          .section__title {
+            background: darken($secondaryDark, 3%);
+          }
+        }
+
+        &__title {
+          font-size: 0.7em;
+          color: lighten($textInactive, 2%);
+          text-transform: uppercase;
+          position: relative;
+          padding: $smallPadding;
+          padding-right: $smallPadding + 5px;
+          z-index: 3;
+          background: darken($secondaryDark, 1.5%);
+        }
+
+        &__content {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 37px;
+          transition: all 0.5s ease;
+          opacity: 0.3;
+
+          .champ_list {
+            background: rgba($mainDark, 0.8);
+            height: 37px;
+            & > div {
+              display: inline-block;
+            }
+
+            .champ {
+              opacity: 0.85;
+
+              &--win {
+                .champ__icon {
+                  border: 1px solid $skyblue;
+                }
+              }
+              &--lose {
+                .champ__icon {
+                  border: 1px solid $pink;
+                }
+              }
+
+              &:hover {
+                opacity: 1;
+              }
+              &__icon {
+                width: 37px;
+                height: 37px;
+                position: relative;
+                overflow: hidden;
+
+                img {
+                  @extend %abs_center;
+                  width: 112%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

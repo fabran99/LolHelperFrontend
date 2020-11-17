@@ -29,6 +29,7 @@ const {
   restartUx,
   getCurrentSummonerData,
   getCurrentGameData,
+  getSummonerDetail,
 } = require("./electron_related/gameRequests");
 
 // Os handler
@@ -191,6 +192,7 @@ ipc.handle("GET_SUMMONER_MASTERIES_BY_ID", getSummonerMasteries);
 ipc.handle("GET_MATCHLIST_BY_PUUID", getMatchlist);
 ipc.handle("RESTART_UX", restartUx);
 ipc.handle("GET_CURRENT_GAME_DATA", getCurrentGameData);
+ipc.handle("GET_SUMMONER_DETAIL", getSummonerDetail);
 
 // Datos del summoner actual
 ipc.handle("GET_CURRENT_SUMMONER_DATA", getCurrentSummonerData);

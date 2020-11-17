@@ -1,0 +1,64 @@
+@import "../../../sass/base.scss";
+
+.rightbar {
+  width: $navigationWidth;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.223),
+    rgba(0, 0, 0, 0.123)
+  );
+  z-index: 5;
+  animation: fadeInRight 0.5s ease forwards;
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 1px;
+    background: linear-gradient(
+      to top,
+      rgba(43, 43, 43, 0.116),
+      rgba(255, 255, 255, 0.13)
+    );
+  }
+
+  &__icons {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    height: 32px;
+    background: rgba($mainDark, 0.6);
+
+    .icon {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      position: relative;
+      color: $textInactive;
+      background: $secondaryDark;
+      opacity: 0.8;
+      font-size: 0.7em;
+
+      &:hover {
+        opacity: 1;
+        color: lighten($textInactive, 10%);
+        cursor: pointer;
+      }
+
+      &:not(:last-child) {
+        margin-right: 1px;
+      }
+
+      svg {
+        @extend %abs_center;
+      }
+    }
+  }
+}

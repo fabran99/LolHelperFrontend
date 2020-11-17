@@ -1,4 +1,4 @@
-import { UPDATE_CONFIG } from "./config.types";
+import { UPDATE_CONFIG } from "./settings.types";
 
 export const updateConfig = (data) => (dispatch) => {
   dispatch({

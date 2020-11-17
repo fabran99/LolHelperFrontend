@@ -6,7 +6,7 @@ import {
   GAMESESSION_CHANGE,
 } from "./lcuConnector.types";
 
-export const lcuConnect = (data) => (dispatch) => {
+export const lcuConnect = (data) => async (dispatch) => {
   // Guarda la info de conexion en redux
   dispatch({
     type: LCU_CONNECT,

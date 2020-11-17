@@ -1,4 +1,4 @@
-import { UPDATE_SUMMONER } from "./summoner.types";
+import { UPDATE_SUMMONER, CLEAN_SUMMONER } from "./summoner.types";
 
 var initialState = {
   summonerId: null,
@@ -7,6 +7,10 @@ var initialState = {
   puuid: null,
   profileIconId: null,
   summonerLevel: null,
+  tier: null,
+  wins: null,
+  division: null,
+  isInPromo: null,
 };
 
 export default (state = initialState, action) => {
@@ -15,6 +19,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+      };
+    case CLEAN_SUMMONER:
+      return {
+        ...state,
+        ...initialState,
       };
     default:
       return state;

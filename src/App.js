@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-// import Particles from "react-particles-js";
-// import particles_config from "./json/particlesjs-config.json";
-// Redux
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import storeObject from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+
 // React router
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -11,56 +10,70 @@ import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Paginas
+import HomePage from "./pages/home/home.component";
+import StatsPage from "./pages/stats/stats.component";
+
 // Componentes
-import AppWrapper from "./components/wrappers/AppWrapper";
-import Home from "./components/home/Home";
-import Ingame from "./components/ingame/Ingame";
-import Configuration from "./components/configuration/Configuration";
+import Navigation from "./components/navigation/navigation.component";
+import AppWrapper from "./wrappers/AppWrapper/AppWrapper.component";
 
-// Navegacion
-import TopBar from "./components/navigation/TopBar";
-
-// css
-import "./css/main.css";
+// Sass
+import "./sass/bootstrap-grid.min.css";
+import "./sass/main.scss";
 
 export class App extends Component {
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={storeObject.store}>
         <Router>
-          <div className="App">
-            <ToastContainer />
-            {/* <Particles params={particles_config} /> */}
-            <TopBar />
+          <PersistGate persistor={storeObject.persistor}>
+            <div className="App">
+              <ToastContainer />
 
-            <AppWrapper>
-              <div className="app_wrapper">
-                <Switch>
-                  {/* Homepage */}
-                  <Route
+              {/* Navegacion */}
+              <Navigation />
+
+              <AppWrapper>
+                <div className="app_container">
+                  <Switch>
+                    {/* HomePage */}
+                    <Route
+                      exact
+                      path="/"
+                      render={(props) => <HomePage {...props} />}
+                    />
+                    {/* StatsPage */}
+                    <Route
+                      exact
+                      path="/stats"
+                      render={(props) => <StatsPage {...props} />}
+                    />
+                    {/* <Route
                     exact
                     path="/"
                     render={(props) => <Home {...props} />}
-                  />
-                  {/* Ingame */}
-                  <Route
+                  /> */}
+                    {/* Ingame */}
+                    {/* <Route
                     exact
                     path="/ingame"
                     render={(props) => <Ingame {...props} />}
-                  />
-                  {/* Configuration */}
-                  {/* <Route
+                  /> */}
+                    {/* Configuration */}
+                    {/* <Route
                     exact
                     path="/configuration"
                     render={(props) => <Configuration {...props} />}
                   /> */}
 
-                  {/* 404 */}
-                  <Route render={(props) => <Home {...props} />} />
-                </Switch>
-              </div>
-            </AppWrapper>
-          </div>
+                    {/* 404 */}
+                    {/* <Route render={(props) => <Home {...props} />} /> */}
+                  </Switch>
+                </div>
+              </AppWrapper>
+            </div>
+          </PersistGate>
         </Router>
       </Provider>
     );

@@ -1,0 +1,48 @@
+@import "../../sass/base.scss";
+
+@keyframes logoAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    to top,
+    darken($background_color, 2%),
+    $background_color
+  );
+  animation: fadeIn 0.2s ease;
+
+  &__content {
+    @extend %abs_center;
+    width: 200px;
+    text-align: center;
+    color: white;
+    font-family: "Montserrat";
+    font-size: 1.1em;
+    font-weight: lighter;
+
+    img {
+      width: 100%;
+      animation: logoAnimation 0.7s ease infinite;
+    }
+  }
+
+  &__text {
+    margin-top: 1em;
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+}

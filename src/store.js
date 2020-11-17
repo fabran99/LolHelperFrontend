@@ -1,4 +1,6 @@
 import { createStore, applyMiddleware, compose } from "redux";
+import { persistStore } from "redux-persist";
+
 import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 
@@ -37,4 +39,6 @@ if (process.env.NODE_ENV == "development") {
   );
 }
 
-export default store;
+const persistor = persistStore(store);
+
+export default { store, persistor };
