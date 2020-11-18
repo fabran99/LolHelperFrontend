@@ -9,10 +9,11 @@ import { getAssets } from "../../redux/assets/assets.actions";
 import {
   lcuConnect,
   lcuDisconnect,
-  champselectchange,
-  gamesessionChange,
-  lobbyChange,
 } from "../../redux/lcuConnector/lcuConnector.actions";
+import { champSelectChange } from "../../redux/champSelect/champSelect.actions";
+import { gameSessionChange } from "../../redux/gameSession/gameSession.actions";
+import { lobbyChange } from "../../redux/lobby/lobby.actions";
+
 import {
   updateSummoner,
   cleanSummoner,
@@ -93,8 +94,8 @@ export class AppWrapper extends Component {
     const {
       lcuDisconnect,
       lcuConnect,
-      champselectchange,
-      gamesessionChange,
+      champSelectChange,
+      gameSessionChange,
       lobbyChange,
       updateSummoner,
       cleanSummoner,
@@ -119,10 +120,10 @@ export class AppWrapper extends Component {
     );
 
     // ChampSelect
-    this.champselectchange_listener = electron.ipcRenderer.on(
+    this.champSelectChange_listener = electron.ipcRenderer.on(
       "CHAMPSELECT_CHANGE",
       (event, data) => {
-        champselectchange(data);
+        champSelectChange(data);
       }
     );
 
@@ -130,7 +131,7 @@ export class AppWrapper extends Component {
     this.sessionchange_listener = electron.ipcRenderer.on(
       "GAMESESSION_CHANGE",
       (event, data) => {
-        gamesessionChange(data);
+        gameSessionChange(data);
       }
     );
     this.lobbychange_listener = electron.ipcRenderer.on(
@@ -222,8 +223,8 @@ const mapDispatchToProps = {
   getAssets,
   lcuConnect,
   lcuDisconnect,
-  champselectchange,
-  gamesessionChange,
+  champSelectChange,
+  gameSessionChange,
   lobbyChange,
   updateSummoner,
   cleanSummoner,

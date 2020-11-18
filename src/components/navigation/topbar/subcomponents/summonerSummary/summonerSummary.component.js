@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import classnames from "classnames";
+import { ClickAwayListener } from "@material-ui/core";
 
 import {
   selectImgLinks,
@@ -17,13 +19,18 @@ import {
   getLaneFromRole,
 } from "../../../../../helpers/utilities";
 
-const SummonerSummary = ({ summoner, imgLinks, assetsExists, champions }) => {
+const SummonerSummary = ({
+  summoner,
+  imgLinks,
+  assetsExists,
+  champions,
+  history,
+}) => {
   const {
     profileIconId,
     tier,
     division,
     displayName,
-    wins,
     masteries,
     matchlist,
   } = summoner;
@@ -31,6 +38,10 @@ const SummonerSummary = ({ summoner, imgLinks, assetsExists, champions }) => {
   const toggle = () => {
     setIsActive(!isActive);
   };
+
+  useEffect(() => {
+    setIsActive(false);
+  }, [history.location.pathname]);
 
   if (!assetsExists) {
     return;
@@ -69,123 +80,132 @@ const SummonerSummary = ({ summoner, imgLinks, assetsExists, champions }) => {
       {/* Detail */}
 
       {isActive && (
-        <div className="summoner_summary__detail">
-          <div className="content">
-            <div className="section">
-              <div className="section__title">Campeónes más jugados</div>
-              <div className="section__content">
-                <div className="champ_list">
-                  {bestChamps.map((champ, i) => {
-                    var currentChamp = champions[champ.championId];
+        <ClickAwayListener onClickAway={() => setIsActive(false)}>
+          <div className="summoner_summary__detail">
+            <div className="content">
+              <div className="section">
+                <div className="section__title">Campeónes más jugados</div>
+                <div className="section__content">
+                  <div className="champ_list">
+                    {bestChamps.map((champ, i) => {
+                      var currentChamp = champions[champ.championId];
 
-                    const tooltipData = () => {
+                      const tooltipData = () => {
+                        return (
+                          <div className="tooltip">
+                            <div className="tooltip__title">
+                              {currentChamp.name}
+                            </div>
+                            <div className="tooltip__content">
+                              <div className="key">Maestría:</div>
+                              <div className="value">
+                                {numberToDots(champ.championPoints)}
+                              </div>
+                            </div>
+                            <div className="tooltip__content">
+                              <div className="key">Jugado por última vez:</div>
+                              <div className="value">
+                                {milisecondsToDate(champ.lastPlayTime)}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      };
+
                       return (
-                        <div className="tooltip">
-                          <div className="tooltip__title">
-                            {currentChamp.name}
-                          </div>
-                          <div className="tooltip__content">
-                            <div className="key">Maestría:</div>
-                            <div className="value">
-                              {numberToDots(champ.championPoints)}
+                        <CustomTooltip
+                          key={champ.championId}
+                          title={tooltipData()}
+                          arrow
+                        >
+                          <div className="champ">
+                            <div className="champ__icon">
+                              <img
+                                src={getSquare(imgLinks, currentChamp.key)}
+                              />
                             </div>
                           </div>
-                          <div className="tooltip__content">
-                            <div className="key">Jugado por última vez:</div>
-                            <div className="value">
-                              {milisecondsToDate(champ.lastPlayTime)}
-                            </div>
-                          </div>
-                        </div>
+                        </CustomTooltip>
                       );
-                    };
-
-                    return (
-                      <CustomTooltip
-                        key={champ.championId}
-                        title={tooltipData()}
-                        arrow
-                      >
-                        <div className="champ">
-                          <div className="champ__icon">
-                            <img src={getSquare(imgLinks, currentChamp.key)} />
-                          </div>
-                        </div>
-                      </CustomTooltip>
-                    );
-                  })}
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="section">
-              <div className="section__title">Últimas partidas</div>
-              <div className="section__content">
-                <div className="champ_list">
-                  {lastMatches.map((match, i) => {
-                    var currentChamp = champions[match.championId];
+              <div className="section">
+                <div className="section__title">Últimas partidas</div>
+                <div className="section__content">
+                  <div className="champ_list">
+                    {lastMatches.map((match, i) => {
+                      var currentChamp = champions[match.championId];
 
-                    const tooltipData = () => {
+                      const tooltipData = () => {
+                        return (
+                          <div className="tooltip">
+                            <div
+                              className={`tooltip__title tooltip__title--${
+                                match.win ? "skyblue" : "pink"
+                              }`}
+                            >
+                              {match.win ? "Victoria" : "Derrota"}
+                            </div>
+
+                            <div className="tooltip__content">
+                              <div className="key">Línea:</div>
+                              <div className="value">
+                                {getLaneFromRole(match.role, match.lane)}
+                              </div>
+                            </div>
+                            <div className="tooltip__content">
+                              <div className="key">KDA:</div>
+                              <div className="value">{match.kda}</div>
+                            </div>
+                            <div className="tooltip__content">
+                              <div className="key">Fecha:</div>
+                              <div className="value">
+                                {milisecondsToDate(match.timestamp)}
+                              </div>
+                            </div>
+                            <div className="tooltip__content">
+                              <div className="key">Duración:</div>
+                              <div className="value">{match.gameDuration}</div>
+                            </div>
+                            <div className="tooltip__content">
+                              <div className="key">Modo:</div>
+                              <div className="value">
+                                {queueTypeToName(match.queueType)}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      };
+
                       return (
-                        <div className="tooltip">
-                          <div
-                            className={`tooltip__title tooltip__title--${
-                              match.win ? "skyblue" : "pink"
-                            }`}
-                          >
-                            {match.win ? "Victoria" : "Derrota"}
-                          </div>
-
-                          <div className="tooltip__content">
-                            <div className="key">Línea:</div>
-                            <div className="value">
-                              {getLaneFromRole(match.role, match.lane)}
-                            </div>
-                          </div>
-                          <div className="tooltip__content">
-                            <div className="key">KDA:</div>
-                            <div className="value">{match.kda}</div>
-                          </div>
-                          <div className="tooltip__content">
-                            <div className="key">Fecha:</div>
-                            <div className="value">
-                              {milisecondsToDate(match.timestamp)}
-                            </div>
-                          </div>
-                          <div className="tooltip__content">
-                            <div className="key">Duración:</div>
-                            <div className="value">{match.gameDuration}</div>
-                          </div>
-                          <div className="tooltip__content">
-                            <div className="key">Modo:</div>
-                            <div className="value">
-                              {queueTypeToName(match.queueType)}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    };
-
-                    return (
-                      <CustomTooltip arrow title={tooltipData()}>
-                        <div
-                          className={`champ champ--${
-                            match.win ? "win" : "lose"
-                          }`}
+                        <CustomTooltip
+                          arrow
+                          title={tooltipData()}
                           key={match.gameId}
                         >
-                          <div className="champ__icon">
-                            <img src={getSquare(imgLinks, currentChamp.key)} />
+                          <div
+                            className={`champ champ--${
+                              match.win ? "win" : "lose"
+                            }`}
+                          >
+                            <div className="champ__icon">
+                              <img
+                                src={getSquare(imgLinks, currentChamp.key)}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </CustomTooltip>
-                    );
-                  })}
+                        </CustomTooltip>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </ClickAwayListener>
       )}
     </div>
   );
@@ -198,4 +218,4 @@ const mapStateToProps = (state) => ({
   champions: selectChampionsAsDict(state),
 });
 
-export default connect(mapStateToProps, null)(SummonerSummary);
+export default connect(mapStateToProps, null)(withRouter(SummonerSummary));
