@@ -55,7 +55,7 @@ export const updateSummoner = (connection, retrys) => async (dispatch) => {
   }
 };
 
-export const cleanSummoner = (data) => (dispatch) => {
+export const cleanSummoner = () => (dispatch) => {
   dispatch({
     type: CLEAN_SUMMONER,
   });

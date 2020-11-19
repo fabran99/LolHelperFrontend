@@ -276,7 +276,7 @@ class LauncherHandler extends GenericHandler {
     };
 
     var result = await rp(options);
-    return result.body;
+    return JSON.parse(result.body);
   }
 
   // Solicita datos de la seleccion

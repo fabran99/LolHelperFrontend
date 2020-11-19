@@ -1,4 +1,4 @@
-import { LOBBY_CHANGE } from "./lobby.types";
+import { LOBBY_CHANGE, CLEAN_LOBBY } from "./lobby.types";
 
 const initialState = null;
 
@@ -9,6 +9,8 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload,
       };
+    case CLEAN_LOBBY:
+      return null;
     default:
       return state;
   }

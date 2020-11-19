@@ -2,24 +2,26 @@
 
 @keyframes reveal {
   0% {
-    clip-path: polygon(0 54%, 100% 31%, 100% 44%, 100% 60%, 0 82%, 0 68%);
-    filter: blur(3px);
+    opacity: 0;
+    // clip-path: polygon(0 54%, 100% 31%, 100% 44%, 100% 60%, 0 82%, 0 68%);
+    filter: blur(0px);
   }
   20% {
-    clip-path: polygon(0 36%, 100% 9%, 100% 19%, 100% 69%, 0 91%, 0 68%);
-    filter: blur(3px);
-  }
-  50% {
-    clip-path: polygon(0 36%, 100% 0, 100% 0, 100% 69%, 0 100%, 0 100%);
+    // clip-path: polygon(0 36%, 100% 9%, 100% 19%, 100% 69%, 0 91%, 0 68%);
     filter: blur(2px);
   }
+  50% {
+    // clip-path: polygon(0 36%, 100% 0, 100% 0, 100% 69%, 0 100%, 0 100%);
+    filter: blur(3px);
+  }
   75% {
-    clip-path: polygon(0 28%, 75% 0, 100% 0, 100% 69%, 24% 100%, 0 100%);
-    filter: blur(1px);
+    // clip-path: polygon(0 28%, 75% 0, 100% 0, 100% 69%, 24% 100%, 0 100%);
+    filter: blur(2px);
   }
   100% {
-    clip-path: polygon(0 0, 0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+    // clip-path: polygon(0 0, 0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
     filter: blur(0px);
+    opacity: 1;
   }
 }
 
@@ -30,7 +32,7 @@
   background-position: center;
   background-size: cover;
   position: relative;
-  animation: reveal 0.25s linear;
+  // animation: reveal 0.2s ease;
 
   .page_overlay {
     @extend %abs_center;

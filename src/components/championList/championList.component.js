@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { selectChampions } from "../../redux/assets/assets.selectors";
 
 import ListFilter from "./subcomponents/ListFilter";
-import RevealWithTimeout from "../../wrappers/revealWithTimeout/revealWithTimeout.component";
 import ListElement from "./subcomponents/ListElement";
 
 // Utilidades
@@ -89,6 +87,7 @@ export class ChampionList extends Component {
 
   render() {
     const filteredList = this.getFilteredChampions();
+    console.log(this.props);
 
     return (
       <div className="championlist">
@@ -104,20 +103,16 @@ export class ChampionList extends Component {
           {/* Lista */}
           <div className="championlist__list">
             {filteredList.length > 0 ? (
-              // <div className="row">
               filteredList.map((champion, i) => {
                 return (
-                  // <div className="col-6" key={champion.key}>
                   <ListElement
                     champion={champion}
                     index={i + 1}
                     key={champion.key}
                   />
-                  // </div>
                 );
               })
             ) : (
-              // </div>
               <div className="empty_list">No se encontraron resultados</div>
             )}
           </div>

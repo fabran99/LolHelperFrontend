@@ -29,12 +29,17 @@ export const selectChampions = createSelector(
   (assets) => assets.champions
 );
 
-export const selectChampionsAsDict = createSelector([selectAssets], (assets) =>
-  assets.champions.reduce((accumulatedObject, champion) => {
-    accumulatedObject[champion.championId] = champion;
-    return accumulatedObject;
-  }, {})
+export const selectChampionsAsDict = createSelector(
+  [selectChampions],
+  (champions) =>
+    champions.reduce((accumulatedObject, champion) => {
+      accumulatedObject[champion.championId] = champion;
+      return accumulatedObject;
+    }, {})
 );
+
+export const selectChampionById = (championId) =>
+  createSelector([selectChampionsAsDict], (champions) => champions[championId]);
 
 // Ranking
 export const selectRanking = createSelector(
@@ -53,3 +58,6 @@ export const selectItemsAsDict = createSelector([selectAssets], (assets) =>
     accumulatedObject[item.key] = item;
   }, {})
 );
+
+export const selectItemById = (itemId) =>
+  createSelector([selectItemsAsDict], (items) => items[itemId]);

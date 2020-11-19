@@ -1,4 +1,4 @@
-import { CHAMPSELECT_CHANGE } from "./champSelect.types";
+import { CHAMPSELECT_CHANGE, CLEAN_CHAMPSELECT } from "./champSelect.types";
 
 const initialState = null;
 
@@ -9,6 +9,8 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload,
       };
+    case CLEAN_CHAMPSELECT:
+      return null;
     default:
       return state;
   }

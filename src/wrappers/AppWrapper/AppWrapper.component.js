@@ -6,18 +6,15 @@ import { toast } from "react-toastify";
 import Loader from "../../components/loader/loader.component";
 // Actions
 import { getAssets } from "../../redux/assets/assets.actions";
+import { initializeLcuConnSocket } from "../../redux/lcuConnector/lcuConnector.actions";
+import { initializeChampSelectSocket } from "../../redux/champSelect/champSelect.actions";
+import { initializeGameSessionSocket } from "../../redux/gameSession/gameSession.actions";
+import { initializeLobbySocket } from "../../redux/lobby/lobby.actions";
 import {
-  lcuConnect,
-  lcuDisconnect,
-} from "../../redux/lcuConnector/lcuConnector.actions";
-import { champSelectChange } from "../../redux/champSelect/champSelect.actions";
-import { gameSessionChange } from "../../redux/gameSession/gameSession.actions";
-import { lobbyChange } from "../../redux/lobby/lobby.actions";
-
-import {
-  updateSummoner,
-  cleanSummoner,
-} from "../../redux/summoner/summoner.actions";
+  initializeCurrentGameSocket,
+  stopFetchingCurrentGame,
+  startFetchingCurrentGame,
+} from "../../redux/ingame/ingame.actions";
 
 // Selectors
 import {
@@ -25,6 +22,7 @@ import {
   selectAssetError,
   selectLolVersion,
 } from "../../redux/assets/assets.selectors";
+import { selectGamePhase } from "../../redux/gameSession/gameSession.selectors";
 
 // Helpers
 import { electron } from "../../helpers/outsideObjects";
@@ -92,54 +90,18 @@ export class AppWrapper extends Component {
 
   initListeners() {
     const {
-      lcuDisconnect,
-      lcuConnect,
-      champSelectChange,
-      gameSessionChange,
-      lobbyChange,
-      updateSummoner,
-      cleanSummoner,
+      initializeChampSelectSocket,
+      initializeGameSessionSocket,
+      initializeLobbySocket,
+      initializeLcuConnSocket,
+      initializeCurrentGameSocket,
     } = this.props;
 
-    // Check connected
-    this.lcu_connect_listener = electron.ipcRenderer.on(
-      "LCU_CONNECT",
-      (event, data) => {
-        // Guardo la conexion
-        lcuConnect(data);
-        updateSummoner(data, 0);
-      }
-    );
-    // Check disconnected
-    this.lcu_disconnect_listener = electron.ipcRenderer.on(
-      "LCU_DISCONNECT",
-      () => {
-        lcuDisconnect();
-        cleanSummoner();
-      }
-    );
-
-    // ChampSelect
-    this.champSelectChange_listener = electron.ipcRenderer.on(
-      "CHAMPSELECT_CHANGE",
-      (event, data) => {
-        champSelectChange(data);
-      }
-    );
-
-    // GameSession
-    this.sessionchange_listener = electron.ipcRenderer.on(
-      "GAMESESSION_CHANGE",
-      (event, data) => {
-        gameSessionChange(data);
-      }
-    );
-    this.lobbychange_listener = electron.ipcRenderer.on(
-      "LOBBY_CHANGE",
-      (event, data) => {
-        lobbyChange(data);
-      }
-    );
+    initializeChampSelectSocket();
+    initializeGameSessionSocket();
+    initializeLobbySocket();
+    initializeLcuConnSocket();
+    initializeCurrentGameSocket();
 
     // Updates
     this.update_listener = electron.ipcRenderer.on(
@@ -177,16 +139,40 @@ export class AppWrapper extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { assetsError, lolVersion } = this.props;
+    const {
+      assetsError,
+      lolVersion,
+      gamePhase,
+      startFetchingCurrentGame,
+      fetching,
+      stopFetchingCurrentGame,
+    } = this.props;
+    console.log(prevProps.gamePhase, gamePhase);
+
+    var shouldStartFetching =
+      prevProps.gamePhase != gamePhase && gamePhase == "InProgress";
+    var sholdStopFetching = fetching && gamePhase != "InProgress";
+    var assetsFailed = !prevProps.assetsError && assetsError;
+    var assetsRecovered = prevProps.assetsError && !assetsError;
+    var isNewLolVersion =
+      prevProps.lolVersion && prevProps.lolVersion != lolVersion;
+
+    if (shouldStartFetching) {
+      startFetchingCurrentGame();
+    } else if (sholdStopFetching) {
+      stopFetchingCurrentGame();
+      console.log("stop");
+    }
     // Muestro cartel de error si no se pudo actualizar los assets
-    if (!prevProps.assetsError && assetsError) {
+    if (assetsFailed) {
       this.retryAssetsFast();
-    } else if (prevProps.assetsError && !assetsError) {
+    } else if (assetsRecovered) {
       this.retryAssetsNormal();
     }
+    console.log("test");
 
     // Si cambia la version muestro el cartel
-    if (prevProps.lolVersion && prevProps.lolVersion != lolVersion) {
+    if (isNewLolVersion) {
       // Muestro cartel
       toast.info(`Nueva version de LOL ${lolVersion}.`, {
         position: "bottom-left",
@@ -217,17 +203,19 @@ const mapStateToProps = (state) => ({
   assetsError: selectAssetError(state),
   lolVersion: selectLolVersion(state),
   champInfoExists: selectChampionInfoExists(state),
+  gamePhase: selectGamePhase(state),
+  fetching: state.ingame.fetchingGame,
 });
 
 const mapDispatchToProps = {
   getAssets,
-  lcuConnect,
-  lcuDisconnect,
-  champSelectChange,
-  gameSessionChange,
-  lobbyChange,
-  updateSummoner,
-  cleanSummoner,
+  initializeChampSelectSocket,
+  initializeGameSessionSocket,
+  initializeLobbySocket,
+  initializeLcuConnSocket,
+  initializeCurrentGameSocket,
+  stopFetchingCurrentGame,
+  startFetchingCurrentGame,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppWrapper);
