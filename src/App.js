@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import Particles from "react-particles-js";
-import particles_config from "./json/particlesjs-config.json";
 // Redux
 import { Provider } from "react-redux";
 import store from "./store";
