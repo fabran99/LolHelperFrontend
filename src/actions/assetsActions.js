@@ -1,6 +1,7 @@
 import { GET_ASSETS, ERROR_GET_ASSETS } from "./types";
 import { assetsUrls } from "../endpoints/assets";
 import axios from "axios";
+import default_assets from "../json/default_assets.json";
 
 export const getAssets = () => (dispatch) => {
   // Solicita info de los assets
@@ -14,8 +15,12 @@ export const getAssets = () => (dispatch) => {
     })
     .catch((err) => {
       console.log(err);
+      // dispatch({
+      //   type: ERROR_GET_ASSETS,
+      // });
       dispatch({
-        type: ERROR_GET_ASSETS,
+        type: GET_ASSETS,
+        payload: default_assets,
       });
     });
 };

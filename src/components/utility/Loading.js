@@ -5,7 +5,7 @@ export class Loading extends Component {
   render() {
     return (
       <div className="loading_container fadeIn">
-        <div class="text" id="text">
+        <div className="text" id="text">
           Cargando...
         </div>
         <img src={logo} alt="" />
