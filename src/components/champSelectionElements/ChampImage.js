@@ -435,8 +435,8 @@ export class ChampImage extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
-  champSelect: state.lcuConnector.champSelect,
-  configuration: state.configuration,
+  champSelect: state.champSelect,
+  configuration: state.settings,
 });
 
 export default connect(mapStateToProps, { updateConfig })(ChampImage);

@@ -1,96 +1,66 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 import {
-  radarDatasetStylesAvg,
   radarOptions,
   radarDatasetStylesSelected,
 } from "../../helpers/chartDefaults";
+import { selectRadarStatsByElo } from "../../redux/assets/assets.selectors";
 
 import { Radar } from "react-chartjs-2";
 
-export class RadarStats extends Component {
-  // estadisticas
-  getRadarAvg() {
-    const { assets } = this.props;
-    const radarStats = ["kills", "deaths", "assists", "farmPerMin", "damage"];
+const getStatsAsPercent = (champ, stats) => {
+  const radarStats = ["kills", "deaths", "assists", "farmPerMin", "damage"];
 
-    var stats = assets.radar_stats.find((x) => x.elo == "high_elo");
+  var maxRadar = radarStats.map((stat) => {
+    return stats[stat].max;
+  });
 
-    var maxRadar = radarStats.map((stat) => {
-      return stats[stat].max;
-    });
+  var asPercent = radarStats.map((stat, i) => {
+    var max = maxRadar[i];
+    return (champ[stat] * 100) / max;
+  });
+  return asPercent;
+};
 
-    var avgRadar = radarStats.map((stat, i) => {
-      return Math.round((stats[stat].mean * 100) / maxRadar[i]);
-    });
-    return avgRadar;
+const RadarStats = ({ champ, radarStatsByElo }) => {
+  if (!champ) {
+    return null;
   }
 
-  getStatsAspercent(champ) {
-    const { assets } = this.props;
-    const radarStats = ["kills", "deaths", "assists", "farmPerMin", "damage"];
+  const radarLabels = ["Kills", "Deaths", "Assists", "CS/Min", "Damage"];
 
-    var stats = assets.radar_stats.find((x) => x.elo == "high_elo");
-    var maxRadar = radarStats.map((stat) => {
-      return stats[stat].max;
-    });
+  var radarDatasets = [
+    {
+      data: getStatsAsPercent(champ, radarStatsByElo["high_elo"]),
+      label: champ.name,
+      ...radarDatasetStylesSelected,
+    },
+  ];
 
-    var asPercent = radarStats.map((stat, i) => {
-      var max = maxRadar[i];
-      return (champ[stat] * 100) / max;
-    });
-    return asPercent;
-  }
+  var radarData = {
+    labels: radarLabels,
+    datasets: radarDatasets,
+  };
 
-  render() {
-    const { champ } = this.props;
+  var optionsRadar = {
+    ...radarOptions,
+    legend: {
+      display: false,
+    },
+  };
 
-    if (!champ) {
-      return null;
-    }
-
-    const radarLabels = ["Kills", "Deaths", "Assists", "CS/Min", "Damage"];
-
-    var radarDatasets = [
-      // {
-      //   data: this.getRadarAvg(),
-      //   label: "Promedio",
-      //   ...radarDatasetStylesAvg,
-      // },
-      {
-        data: this.getStatsAspercent(champ),
-        label: champ.name,
-        ...radarDatasetStylesSelected,
-      },
-    ];
-
-    var radarData = {
-      labels: radarLabels,
-      datasets: radarDatasets,
-    };
-
-    var optionsRadar = {
-      ...radarOptions,
-      legend: {
-        display: false,
-      },
-    };
-
-    return (
-      <div className="chart_container">
-        <div className="radar_container">
-          <Radar data={radarData} options={optionsRadar} />
-        </div>
+  return (
+    <div className="chart_container">
+      <div className="radar_container">
+        <Radar data={radarData} options={optionsRadar} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({
-  assets: state.assets,
+  radarStatsByElo: selectRadarStatsByElo(state),
 });
 
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(RadarStats);
+export default connect(mapStateToProps, null)(RadarStats);

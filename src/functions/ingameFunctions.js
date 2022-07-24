@@ -511,7 +511,6 @@ export const getNextBaronTime = (ingame) => {
   if (ingame && ingame.events && ingame.events.Events) {
     events = ingame.events.Events.reverse();
   } else {
-    console.log(ingame);
     return false;
   }
   var timer = null;

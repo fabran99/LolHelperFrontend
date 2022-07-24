@@ -11,56 +11,71 @@ import {
 } from "../../functions/gameSession";
 import { parseBuild } from "../../functions/buildLists";
 
+import { selectChampionById } from "../../redux/assets/assets.selectors";
+import {
+  selectLcuConnection,
+  selectLcuIsConnected,
+} from "../../redux/lcuConnector/lcuConnector.selectors";
+import {
+  selectCurrentPhase,
+  selectGameQueue,
+} from "../../redux/gameSession/gameSession.selectors";
+import {
+  selectCurrentPlayerHasConfirmedPick,
+  selectSelectedChamp,
+  selectChatDetails,
+} from "../../redux/champSelect/champSelect.selectors";
+
 export class ConfigurationHandler extends Component {
-  componentDidMount() {
-    this.initListeners();
-  }
+  // componentDidMount() {
+  //   this.initListeners();
+  // }
 
-  initListeners() {
-    // Check build is imported
-    this.build_imported_listener = electron.ipcRenderer.on(
-      "BUILD_APPLIED",
-      (event, fileExisted) => {
-        this.buildIsImported(fileExisted);
-      }
-    );
-    this.build_not_imported_listener = electron.ipcRenderer.on(
-      "BUILD_FAILED",
-      () => {
-        this.buildFailed();
-      }
-    );
-  }
+  // initListeners() {
+  //   // Check build is imported
+  //   this.build_imported_listener = electron.ipcRenderer.on(
+  //     "BUILD_APPLIED",
+  //     (event, fileExisted) => {
+  //       this.buildIsImported(fileExisted);
+  //     }
+  //   );
+  //   this.build_not_imported_listener = electron.ipcRenderer.on(
+  //     "BUILD_FAILED",
+  //     () => {
+  //       this.buildFailed();
+  //     }
+  //   );
+  // }
 
-  buildIsImported(buildExisted) {
-    this.props.updateConfig({
-      savingBuild: false,
-    });
-    if (!buildExisted) {
-      toast.info("Build importada con exito", {
-        position: "bottom-left",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-    }
-  }
+  // buildIsImported(buildExisted) {
+  //   this.props.updateConfig({
+  //     savingBuild: false,
+  //   });
+  //   if (!buildExisted) {
+  //     toast.info("Build importada con exito", {
+  //       position: "bottom-left",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //     });
+  //   }
+  // }
 
-  buildFailed() {
-    this.props.updateConfig({
-      savingBuild: false,
-    });
-    toast.error("No se pudo importar la build correctamente", {
-      position: "bottom-left",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
+  // buildFailed() {
+  //   this.props.updateConfig({
+  //     savingBuild: false,
+  //   });
+  //   toast.error("No se pudo importar la build correctamente", {
+  //     position: "bottom-left",
+  //     autoClose: 4000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //   });
+  // }
 
   askLane(data, counter, retrys) {
     if (retrys > 30) {
@@ -83,7 +98,19 @@ export class ConfigurationHandler extends Component {
 
   componentDidUpdate(prevProps) {
     const { location } = this.props.history;
-    const { assets, lcuConnector, configuration, updateConfig } = this.props;
+    const {
+      lcuConnection,
+      lcuIsConnected,
+      gamePhase,
+      settings,
+      updateConfig,
+      getChampionById,
+      gameQueue,
+      selectedChamp,
+      confirmedPick,
+      chatDetails,
+    } = this.props;
+
     const {
       autoNavigate,
       autoAcceptMatch,
@@ -92,20 +119,18 @@ export class ConfigurationHandler extends Component {
       autoImportBuild,
       dontAutoImportBuildNow,
       laneSelectedForRecommendations,
-    } = configuration;
+    } = settings;
     // Manejo de fases
-    var prevPhase = prevProps.lcuConnector.gameSession.phase;
-    var currentPhase = lcuConnector.gameSession.phase;
+    var prevPhase = prevProps.gamePhase;
+    var currentPhase = gamePhase;
     var notIngamePhases = ["None", "Lobby", "Matchmaking", "ReadyCheck"];
     var ingamePhases = ["ChampSelect", "InProgress"];
 
     // Variables del estado de la partida
-    var currentSelection = lcuConnector.champSelect;
-    var prevSelection = prevProps.lcuConnector.champSelect;
-    var currentConfirmPick = playerHasConfirmedPick(currentSelection);
-    var prevConfirmPick = playerHasConfirmedPick(prevSelection);
-    var currentChamp = getSelectedChamp(currentSelection);
-    var prevChamp = getSelectedChamp(prevSelection);
+    var currentConfirmPick = confirmedPick;
+    var prevConfirmPick = prevProps.confirmedPick;
+    var currentChamp = selectedChamp;
+    var prevChamp = prevProps.selectedChamp;
 
     // ========================================
     // Si entro en partida, redirijo a ingame
@@ -121,8 +146,8 @@ export class ConfigurationHandler extends Component {
     // Si cierro el juego y estaba en ingame lo mando a la principal
     if (
       location.pathname == "/ingame" &&
-      prevProps.lcuConnector.connected &&
-      !lcuConnector.connected
+      prevProps.lcuIsConnected &&
+      !lcuIsConnected
     ) {
       this.props.history.push("/");
     }
@@ -137,7 +162,7 @@ export class ConfigurationHandler extends Component {
     ) {
       electron.ipcRenderer.invoke(
         "CHECK_READY_FOR_MATCH",
-        JSON.stringify({ connection: lcuConnector.connection })
+        JSON.stringify({ connection: lcuConnection })
       );
     }
 
@@ -156,14 +181,10 @@ export class ConfigurationHandler extends Component {
         (prevConfirmPick &&
           currentConfirmPick &&
           laneSelectedForRecommendations !=
-            prevProps.configuration.laneSelectedForRecommendations)
+            prevProps.settings.laneSelectedForRecommendations)
       ) {
         if (currentChamp) {
-          var champ = assets.champions.find(
-            (item) => item.championId == currentChamp
-          );
-
-          //
+          var champ = getChampionById(currentChamp);
           var current_lane = laneSelectedForRecommendations;
 
           if (!current_lane || champ.lanes.indexOf(current_lane) == -1) {
@@ -177,7 +198,7 @@ export class ConfigurationHandler extends Component {
           var obj = {
             runePage: runes,
             champName: champ.name,
-            connection: lcuConnector.connection,
+            connection: lcuConnection,
           };
 
           this.props.updateConfig({
@@ -212,16 +233,14 @@ export class ConfigurationHandler extends Component {
         (prevConfirmPick && currentConfirmPick && currentPhase != prevPhase)
       ) {
         if (currentChamp) {
-          var champ = assets.champions.find(
-            (item) => item.championId == currentChamp
-          );
+          var champ = getChampionById(currentChamp);
 
           var buildObject = parseBuild(champ);
 
           updateConfig({
             savingBuild: true,
           });
-
+          console.log("actualizo build");
           electron.ipcRenderer
             .invoke("IMPORT_ITEMS", JSON.stringify(buildObject))
             .then((res) => {
@@ -271,38 +290,35 @@ export class ConfigurationHandler extends Component {
     ];
     // Quito linea automatica si deje de estar en lobby o cambie de modo
     if (
-      configuration.autoAskLane != "" &&
+      settings.autoAskLane != "" &&
       keepAutoAskPhases.indexOf(prevPhase) != -1 &&
       keepAutoAskPhases.indexOf(currentPhase) == -1
     ) {
       updateConfig({ autoAskLane: "" });
-    } else if (configuration.autoAskLane != "") {
+    } else if (settings.autoAskLane != "" && gameQueue) {
       var gameModesToAutoPick = ["NORMAL", "BOT"];
-      var gameSession = lcuConnector.gameSession;
       if (
-        gameModesToAutoPick.indexOf(gameSession.gameData.queue.type) == -1 ||
-        !gameSession.gameData.queue.gameMode == "CLASSIC" ||
-        gameSession.gameData.queue.gameTypeConfig.name !=
-          "GAME_CFG_TEAM_BUILDER_BLIND"
+        gameModesToAutoPick.indexOf(gameQueue.type) == -1 ||
+        !gameQueue.gameMode == "CLASSIC" ||
+        gameQueue.gameTypeConfig.name != "GAME_CFG_TEAM_BUILDER_BLIND"
       ) {
         updateConfig({ autoAskLane: "" });
       }
     }
 
     if (
-      configuration.autoAskLane != "" &&
+      settings.autoAskLane != "" &&
       currentPhase == "ChampSelect" &&
-      lcuConnector.champSelect
+      chatDetails
     ) {
       if (
-        lcuConnector.champSelect.chatDetails.chatRoomName != "" &&
-        (prevPhase != "ChampSelect" ||
-          prevProps.lcuConnector.champSelect.chatDetails.chatRoomName == "")
+        chatDetails.chatRoomName != "" &&
+        (prevPhase != "ChampSelect" || prevProps.chatDetails.chatRoomName == "")
       ) {
         var data = {
-          lane: configuration.autoAskLane,
-          connection: lcuConnector.connection,
-          chatRoomName: lcuConnector.champSelect.chatDetails.chatRoomName,
+          lane: settings.autoAskLane,
+          connection: lcuConnection,
+          chatRoomName: chatDetails.chatRoomName,
         };
         setTimeout(() => {
           this.askLane(JSON.stringify(data), 3, 0);
@@ -317,9 +333,16 @@ export class ConfigurationHandler extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  assets: state.assets,
-  lcuConnector: state.lcuConnector,
-  configuration: state.configuration,
+  lcuConnection: selectLcuConnection(state),
+  lcuIsConnected: selectLcuIsConnected(state),
+  gamePhase: selectCurrentPhase(state),
+  champSelect: state.champSelect,
+  settings: state.settings,
+  getChampionById: (id) => selectChampionById(id)(state),
+  gameQueue: selectGameQueue(state),
+  confirmedPick: selectCurrentPlayerHasConfirmedPick(state),
+  selectedChamp: selectSelectedChamp(state),
+  chatDetails: selectChatDetails(state),
 });
 
 const mapDispatchToProps = {

@@ -276,14 +276,8 @@ export class TeamStats extends Component {
   }
 
   render() {
-    const {
-      team,
-      assets,
-      enemy,
-      enemyTeam,
-      gameSession,
-      champSelect,
-    } = this.props;
+    const { team, assets, enemy, enemyTeam, gameSession, champSelect } =
+      this.props;
 
     // Distribucion de daño
     var dmgDistribution = this.getDmgDistribution(team);
@@ -338,7 +332,7 @@ export class TeamStats extends Component {
                       }
                       return (
                         <CustomTooltip
-                          key={ban.championId}
+                          key={i}
                           title={ban.reason}
                           placement="top"
                         >
@@ -400,8 +394,8 @@ export class TeamStats extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
-  champSelect: state.lcuConnector.champSelect,
-  gameSession: state.lcuConnector.gameSession,
+  champSelect: state.champSelect,
+  gameSession: state.gameSession,
 });
 
 const mapDispatchToProps = {};

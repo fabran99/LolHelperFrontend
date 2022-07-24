@@ -8,6 +8,11 @@ import Tag from "../utility/Tag";
 import { getTagsFromMatchlist, getTagsFromData } from "../../helpers/general";
 import imgPlaceholder from "../../img/placeholder.svg";
 import PlayerDetailModal from "../playerDetail/PlayerDetailModal";
+import { selectLcuConnection } from "../../redux/lcuConnector/lcuConnector.selectors";
+import {
+  selectChampionsAsDict,
+  selectImgLinks,
+} from "../../redux/assets/assets.selectors";
 
 export class LobbyPlayerItem extends Component {
   constructor(props) {
@@ -30,15 +35,6 @@ export class LobbyPlayerItem extends Component {
       displayName: null,
     };
   }
-  getChampInfo(id) {
-    const { assets } = this.props;
-    if (!id) {
-      return null;
-    }
-
-    var champ = assets.champions.find((item) => item.championId == id);
-    return champ;
-  }
 
   componentDidMount() {
     if (this.props.player.summonerId) {
@@ -48,13 +44,8 @@ export class LobbyPlayerItem extends Component {
 
   getPlayerInfo() {
     const { player, connection } = this.props;
-    const {
-      summonerId,
-      summonerIconId,
-      summonerLevel,
-      summonerName,
-      puuid,
-    } = player;
+    const { summonerId, summonerIconId, summonerLevel, summonerName, puuid } =
+      player;
 
     this.setState({
       summonerId,
@@ -122,7 +113,16 @@ export class LobbyPlayerItem extends Component {
 
     // Solicito info de las partidas del jugador
     electron.ipcRenderer
-      .invoke("GET_MATCHLIST_BY_PUUID", JSON.stringify({ connection, puuid }))
+      .invoke(
+        "GET_MATCHLIST_BY_PUUID",
+        JSON.stringify({
+          connection,
+          puuid,
+          summonerId,
+          displayName: summonerName,
+          host: process.env.REACT_APP_HOST,
+        })
+      )
       .then((res) => {
         this.setState({
           matchlist: res,
@@ -147,8 +147,14 @@ export class LobbyPlayerItem extends Component {
   }
 
   render() {
-    const { player, isLocalPlayer, assets, multiTeams } = this.props;
-    const { summonerId } = player;
+    const {
+      player,
+      isLocalPlayer,
+      assets,
+      multiTeams,
+      championDict,
+      imgLinks,
+    } = this.props;
     const {
       summonerLevel,
       profileIconId,
@@ -197,10 +203,10 @@ export class LobbyPlayerItem extends Component {
             <div className="tooltip__champlist">
               <div className="tooltip__content">Campeones mas jugados</div>
               {bestChamps.map((item) => {
-                var champData = this.getChampInfo(item.championId);
+                var champData = championDict[item.championId];
                 return (
                   <div key={item.championId} className="tooltip__champ">
-                    <img src={getSquare(assets.img_links, champData.key)} />
+                    <img src={getSquare(imgLinks, champData.key)} />
                   </div>
                 );
               })}
@@ -239,7 +245,7 @@ export class LobbyPlayerItem extends Component {
                   })}
                 >
                   <img src={imgPlaceholder} alt="" />
-                  <img src={getIcon(assets.img_links, profileIconId)} alt="" />
+                  <img src={getIcon(imgLinks, profileIconId)} alt="" />
                 </div>
                 <div className="player__name">{displayName || "?"}</div>
               </div>
@@ -257,7 +263,7 @@ export class LobbyPlayerItem extends Component {
                 })}
               >
                 <img src={imgPlaceholder} alt="" />
-                <img src={getIcon(assets.img_links, profileIconId)} alt="" />
+                <img src={getIcon(imgLinks, profileIconId)} alt="" />
               </div>
               <div className="player__name">{displayName || "?"}</div>
             </div>
@@ -270,6 +276,9 @@ export class LobbyPlayerItem extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
+  connection: selectLcuConnection(state),
+  imgLinks: selectImgLinks(state),
+  championDict: selectChampionsAsDict(state),
 });
 
 export default connect(mapStateToProps, null)(LobbyPlayerItem);

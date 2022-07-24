@@ -26,6 +26,7 @@ const importBuild = (currentWindow, build) => {
       console.log(err);
       currentWindow.webContents.send("BUILD_FAILED", true);
     } else {
+      console.log("Importo la build");
       var allExists = true;
       // Elimino todos los archivos que dijeran LolHelper
       deleteAllLolHelperFromFolder(route);

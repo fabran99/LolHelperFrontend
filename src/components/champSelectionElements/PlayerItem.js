@@ -15,6 +15,7 @@ import {
 } from "../../helpers/general";
 import PlayerDetailModal from "../playerDetail/PlayerDetailModal";
 import Tag from "../utility/Tag";
+import { selectLcuConnection } from "../../redux/lcuConnector/lcuConnector.selectors";
 
 const positions_dict = {
   utility: "Support",
@@ -81,13 +82,8 @@ export class PlayerItem extends Component {
         JSON.stringify({ connection, summonerId })
       )
       .then((res) => {
-        const {
-          puuid,
-          displayName,
-          accountId,
-          summonerLevel,
-          profileIconId,
-        } = res;
+        const { puuid, displayName, accountId, summonerLevel, profileIconId } =
+          res;
 
         this.setState(
           {
@@ -143,7 +139,7 @@ export class PlayerItem extends Component {
 
   getPlayerRankData() {
     const { connection } = this.props;
-    const { puuid } = this.state;
+    const { puuid, summonerId, displayName } = this.state;
 
     // Solicito info de las ranked del jugador
     electron.ipcRenderer
@@ -169,7 +165,16 @@ export class PlayerItem extends Component {
 
     // Solicito info de las partidas del jugador
     electron.ipcRenderer
-      .invoke("GET_MATCHLIST_BY_PUUID", JSON.stringify({ connection, puuid }))
+      .invoke(
+        "GET_MATCHLIST_BY_PUUID",
+        JSON.stringify({
+          connection,
+          puuid,
+          summonerId,
+          displayName,
+          host: process.env.REACT_APP_HOST,
+        })
+      )
       .then((res) => {
         this.setState({
           matchlist: res,
@@ -464,8 +469,8 @@ export class PlayerItem extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
-  champSelect: state.lcuConnector.champSelect,
-  connection: state.lcuConnector.connection,
+  champSelect: state.champSelect,
+  connection: selectLcuConnection(state),
 });
 
 export default connect(mapStateToProps, null)(PlayerItem);

@@ -17,9 +17,9 @@ export class GameInProgress extends Component {
   }
 
   getTeams() {
-    const { lcuConnector, summoner, ingame, assets } = this.props;
+    const { lcuConnector, summoner, ingame, assets, gameSession } = this.props;
 
-    return getTeams(lcuConnector.gameSession, summoner, ingame, assets);
+    return getTeams(gameSession, summoner, ingame, assets);
   }
 
   render() {
@@ -65,11 +65,10 @@ export class GameInProgress extends Component {
 const mapStateToProps = (state) => ({
   lcuConnector: state.lcuConnector,
   assets: state.assets,
-  configuration: state.configuration,
+  configuration: state.settings,
   summoner: state.summoner,
   ingame: state.ingame,
+  gameSession: state.gameSession,
 });
 
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(GameInProgress);
+export default connect(mapStateToProps, null)(GameInProgress);

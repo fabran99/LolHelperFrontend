@@ -1,84 +1,55 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
-import { getGameName, getSelectedChamp } from "../../functions/gameSession";
 import { updateConfig } from "../../actions/configActions";
 
 import ChampImage from "../champSelectionElements/ChampImage";
 import TeamsList from "../champSelectionElements/TeamsList";
 
 import Loading from "../utility/Loading";
+import { selectGameName } from "../../redux/gameSession/gameSession.selectors";
+import {
+  selectSelectedChamp,
+  selectChampSelectionValid,
+} from "../../redux/champSelect/champSelect.selectors";
+import { selectChampionById } from "../../redux/assets/assets.selectors";
 
-export class ChampSelect extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      runesApplied: false,
-      runeButtonDisabled: false,
-    };
+const ChampSelect = ({
+  champSelectionValid,
+  gameName,
+  getChampionById,
+  selectedChamp,
+}) => {
+  if (!champSelectionValid) {
+    return <Loading />;
   }
 
-  getGameName() {
-    const { gameSession } = this.props;
-    return getGameName(gameSession);
-  }
-  getSelectedChamp() {
-    const { champSelect } = this.props;
-    return getSelectedChamp(champSelect);
-  }
-
-  getChampInfo(id) {
-    const { assets } = this.props;
-    if (!id) {
-      return null;
-    }
-
-    var champ = assets.champions.find((item) => item.championId == id);
-    return champ;
-  }
-
-  // componentWillUnmount() {
-  //   const { configuration, updateConfig } = this.props;
-  //   if (configuration.autoImportRunes && configuration.dontAutoImportRunesNow) {
-  //     updateConfig({ dontAutoImportRunesNow: false });
-  //   }
-  // }
-
-  render() {
-    const { champSelect } = this.props;
-    if (!champSelect) {
-      return <Loading />;
-    }
-
-    var champ = this.getChampInfo(this.getSelectedChamp());
-    return (
-      <div className="champSelect">
-        <div className="header_text header_text--long">
-          {this.getGameName()}
+  var champ = getChampionById(selectedChamp);
+  return (
+    <div className="champSelect">
+      <div className="header_text header_text--long">{gameName}</div>
+      <div className="row">
+        {/* Imagen */}
+        <div className="col-3">
+          <div className="champSelect__image">
+            <ChampImage champ={champ} />
+          </div>
         </div>
-        <div className="row">
-          {/* Imagen */}
-          <div className="col-3">
-            <div className="champSelect__image">
-              <ChampImage champ={champ} />
-            </div>
-          </div>
 
-          {/* Teams */}
-          <div className="col-9">
-            <TeamsList alone={!champ} />
-          </div>
+        {/* Teams */}
+        <div className="col-9">
+          <TeamsList alone={!champ} />
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({
-  champSelect: state.lcuConnector.champSelect,
-  gameSession: state.lcuConnector.gameSession,
-  assets: state.assets,
-  configuration: state.configuration,
+  gameName: selectGameName(state),
+  getChampionById: (id) => selectChampionById(id)(state),
+  selectedChamp: selectSelectedChamp(state),
+  champSelectionValid: selectChampSelectionValid(state),
 });
 
 export default connect(mapStateToProps, { updateConfig })(ChampSelect);

@@ -39,9 +39,7 @@ export class PlayerDetailModal extends Component {
     document.removeEventListener("keydown", this.escFunction, false);
   }
 
-  getMatchDetail(gameId) {
-    console.log(gameId);
-  }
+  getMatchDetail(gameId) {}
 
   getChampInfo(id) {
     const { assets } = this.props;

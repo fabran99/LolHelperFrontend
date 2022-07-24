@@ -396,6 +396,9 @@
           &--Water {
             border-color: rgba($blue_accent, 0.6);
           }
+          &--Hextech {
+            border-color: rgba(lighten($blue_accent, 25%), 0.6);
+          }
           &--Air {
             border-color: rgba(lighten($skyblue, 40%), 0.6);
           }

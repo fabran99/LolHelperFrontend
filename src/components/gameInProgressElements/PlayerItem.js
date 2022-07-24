@@ -158,7 +158,7 @@ export class PlayerItem extends Component {
 
   getPlayerRankData() {
     const { connection } = this.props;
-    const { puuid } = this.state;
+    const { puuid, summonerId, displayName } = this.state;
 
     // Solicito info de las ranked del jugador
     electron.ipcRenderer
@@ -184,7 +184,7 @@ export class PlayerItem extends Component {
 
     // Solicito info de las partidas del jugador
     electron.ipcRenderer
-      .invoke("GET_MATCHLIST_BY_PUUID", JSON.stringify({ connection, puuid }))
+      .invoke("GET_MATCHLIST_BY_PUUID", JSON.stringify({ connection, puuid, summonerId, displayName, host:process.env.REACT_APP_HOST }))
       .then((res) => {
         this.setState({
           matchlist: res,
