@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { electron } from "../../helpers/outsideObjects";
 import { Link, withRouter } from "react-router-dom";
 import classnames from "classnames";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/settings/settings.actions";
 
 import { selectLcuIsConnected } from "../../redux/lcuConnector/lcuConnector.selectors";
 import { selectSummonerName } from "../../redux/summoner/summoner.selectors";

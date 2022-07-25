@@ -1,6 +1,9 @@
-import { GET_ASSETS, ERROR_GET_ASSETS, INITIALIZE_GET_ASSETS, STOP_GETTING_ASSETS } from "./assets.types";
-import { assetsUrls } from "../../endpoints/assets";
-import axios from "axios";
+import {
+  GET_ASSETS,
+  ERROR_GET_ASSETS,
+  INITIALIZE_GET_ASSETS,
+  STOP_GETTING_ASSETS,
+} from "./assets.types";
 
 // export const getAssets = () => (dispatch) => {
 //   // Solicita info de los assets
@@ -20,19 +23,19 @@ import axios from "axios";
 //     });
 // };
 
-export const getAssets = (data)=>({
+export const getAssets = (data) => ({
   type: GET_ASSETS,
-  payload: data
-})
+  payload: data,
+});
 
-export const errorGetAssets = ()=>({
+export const errorGetAssets = () => ({
   type: ERROR_GET_ASSETS,
-})
+});
 
-export const initializeGetAssets = ()=>({
-  type: INITIALIZE_GET_ASSETS
-})
+export const initializeGetAssets = () => ({
+  type: INITIALIZE_GET_ASSETS,
+});
 
-export const stopGettingAssets = ()=>({
-  type: STOP_GETTING_ASSETS
-})
+export const stopGettingAssets = () => ({
+  type: STOP_GETTING_ASSETS,
+});

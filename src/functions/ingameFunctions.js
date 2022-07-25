@@ -123,8 +123,8 @@ export const getTeams = (gameSession, summoner, ingame, assets) => {
     if (ingame && ingame.allPlayers) {
       var generalData = ingame.allPlayers.find(
         (el) =>
-          el.summonerName == memberData.displayName &&
-          el.team == INGAME_TEAM_NAMES[memberData.team]
+          el.summonerName === memberData.displayName &&
+          el.team === INGAME_TEAM_NAMES[memberData.team]
       );
       if (generalData) {
         memberData = {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/settings/settings.actions";
 import { withRouter } from "react-router-dom";
 import Switch from "../utility/Switch";
 import { electron } from "../../helpers/outsideObjects";

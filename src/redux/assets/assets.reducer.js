@@ -1,4 +1,5 @@
 import { GET_ASSETS, ERROR_GET_ASSETS } from "./assets.types";
+import default_assets from "../../json/default_assets.json";
 
 var currentVersion = process.env.REACT_APP_VERSION;
 var initialState = {
@@ -34,6 +35,9 @@ export default (state = initialState, action) => {
         error: false,
       };
     case ERROR_GET_ASSETS:
+      if (state.champions == null) {
+        state = { ...default_assets };
+      }
       return {
         ...state,
         error: true,

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import LobbyPlayerItem from "../lobby/LobbyPlayerItem";
 
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/settings/settings.actions";
 import Loading from "../utility/Loading";
 import { selectAutoAskLane } from "../../redux/settings/settings.selectors";
 import {

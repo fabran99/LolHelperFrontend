@@ -22,11 +22,6 @@ import { selectIsSummonerRift } from "../../redux/gameSession/gameSession.select
 import DrakeStatus from "./DrakeStatus";
 import BaronStatus from "./BaronStatus";
 
-const INGAME_TEAM_NAMES = {
-  ORDER: "teamOne",
-  CHAOS: "teamTwo",
-};
-
 const DRAKE_IMAGES = { Air, Elder, Fire, Earth, Water, Hextech };
 
 const TeamListHeader = ({

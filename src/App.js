@@ -14,7 +14,6 @@ import "react-toastify/dist/ReactToastify.css";
 import AppWrapper from "./components/wrappers/AppWrapper";
 import Home from "./components/home/Home";
 import Ingame from "./components/ingame/Ingame";
-import Configuration from "./components/configuration/Configuration";
 
 // Navegacion
 import TopBar from "./components/navigation/TopBar";
@@ -30,7 +29,6 @@ export class App extends Component {
           <PersistGate persistor={store.persistor}>
             <div className="App">
               <ToastContainer />
-              {/* <Particles params={particles_config} /> */}
               <TopBar />
 
               <AppWrapper>
@@ -48,12 +46,6 @@ export class App extends Component {
                       path="/ingame"
                       render={(props) => <Ingame {...props} />}
                     />
-                    {/* Configuration */}
-                    {/* <Route
-                    exact
-                    path="/configuration"
-                    render={(props) => <Configuration {...props} />}
-                  /> */}
 
                     {/* 404 */}
                     <Route render={(props) => <Home {...props} />} />

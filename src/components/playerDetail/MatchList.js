@@ -50,6 +50,7 @@ export class MatchList extends Component {
               var icon = icon_dict[lane.toLowerCase()];
               var queue = queueTypeToName(item.queueType);
               var champData = this.getChampInfo(item.championId);
+
               var date = moment
                 .unix(item.timestamp / 1000)
                 .format("DD/MM/YYYY HH:mm");

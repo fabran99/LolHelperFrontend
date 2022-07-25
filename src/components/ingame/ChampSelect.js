@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/settings/settings.actions";
 
 import ChampImage from "../champSelectionElements/ChampImage";
 import TeamsList from "../champSelectionElements/TeamsList";

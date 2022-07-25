@@ -145,17 +145,19 @@ const getMatchlist = async (event, data) => {
   try {
     var result = await rp({
       method: "GET",
-      uri: `${host}/stats/player_matchlist/?limit=20&username=${displayName}&region=${currentRegion.region}`,
+      uri: encodeURI(
+        `${host}/stats/player_matchlist/?limit=20&username=${displayName}&region=${currentRegion.region}`
+      ),
       strictSSL: false,
       resolveWithFullResponse: true,
     });
     result = JSON.parse(result.body).game_ids;
     usedEndpoint = true;
   } catch (e) {
+    console.log(e);
     var result = await summHandler.getMatchlistByPuuid(puuid);
     result = result.map((x) => x.gameId);
   }
-
   // Tomo los primeros 20 juegos
   var games = [];
   var end = Math.min(20, result.length);

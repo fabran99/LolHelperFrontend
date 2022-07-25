@@ -6,23 +6,12 @@ import { electron } from "../../helpers/outsideObjects";
 import PlayerDetailModal from "../playerDetail/PlayerDetailModal";
 import imgPlaceholder from "../../img/placeholder.svg";
 import CustomTooltip from "../utility/CustomTooltip";
-import {
-  numberToDots,
-  getTagsFromMatchlist,
-  getTagsFromData,
-  getWarningFromTagList,
-  secondsToTime,
-} from "../../helpers/general";
+import { numberToDots } from "../../helpers/general";
 
 import minionIcon from "../../img/minion_icon.png";
 import wardIcon from "../../img/support_icon.png";
 import goldIcon from "../../img/gold_icon.png";
 import moment from "moment";
-
-const INGAME_TEAM_NAMES = {
-  teamOne: "ORDER",
-  teamTwo: "CHAOS",
-};
 
 export class PlayerItem extends Component {
   constructor(props) {
@@ -96,13 +85,8 @@ export class PlayerItem extends Component {
         JSON.stringify({ connection, summonerId })
       )
       .then((res) => {
-        const {
-          puuid,
-          displayName,
-          accountId,
-          summonerLevel,
-          profileIconId,
-        } = res;
+        const { puuid, displayName, accountId, summonerLevel, profileIconId } =
+          res;
 
         this.setState(
           {
@@ -184,7 +168,16 @@ export class PlayerItem extends Component {
 
     // Solicito info de las partidas del jugador
     electron.ipcRenderer
-      .invoke("GET_MATCHLIST_BY_PUUID", JSON.stringify({ connection, puuid, summonerId, displayName, host:process.env.REACT_APP_HOST }))
+      .invoke(
+        "GET_MATCHLIST_BY_PUUID",
+        JSON.stringify({
+          connection,
+          puuid,
+          summonerId,
+          displayName,
+          host: process.env.REACT_APP_HOST,
+        })
+      )
       .then((res) => {
         this.setState({
           matchlist: res,
@@ -211,13 +204,8 @@ export class PlayerItem extends Component {
   render() {
     const { assets, player, enemy } = this.props;
 
-    const {
-      displayName,
-      masteryLevels,
-      detailModalVisible,
-      tier,
-      division,
-    } = this.state;
+    const { displayName, masteryLevels, detailModalVisible, tier, division } =
+      this.state;
 
     var selectedChamp = this.getChampInfo(player.championId);
 

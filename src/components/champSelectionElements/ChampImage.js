@@ -12,7 +12,7 @@ import SkillOrder from "../champExtraElements/SkillOrder";
 import CountersList from "../champExtraElements/CountersList";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { electron } from "../../helpers/outsideObjects";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/settings/settings.actions";
 import classnames from "classnames";
 import RadarStats from "../champExtraElements/RadarStats";
 import DoughnutStats from "../champExtraElements/DoughnutStats";
@@ -31,12 +31,8 @@ export class ChampImage extends Component {
 
   // Runas
   applyRunes() {
-    var { champ, configuration } = this.props;
-    if (
-      !champ ||
-      this.state.runeButtonDisabled ||
-      configuration.changingRunes
-    ) {
+    var { champ, settings } = this.props;
+    if (!champ || this.state.runeButtonDisabled || settings.changingRunes) {
       return;
     }
     this.setState(
@@ -44,7 +40,7 @@ export class ChampImage extends Component {
         runeButtonDisabled: true,
       },
       () => {
-        var lane = configuration.laneSelectedForRecommendations;
+        var lane = settings.laneSelectedForRecommendations;
 
         if (!lane || champ.lanes.indexOf(lane) == -1) {
           lane = champ.lanes[0];
@@ -76,20 +72,20 @@ export class ChampImage extends Component {
 
   toggleAutoImportRunes() {
     this.props.updateConfig({
-      dontAutoImportRunesNow: !this.props.configuration.dontAutoImportRunesNow,
+      dontAutoImportRunesNow: !this.props.settings.dontAutoImportRunesNow,
     });
   }
 
   // Objetos
   toggleAutoImportBuild() {
     this.props.updateConfig({
-      dontAutoImportBuildNow: !this.props.configuration.dontAutoImportBuildNow,
+      dontAutoImportBuildNow: !this.props.settings.dontAutoImportBuildNow,
     });
   }
 
   applyBuild() {
-    var { champ, updateConfig, configuration } = this.props;
-    if (!champ || this.state.buildButtonDisabled || configuration.savingBuild) {
+    var { champ, updateConfig, settings } = this.props;
+    if (!champ || this.state.buildButtonDisabled || settings.savingBuild) {
       return;
     }
     this.setState(
@@ -122,10 +118,7 @@ export class ChampImage extends Component {
     }
 
     // Muestro cambios en la interfaz si aplico la build
-    if (
-      prevProps.configuration.savingBuild &&
-      !this.props.configuration.savingBuild
-    ) {
+    if (prevProps.settings.savingBuild && !this.props.settings.savingBuild) {
       this.timeoutApplyBuild = setTimeout(() => {
         this.setState({
           buildButtonDisabled: false,
@@ -148,8 +141,8 @@ export class ChampImage extends Component {
 
   defaultToFirstLaneOrKeep() {
     // Mantengo la linea seleccionada o pongo la primera si cambio de personaje
-    const { champ, configuration, updateConfig } = this.props;
-    var currentLane = configuration.laneSelectedForRecommendations;
+    const { champ, settings, updateConfig } = this.props;
+    var currentLane = settings.laneSelectedForRecommendations;
     if (champ) {
       var lanes = champ.lanes;
       if (lanes.indexOf(currentLane) == -1) {
@@ -182,12 +175,12 @@ export class ChampImage extends Component {
   }
 
   render() {
-    const { champ, assets, configuration } = this.props;
+    const { champ, assets, settings } = this.props;
     const {
       champSelectionVisibleData: visibleData,
       savingBuild,
       laneSelectedForRecommendations: lane,
-    } = configuration;
+    } = settings;
     const { runeButtonDisabled, buildButtonDisabled } = this.state;
 
     // Si no tengo un champ seleccionado retorno una vista default
@@ -208,11 +201,11 @@ export class ChampImage extends Component {
     }
 
     // Runas
-    var noAutoRunes = configuration.dontAutoImportRunesNow;
-    var { autoImportRunes, autoImportBuild } = configuration;
+    var noAutoRunes = settings.dontAutoImportRunesNow;
+    var { autoImportRunes, autoImportBuild } = settings;
 
     const runeButtonContent = () => {
-      if (runeButtonDisabled || configuration.changingRunes) {
+      if (runeButtonDisabled || settings.changingRunes) {
         return "Aplicando runas...";
       } else if (!autoImportRunes) {
         return "Click para importar runas";
@@ -232,7 +225,7 @@ export class ChampImage extends Component {
     };
 
     // Build
-    var noAutoBuild = configuration.dontAutoImportBuildNow;
+    var noAutoBuild = settings.dontAutoImportBuildNow;
 
     const buildButtonContent = () => {
       if (buildButtonDisabled || savingBuild) {
@@ -316,7 +309,7 @@ export class ChampImage extends Component {
               <div
                 onClick={runeButtonAction()}
                 className={classnames("runehandler fadeIn", {
-                  disabled: runeButtonDisabled || configuration.changingRunes,
+                  disabled: runeButtonDisabled || settings.changingRunes,
                 })}
               >
                 <div className="runehandler__border"></div>
@@ -340,7 +333,7 @@ export class ChampImage extends Component {
               <div
                 onClick={buildButtonAction()}
                 className={classnames("runehandler fadeIn", {
-                  disabled: buildButtonDisabled || configuration.savingBuild,
+                  disabled: buildButtonDisabled || settings.savingBuild,
                 })}
               >
                 <div className="runehandler__border"></div>
@@ -436,7 +429,7 @@ export class ChampImage extends Component {
 const mapStateToProps = (state) => ({
   assets: state.assets,
   champSelect: state.champSelect,
-  configuration: state.settings,
+  settings: state.settings,
 });
 
 export default connect(mapStateToProps, { updateConfig })(ChampImage);

@@ -4,15 +4,6 @@ import { connect } from "react-redux";
 
 import Loading from "../utility/Loading";
 
-import {
-  lcuConnect,
-  lcuDisconnect,
-  champselectchange,
-  gamesessionChange,
-  lobbyChange,
-} from "../../actions/lcuConnectorActions";
-import { updateSummoner } from "../../actions/summonerActions";
-import { updateConfig } from "../../actions/configActions";
 import { electron } from "../../helpers/outsideObjects";
 import { toast } from "react-toastify";
 
@@ -116,7 +107,7 @@ export class AppWrapper extends Component {
     }
 
     // Si cambia la version muestro cartel
-    if (prevProps.lolVersion && prevProps.lolVersion != lolVersion) {
+    if (prevProps.lolVersion && prevProps.lolVersion !== lolVersion) {
       // Muestro cartel
       toast.info(`Nueva version de LOL ${lolVersion}.`, {
         position: "bottom-left",
@@ -128,32 +119,21 @@ export class AppWrapper extends Component {
       });
     }
 
-    // Pido datos del summoner si me logueo
-
-    // if (!prevProps.lcuConnector.connected && lcuConnector.connected) {
-    //   setTimeout(() => {
-    //     this.getSummonerData(0);
-    //   }, 500);
-    // } else if (prevProps.lcuConnector.connected && !lcuConnector.connected) {
-    //   // Elimino los datos del summoner si me deslogueo
-    //   this.deleteSummonerData();
-    // }
-
     // Empiezo a hacer fetch de la partida actual si estoy en partida
     if (
-      currentPhase == "InProgress" &&
+      currentPhase === "InProgress" &&
       lcuConnected &&
       !isTFT &&
       !(
-        prevProps.currentPhase == "InProgress" &&
+        prevProps.currentPhase === "InProgress" &&
         prevProps.lcuConnected &&
         !prevProps.isTFT
       )
     ) {
       this.props.startFetchingCurrentGame();
     } else if (
-      !(currentPhase == "InProgress" && lcuConnected && !isTFT) &&
-      prevProps.currentPhase == "InProgress" &&
+      !(currentPhase === "InProgress" && lcuConnected && !isTFT) &&
+      prevProps.currentPhase === "InProgress" &&
       prevProps.lcuConnected &&
       !prevProps.isTFT
     ) {
@@ -161,60 +141,8 @@ export class AppWrapper extends Component {
     }
   }
 
-  // getSummonerData(retrys) {
-  //   const { lcuConnector, updateSummoner } = this.props;
-  //   if (!lcuConnector.connection) {
-  //     return null;
-  //   }
-  //   // Pido datos del summoner
-  //   var data = JSON.stringify({ connection: lcuConnector.connection });
-  //   electron.ipcRenderer
-  //     .invoke("GET_CURRENT_SUMMONER_DATA", data)
-  //     .then((res) => {
-  //       if (res.errorCode) {
-  //         setTimeout(() => {
-  //           if (retrys < 5) {
-  //             this.getSummonerData(retrys + 1);
-  //           }
-  //         }, 3000);
-  //       } else {
-  //         var summData = {
-  //           summonerId: res.summonerId,
-  //           summonerLevel: res.summonerLevel,
-  //           accountId: res.accountId,
-  //           displayName: res.displayName,
-  //           profileIconId: res.profileIconId,
-  //           puuid: res.puuid,
-  //         };
-  //         updateSummoner(summData);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-
-  //       setTimeout(() => {
-  //         if (retrys < 15) {
-  //           this.getSummonerData(retrys + 1);
-  //         }
-  //       }, 3000);
-  //     });
-  // }
-
-  // deleteSummonerData() {
-  //   const { updateSummoner } = this.props;
-  //   updateSummoner({
-  //     summonerId: null,
-  //     accountId: null,
-  //     displayName: null,
-  //     puuid: null,
-  //     profileIconId: null,
-  //     summonerLevel: null,
-  //   });
-  // }
-
   render() {
-    const { settingsVisible, assetsLoaded, lcuConnected, isTFT, currentPhase } =
-      this.props;
+    const { settingsVisible, assetsLoaded } = this.props;
     if (!assetsLoaded) {
       return (
         <React.Fragment>
@@ -244,14 +172,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  lcuConnect,
-  lcuDisconnect,
-  champselectchange,
-  gamesessionChange,
-  lobbyChange,
-  updateConfig,
-  updateSummoner,
-
   initializeChampSelectSocket,
   initializeGameSessionSocket,
   initializeLobbySocket,
@@ -260,7 +180,6 @@ const mapDispatchToProps = {
   initializeGetAssets,
   initializeBuildAppliedEvent,
   initializeBuildFailedEvent,
-
   startFetchingCurrentGame,
   stopFetchingCurrentGame,
 };

@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { updateConfig } from "../../actions/configActions";
-import { toast } from "react-toastify";
+
+import { updateConfig } from "../../redux/settings/settings.actions";
 import { electron } from "../../helpers/outsideObjects";
 
-import {
-  getSelectedChamp,
-  playerHasConfirmedPick,
-} from "../../functions/gameSession";
 import { parseBuild } from "../../functions/buildLists";
 
 import { selectChampionById } from "../../redux/assets/assets.selectors";
@@ -27,56 +23,6 @@ import {
 } from "../../redux/champSelect/champSelect.selectors";
 
 export class ConfigurationHandler extends Component {
-  // componentDidMount() {
-  //   this.initListeners();
-  // }
-
-  // initListeners() {
-  //   // Check build is imported
-  //   this.build_imported_listener = electron.ipcRenderer.on(
-  //     "BUILD_APPLIED",
-  //     (event, fileExisted) => {
-  //       this.buildIsImported(fileExisted);
-  //     }
-  //   );
-  //   this.build_not_imported_listener = electron.ipcRenderer.on(
-  //     "BUILD_FAILED",
-  //     () => {
-  //       this.buildFailed();
-  //     }
-  //   );
-  // }
-
-  // buildIsImported(buildExisted) {
-  //   this.props.updateConfig({
-  //     savingBuild: false,
-  //   });
-  //   if (!buildExisted) {
-  //     toast.info("Build importada con exito", {
-  //       position: "bottom-left",
-  //       autoClose: 3000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //     });
-  //   }
-  // }
-
-  // buildFailed() {
-  //   this.props.updateConfig({
-  //     savingBuild: false,
-  //   });
-  //   toast.error("No se pudo importar la build correctamente", {
-  //     position: "bottom-left",
-  //     autoClose: 4000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //   });
-  // }
-
   askLane(data, counter, retrys) {
     if (retrys > 30) {
       return;

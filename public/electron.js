@@ -34,7 +34,7 @@ const {
 } = require("./electron_handler/gameRequests");
 
 // Os handler
-const { importBuild } = require("./electron_related/osHandler");
+const { importBuild } = require("./electron_handler/osHandler");
 
 let mainWindow;
 let loadingScreen;
@@ -87,7 +87,7 @@ const createWindow = () => {
     icon: "",
     webPreferences: {
       nodeIntegration: true,
-      preload: __dirname + "/electron_related/preload.js",
+      preload: __dirname + "/electron_handler/preload.js",
     },
     frame: false,
     resizable: false,
