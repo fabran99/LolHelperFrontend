@@ -11,6 +11,9 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload,
       };
+      if (newData.phase != "InProgress") {
+        newData.teams = null;
+      }
       return newData;
     case CLEAN_GAMESESSION:
       return {

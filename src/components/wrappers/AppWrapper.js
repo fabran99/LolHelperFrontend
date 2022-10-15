@@ -21,6 +21,7 @@ import {
   startFetchingCurrentGame,
   stopFetchingCurrentGame,
 } from "../../redux/ingame/ingame.actions";
+import { gameSessionChange } from "../../redux/gameSession/gameSession.actions";
 
 // Selectors
 import {
@@ -137,6 +138,7 @@ export class AppWrapper extends Component {
       prevProps.lcuConnected &&
       !prevProps.isTFT
     ) {
+      this.props.gameSessionChange({ data: { teams: null } });
       this.props.stopFetchingCurrentGame();
     }
   }
@@ -182,6 +184,7 @@ const mapDispatchToProps = {
   initializeBuildFailedEvent,
   startFetchingCurrentGame,
   stopFetchingCurrentGame,
+  gameSessionChange,
 };
 
 export default connect(

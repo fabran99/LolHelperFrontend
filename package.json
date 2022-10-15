@@ -1,6 +1,6 @@
 {
   "name": "bard_app",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "description": "Aplicacion de estadisticas para league of legends",
   "author": "fabran99",
   "main": "./public/electron.js",

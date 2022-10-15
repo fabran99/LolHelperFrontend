@@ -11,6 +11,15 @@ import { getSpell } from "../../../helpers/getImgLinks";
 const SummonerSpell = (props) => {
   const { imgLinks, spellId, spells } = props;
   const spellData = spells.find((item) => item.key == spellId);
+  if (!spellData) {
+    return (
+      <div className="summonerSpell">
+        <div className="spell">
+          <div className="image"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="summonerSpell">

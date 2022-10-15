@@ -46,7 +46,6 @@ export class GameInProgress extends Component {
     return getTeams(gameData, summoner, allPlayers, assets);
   }
   async handlePlayersFromIngameData() {
-    console.log("manejo jugadores");
     if (this.state.findingSummonerData) {
       return;
     }
@@ -56,10 +55,13 @@ export class GameInProgress extends Component {
 
     for (var i = 0; i < this.props.allPlayers.length; i++) {
       let playerData = this.props.allPlayers[i];
-      let summData = await asyncGetSummonerInfoByName(
-        this.props.lcuConnector.connection,
-        playerData.summonerName
-      );
+      let summData = {};
+      if (!playerData.isBot) {
+        summData = await asyncGetSummonerInfoByName(
+          this.props.lcuConnector.connection,
+          playerData.summonerName
+        );
+      }
       playerData = { ...playerData, ...summData };
       if (playerData.team == "ORDER") {
         teamOne.push(playerData);
@@ -75,7 +77,6 @@ export class GameInProgress extends Component {
 
   componentDidMount() {
     const { gameData, lcuIsConnected, allPlayers } = this.props;
-    console.log(this.props);
     if (
       !this.state.findingSummonerData &&
       gameData &&
@@ -112,7 +113,6 @@ export class GameInProgress extends Component {
     if (!summoner) {
       return <Loading />;
     }
-    console.log("rerender");
 
     return (
       <div className="inProgress">

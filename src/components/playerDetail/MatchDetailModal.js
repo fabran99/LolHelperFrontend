@@ -40,7 +40,6 @@ export class MatchDetailModal extends Component {
       );
       return data;
     });
-    console.log(matchDetail);
 
     // Inffo de la partida
     var queue = queueTypeToName(matchDetail.queueType);

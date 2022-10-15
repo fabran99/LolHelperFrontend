@@ -26,7 +26,6 @@ const Team = (props) => {
   const teamGold = data.participants.reduce((acc, participant) => {
     return acc + participant.stats.goldEarned;
   }, 0);
-  console.log(data);
   return (
     <div
       className={classnames("team", {
