@@ -21,6 +21,17 @@ export const selectIsSummonerRift = createSelector(
   }
 );
 
+export const selectGameSessionGameData = createSelector(
+  [baseSelect],
+  (gameSession) => {
+    if (gameSession && gameSession.gameData) {
+      return gameSession.gameData;
+    } else {
+      return null;
+    }
+  }
+);
+
 export const selectGameName = createSelector(
   [selectGameData, selectGameMap],
   (gameData, gameMap) => {
@@ -90,4 +101,26 @@ export const selectIsTFT = createSelector([baseSelect], (gameData) => {
     isTFT = false;
   }
   return isTFT;
+});
+
+export const selectGameTeams = createSelector([selectGameData], (gameData) => {
+  if (gameData) {
+    return {
+      teamOne: gameData.teamOne,
+      teamTwo: gameData.teamTwo,
+    };
+  } else {
+    return null;
+  }
+});
+
+export const selectIngameTeams = createSelector([baseSelect], (gameSession) => {
+  if (gameSession && gameSession.teams) {
+    return {
+      teamOne: gameSession.teams.teamOne,
+      teamTwo: gameSession.teams.teamTwo,
+    };
+  } else {
+    return null;
+  }
 });

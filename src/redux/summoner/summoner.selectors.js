@@ -11,3 +11,8 @@ export const selectSummonerName = createSelector(
   [selectSummoner],
   (summoner) => summoner.displayName
 );
+
+export const selectSummonerData = createSelector(
+  [selectSummoner],
+  (summoner) => summoner
+);

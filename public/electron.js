@@ -21,6 +21,7 @@ const {
 const {
   updateRunePage,
   getSummonerInfoById,
+  getSummonerInfoByName,
   getBestChampsBySummoner,
   getRankedStatsByPuuid,
   checkReadyForMatch,
@@ -190,6 +191,7 @@ ipc.on("WORKING", () => {
 
 ipc.handle("CHANGE_RUNES", updateRunePage);
 ipc.handle("GET_SUMMONER_INFO_BY_ID", getSummonerInfoById);
+ipc.handle("GET_SUMMONER_INFO_BY_NAME", getSummonerInfoByName);
 ipc.handle("GET_BEST_CHAMPS_BY_ID", getBestChampsBySummoner);
 ipc.handle("GET_RANKED_STATS_BY_PUUID", getRankedStatsByPuuid);
 ipc.handle("CHECK_READY_FOR_MATCH", checkReadyForMatch);

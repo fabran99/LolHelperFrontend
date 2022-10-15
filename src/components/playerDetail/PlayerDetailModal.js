@@ -14,6 +14,7 @@ import moment from "moment";
 import bg from "../../img/universe-bg.jpg";
 import Tag from "../utility/Tag";
 import CustomTooltip from "../utility/CustomTooltip";
+import MatchDetailModal from "./MatchDetailModal";
 
 export class PlayerDetailModal extends Component {
   constructor(props) {
@@ -39,7 +40,12 @@ export class PlayerDetailModal extends Component {
     document.removeEventListener("keydown", this.escFunction, false);
   }
 
-  getMatchDetail(gameId) {}
+  updateMatchDetail(watchingMatchDetail, matchDetail) {
+    this.setState({
+      watchingMatchDetail,
+      matchDetail,
+    });
+  }
 
   getChampInfo(id) {
     const { assets } = this.props;
@@ -53,6 +59,7 @@ export class PlayerDetailModal extends Component {
 
   render() {
     const { data, close, assets, selectedChamp } = this.props;
+    const { matchDetail, watchingMatchDetail } = this.state;
 
     var stats = getStatsFromMatchlist(data.matchlist);
 
@@ -91,152 +98,165 @@ export class PlayerDetailModal extends Component {
     };
 
     return (
-      <div className="modal">
-        <div className="modal__background" onClick={close}></div>
-        <div
-          className="modal__content"
-          style={{ backgroundImage: `url(${bg})` }}
-        >
-          <div className="modal__close" onClick={close}>
-            <i className="fas fa-times"></i>
-          </div>
+      <React.Fragment>
+        <div className="modal">
+          <div className="modal__background" onClick={close}></div>
+          <div
+            className="modal__content"
+            style={{ backgroundImage: `url(${bg})` }}
+          >
+            <div className="modal__close" onClick={close}>
+              <i className="fas fa-times"></i>
+            </div>
 
-          {/* Contenido */}
-          <div className="modal__bar">Detalle de jugador</div>
-          <div className="modal__content_data">
-            <div className="playerdetail">
-              <div className="row">
-                {/* Fila izquierda */}
-                <div className="col-8">
-                  <div className="row">
-                    {/* Icono */}
-                    <div className="col-3">
-                      <CustomTooltip title={bestChamps()} placement="bottom">
-                        <div className="playerdetail__img">
-                          <div className="border"></div>
-                          {<img src={icon} />}
-                          <div className="playerdetail__level">
-                            {data.summonerLevel}
+            {/* Contenido */}
+            <div className="modal__bar">Detalle de jugador</div>
+            <div className="modal__content_data">
+              <div className="playerdetail">
+                <div className="row">
+                  {/* Fila izquierda */}
+                  <div className="col-8">
+                    <div className="row">
+                      {/* Icono */}
+                      <div className="col-3">
+                        <CustomTooltip title={bestChamps()} placement="bottom">
+                          <div className="playerdetail__img">
+                            <div className="border"></div>
+                            {<img src={icon} />}
+                            <div className="playerdetail__level">
+                              {data.summonerLevel}
+                            </div>
                           </div>
-                        </div>
-                      </CustomTooltip>
-                    </div>
-                    {/* Data del jugador */}
-                    <div className="col-4">
-                      <div className="playerinfo__title">
-                        {data.displayName}
+                        </CustomTooltip>
                       </div>
-                      {data.tier &&
-                        data.division &&
-                        data.wins != null &&
-                        data.tier != "NONE" &&
-                        data.division != "NA" && (
-                          <div className="playerinfo__item">
-                            <span className="value">
-                              {data.tier} {data.division} ({data.wins} wins)
-                            </span>
+                      {/* Data del jugador */}
+                      <div className="col-4">
+                        <div className="playerinfo__title">
+                          {data.displayName}
+                        </div>
+                        {data.tier &&
+                          data.division &&
+                          data.wins != null &&
+                          data.tier != "NONE" &&
+                          data.division != "NA" && (
+                            <div className="playerinfo__item">
+                              <span className="value">
+                                {data.tier} {data.division} ({data.wins} wins)
+                              </span>
+                            </div>
+                          )}
+                        {/* Tags */}
+
+                        <div className="playerinfo__tags">
+                          {tags.map((tag, i) => {
+                            return (
+                              <Tag
+                                key={i}
+                                tooltip={tag.tooltip}
+                                value={tag.value}
+                                type={tag.type}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Champ actual */}
+                      <div className="col-5">
+                        {selectedChamp && current_champ_mastery && (
+                          <div className="mastery">
+                            <div className="mastery__image">
+                              <div className="champ_image_container">
+                                <img
+                                  src={getSquare(
+                                    assets.img_links,
+                                    selectedChamp.key
+                                  )}
+                                />
+                              </div>
+                            </div>
+                            <div className="mastery__name">
+                              {selectedChamp.name}
+                            </div>
+                            <div className="mastery__data">
+                              <div>
+                                Nivel de maestria:{" "}
+                                <div className="value ">
+                                  {current_champ_mastery.championLevel}
+                                </div>
+                              </div>
+
+                              <div>
+                                Puntos de maestria:{" "}
+                                <div className="value">
+                                  {numberToDots(
+                                    current_champ_mastery.championPoints
+                                  )}
+                                </div>
+                              </div>
+
+                              <div>
+                                Jugado:{" "}
+                                <div className="value">
+                                  {moment
+                                    .unix(
+                                      current_champ_mastery.lastPlayTime / 1000
+                                    )
+                                    .format("DD/MM/YYYY HH:mm")}
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         )}
-                      {/* Tags */}
 
-                      <div className="playerinfo__tags">
-                        {tags.map((tag, i) => {
-                          return (
-                            <Tag
-                              key={i}
-                              tooltip={tag.tooltip}
-                              value={tag.value}
-                              type={tag.type}
-                            />
-                          );
-                        })}
+                        {selectedChamp && !current_champ_mastery && (
+                          <div className="mastery">
+                            <div className="mastery__image">
+                              <div className="champ_image_container">
+                                <img
+                                  src={getSquare(
+                                    assets.img_links,
+                                    selectedChamp.key
+                                  )}
+                                />
+                              </div>
+                            </div>
+                            <div className="mastery__name">
+                              {selectedChamp.name}
+                            </div>
+                            <div className="mastery__data mastery__data--not_played">
+                              <div>Nunca jugado</div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-
-                    {/* Champ actual */}
-                    <div className="col-5">
-                      {selectedChamp && current_champ_mastery && (
-                        <div className="mastery">
-                          <div className="mastery__image">
-                            <div className="champ_image_container">
-                              <img
-                                src={getSquare(
-                                  assets.img_links,
-                                  selectedChamp.key
-                                )}
-                              />
-                            </div>
-                          </div>
-                          <div className="mastery__name">
-                            {selectedChamp.name}
-                          </div>
-                          <div className="mastery__data">
-                            <div>
-                              Nivel de maestria:{" "}
-                              <div className="value ">
-                                {current_champ_mastery.championLevel}
-                              </div>
-                            </div>
-
-                            <div>
-                              Puntos de maestria:{" "}
-                              <div className="value">
-                                {numberToDots(
-                                  current_champ_mastery.championPoints
-                                )}
-                              </div>
-                            </div>
-
-                            <div>
-                              Jugado:{" "}
-                              <div className="value">
-                                {moment
-                                  .unix(
-                                    current_champ_mastery.lastPlayTime / 1000
-                                  )
-                                  .format("DD/MM/YYYY HH:mm")}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {selectedChamp && !current_champ_mastery && (
-                        <div className="mastery">
-                          <div className="mastery__image">
-                            <div className="champ_image_container">
-                              <img
-                                src={getSquare(
-                                  assets.img_links,
-                                  selectedChamp.key
-                                )}
-                              />
-                            </div>
-                          </div>
-                          <div className="mastery__name">
-                            {selectedChamp.name}
-                          </div>
-                          <div className="mastery__data mastery__data--not_played">
-                            <div>Nunca jugado</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <Matchlist
+                      matchlist={data.matchlist}
+                      updateMatchDetail={this.updateMatchDetail.bind(this)}
+                    />
                   </div>
-                  <Matchlist matchlist={data.matchlist} />
-                </div>
-                <div className="col-4">
-                  {/* Estadisticas */}
-                  <PlayerStats
-                    stats={stats}
-                    masteryLevels={data.masteryLevels}
-                  />
+                  <div className="col-4">
+                    {/* Estadisticas */}
+                    <PlayerStats
+                      stats={stats}
+                      masteryLevels={data.masteryLevels}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+
+        {watchingMatchDetail && (
+          <MatchDetailModal
+            matchDetail={matchDetail}
+            updateMatchDetail={this.updateMatchDetail.bind(this)}
+            summonerId={data.summonerId}
+          />
+        )}
+      </React.Fragment>
     );
   }
 }

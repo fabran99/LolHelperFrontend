@@ -567,6 +567,11 @@
   &__content {
     font-size: 1.3em;
     margin-bottom: 0.3em;
+
+    &--big{
+      width: 220px;
+
+    }
     .value {
       display: inline-block;
       margin-left: 0.5em;
@@ -574,6 +579,7 @@
       color: lighten($skyblue, 40%);
     }
   }
+
 
   &__champlist {
     width: 150px;

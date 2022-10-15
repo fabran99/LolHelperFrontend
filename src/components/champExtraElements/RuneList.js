@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import CustomTooltip from "../utility/CustomTooltip";
 import { runesFromChamp, runesFromPlayer } from "../../functions/assetParser";

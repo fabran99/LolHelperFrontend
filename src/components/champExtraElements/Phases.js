@@ -1,8 +1,4 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import CustomTooltip from "../utility/CustomTooltip";
-import classnames from "classnames";
-import BarRateStat from "../utility/BarRateStat";
+import React from "react";
 import { Line } from "react-chartjs-2";
 
 import { lineOptions } from "../../helpers/chartDefaults";

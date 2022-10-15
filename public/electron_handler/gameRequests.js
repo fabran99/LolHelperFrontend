@@ -54,6 +54,12 @@ const getSummonerInfoById = async (event, data) => {
   var result = await summHandler.getSummonerDataById(summonerId);
   return result;
 };
+const getSummonerInfoByName = async (event, data) => {
+  const { summonerName, connection } = JSON.parse(data);
+  var summHandler = new SummonersHandler(connection);
+  var result = await summHandler.getSummonerDataByName(summonerName);
+  return result;
+};
 
 const getSummonerMasteries = async (event, data) => {
   const { summonerId, connection } = JSON.parse(data);
@@ -87,6 +93,7 @@ const getCurrentSummonerData = async (event, data) => {
 const getSummonerDetail = async (event, data) => {
   const { connection, summoner: basicData } = JSON.parse(data);
   const { puuid, summonerId } = basicData;
+  console.log(basicData);
 
   try {
     // Traigo datos de ranked
@@ -110,7 +117,10 @@ const getSummonerDetail = async (event, data) => {
     // Traigo lista de partidas
     var matchlist = await getMatchlist(
       null,
-      JSON.stringify({ puuid, connection })
+      JSON.stringify({
+        puuid,
+        connection,
+      })
     );
 
     // Traigo lista de maestrias
@@ -128,13 +138,12 @@ const getSummonerDetail = async (event, data) => {
       masteries,
     };
     return summDetail;
-  } catch (e) {
-    console.log(e);
-  }
+  } catch (e) {}
 };
 
 const getMatchlist = async (event, data) => {
-  const { puuid, connection, summonerId, displayName, host } = JSON.parse(data);
+  const { puuid, connection, summonerId, displayName, host, apiKey } =
+    JSON.parse(data);
 
   var summHandler = new SummonersHandler(connection);
   var currentRegion = await summHandler.getRegionData();
@@ -150,6 +159,9 @@ const getMatchlist = async (event, data) => {
       ),
       strictSSL: false,
       resolveWithFullResponse: true,
+      headers: {
+        Authorization: apiKey,
+      },
     });
     result = JSON.parse(result.body).game_ids;
     usedEndpoint = true;
@@ -268,5 +280,6 @@ module.exports = {
   restartUx,
   getCurrentSummonerData,
   getCurrentGameData,
+  getSummonerInfoByName,
   getSummonerDetail,
 };

@@ -17,10 +17,27 @@ export const selectAssetsLoaded = createSelector(
   (assets) => !!assets.champions
 );
 
+// Runas
+export const selectRunes = createSelector(
+  [selectAssets],
+  (assets) => assets.runes
+);
+
+export const selectPerks = createSelector(
+  [selectAssets],
+  (assets) => assets.perks
+);
+
 // Imagenes
 export const selectImgLinks = createSelector(
   [selectAssets],
   (assets) => assets.img_links
+);
+
+// Spells
+export const selectSpells = createSelector(
+  [selectAssets],
+  (assets) => assets.spells
 );
 
 // Champions

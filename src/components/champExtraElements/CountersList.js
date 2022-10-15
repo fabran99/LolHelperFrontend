@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { getSquare } from "../../helpers/getImgLinks";
 
 import CustomTooltip from "../utility/CustomTooltip";
-import { Link } from "react-router-dom";
 import {
   selectChampionById,
   selectImgLinks,
@@ -78,7 +77,6 @@ const CountersList = ({ getChampionById, imgLinks, champ }) => {
 };
 
 const mapStateToProps = (state) => ({
-  assets: state.assets,
   getChampionById: (id) => selectChampionById(id)(state),
   imgLinks: selectImgLinks(state),
 });

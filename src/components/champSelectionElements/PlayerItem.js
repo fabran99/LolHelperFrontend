@@ -5,7 +5,6 @@ import CustomTooltip from "../utility/CustomTooltip";
 import { getSquare, getSpell } from "../../helpers/getImgLinks";
 import imgPlaceholder from "../../img/placeholder.svg";
 import { getSelectedChampByCellId } from "../../functions/gameSession";
-import { electron } from "../../helpers/outsideObjects";
 import moment from "moment";
 import {
   numberToDots,
@@ -16,6 +15,15 @@ import {
 import PlayerDetailModal from "../playerDetail/PlayerDetailModal";
 import Tag from "../utility/Tag";
 import { selectLcuConnection } from "../../redux/lcuConnector/lcuConnector.selectors";
+import { selectPlayerBySummonerId } from "../../redux/players/players.selectors";
+import { updatePlayerData } from "../../redux/players/players.actions";
+import {
+  asyncGetSummonerInfoByID,
+  getBestChampsBySummonerId,
+  getSummonerMasteriesById,
+  getPlayerRankedData,
+  getMatchlistByPuuid,
+} from "../../electron/getLauncherData";
 
 const positions_dict = {
   utility: "Support",
@@ -68,19 +76,28 @@ export class PlayerItem extends Component {
   }
 
   getPlayerInfo() {
-    const { player, connection } = this.props;
+    const { player, connection, selectPlayer, updatePlayerData } = this.props;
     const { summonerId } = player;
 
     this.setState({
       summonerId,
     });
 
+    let currentPlayerData = selectPlayer(summonerId);
+    if (currentPlayerData && currentPlayerData.infoIsComplete) {
+      let currentDate = new Date();
+      let lastUpdate = new Date(currentPlayerData.lastUpdate);
+      // Check if the last update is from 15 minutes ago or less
+      if (currentDate - lastUpdate < 1000 * 60 * 15) {
+        this.setState({
+          ...currentPlayerData,
+        });
+        return;
+      }
+    }
+
     // Solicito info general del jugador
-    electron.ipcRenderer
-      .invoke(
-        "GET_SUMMONER_INFO_BY_ID",
-        JSON.stringify({ connection, summonerId })
-      )
+    asyncGetSummonerInfoByID(connection, summonerId)
       .then((res) => {
         const { puuid, displayName, accountId, summonerLevel, profileIconId } =
           res;
@@ -94,6 +111,7 @@ export class PlayerItem extends Component {
             profileIconId,
           },
           () => {
+            updatePlayerData({ ...this.state });
             this.getPlayerRankData();
           }
         );
@@ -103,34 +121,33 @@ export class PlayerItem extends Component {
       });
 
     // Info de mejores champs del jugador
-    electron.ipcRenderer
-      .invoke(
-        "GET_BEST_CHAMPS_BY_ID",
-        JSON.stringify({ connection, summonerId })
-      )
+    getBestChampsBySummonerId(connection, summonerId)
       .then((res) => {
         var bestChamps = res.masteries.map((champ) => {
           const { championId, championPoints } = champ;
           return { championId, championPoints };
         });
-        this.setState({ bestChamps });
+        this.setState({ bestChamps }, () => {
+          updatePlayerData({ ...this.state });
+        });
       })
       .catch((err) => {
         console.log(err);
       });
 
     // Pido info de las maestrias
-    electron.ipcRenderer
-      .invoke(
-        "GET_SUMMONER_MASTERIES_BY_ID",
-        JSON.stringify({ connection, summonerId })
-      )
+    getSummonerMasteriesById(connection, summonerId)
       .then((res) => {
         // Ordeno descendentemente por maestria
         res = res.sort((a, b) => b.championPoints - a.championPoints);
-        this.setState({
-          masteryLevels: res,
-        });
+        this.setState(
+          {
+            masteryLevels: res,
+          },
+          () => {
+            updatePlayerData({ ...this.state });
+          }
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -138,47 +155,45 @@ export class PlayerItem extends Component {
   }
 
   getPlayerRankData() {
-    const { connection } = this.props;
+    const { connection, updatePlayerData } = this.props;
     const { puuid, summonerId, displayName } = this.state;
 
     // Solicito info de las ranked del jugador
-    electron.ipcRenderer
-      .invoke(
-        "GET_RANKED_STATS_BY_PUUID",
-        JSON.stringify({ connection, puuid })
-      )
+
+    getPlayerRankedData(connection, puuid)
       .then((res) => {
         var key = puuid || Object.keys(res)[0];
         var data = res[key].queueMap["RANKED_SOLO_5x5"];
         var { tier, wins, division } = data;
         var isInPromo = data.miniSeriesProgress != "";
-        this.setState({
-          tier,
-          wins,
-          division,
-          isInPromo,
-        });
+        console.log("Obtengo data de jugador");
+        this.setState(
+          {
+            tier,
+            wins,
+            division,
+            isInPromo,
+          },
+          () => {
+            updatePlayerData({ ...this.state });
+          }
+        );
       })
       .catch((err) => {
         console.log(err);
       });
 
     // Solicito info de las partidas del jugador
-    electron.ipcRenderer
-      .invoke(
-        "GET_MATCHLIST_BY_PUUID",
-        JSON.stringify({
-          connection,
-          puuid,
-          summonerId,
-          displayName,
-          host: process.env.REACT_APP_HOST,
-        })
-      )
+    getMatchlistByPuuid(connection, puuid, summonerId, displayName)
       .then((res) => {
-        this.setState({
-          matchlist: res,
-        });
+        this.setState(
+          {
+            matchlist: res,
+          },
+          () => {
+            updatePlayerData({ ...this.state });
+          }
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -471,6 +486,11 @@ const mapStateToProps = (state) => ({
   assets: state.assets,
   champSelect: state.champSelect,
   connection: selectLcuConnection(state),
+  selectPlayer: (summonerId) => selectPlayerBySummonerId(summonerId)(state),
 });
 
-export default connect(mapStateToProps, null)(PlayerItem);
+const mapDispatchToProps = {
+  updatePlayerData,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerItem);

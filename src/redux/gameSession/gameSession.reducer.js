@@ -7,10 +7,11 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GAMESESSION_CHANGE:
-      return {
+      let newData = {
         ...state,
         ...action.payload,
       };
+      return newData;
     case CLEAN_GAMESESSION:
       return {
         ...initialState,

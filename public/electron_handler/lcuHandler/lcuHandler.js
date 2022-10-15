@@ -161,6 +161,14 @@ class SummonersHandler extends GenericHandler {
 
     return result;
   }
+  // Info de un jugador por su summonerName
+  async getSummonerDataByName(summonerName) {
+    var result = await this.genericGet(
+      encodeURI(`/lol-summoner/v1/summoners?name=${summonerName}`)
+    );
+
+    return result;
+  }
 
   // Maestrias de un jugador por su summonerId
   async getSummonerMasteriesById(summonerId, top = null) {
@@ -196,18 +204,19 @@ class SummonersHandler extends GenericHandler {
 
     return result;
   }
-    // Solicita el detalle de un match
-    async getMatchDetail(matchId){
-      var result = await this.genericGet(`/lol-match-history/v1/games/${matchId}`);
-      return result;
-    }
-  
-    // Obtiene datos de la region del jugador
-    async getRegionData(){
-      var result = await this.genericGet(`/riotclient/get_region_locale`);
-      return result;
-    }
-  
+  // Solicita el detalle de un match
+  async getMatchDetail(matchId) {
+    var result = await this.genericGet(
+      `/lol-match-history/v1/games/${matchId}`
+    );
+    return result;
+  }
+
+  // Obtiene datos de la region del jugador
+  async getRegionData() {
+    var result = await this.genericGet(`/riotclient/get_region_locale`);
+    return result;
+  }
 }
 
 // ==========================

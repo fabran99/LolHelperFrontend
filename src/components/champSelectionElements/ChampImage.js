@@ -11,7 +11,10 @@ import ItemList from "../champExtraElements/ItemList";
 import SkillOrder from "../champExtraElements/SkillOrder";
 import CountersList from "../champExtraElements/CountersList";
 import imgPlaceholder from "../../img/placeholder.svg";
-import { electron } from "../../helpers/outsideObjects";
+import {
+  changeCurrentRunes,
+  importItemsToGame,
+} from "../../electron/getLauncherData";
 import { updateConfig } from "../../redux/settings/settings.actions";
 import classnames from "classnames";
 import RadarStats from "../champExtraElements/RadarStats";
@@ -47,13 +50,7 @@ export class ChampImage extends Component {
         }
 
         var runes = champ.info_by_lane.find((item) => item.lane == lane).runes;
-        var obj = {
-          runePage: runes,
-          champName: champ.name,
-          connection: this.props.connection,
-        };
-        electron.ipcRenderer
-          .invoke("CHANGE_RUNES", JSON.stringify(obj))
+        changeCurrentRunes(this.props.connection, champ.name, runes)
           .then((res) => {
             this.setState({
               runeButtonDisabled: false,
@@ -98,10 +95,7 @@ export class ChampImage extends Component {
           savingBuild: true,
         });
 
-        electron.ipcRenderer.invoke(
-          "IMPORT_ITEMS",
-          JSON.stringify(buildObject)
-        );
+        importItemsToGame(buildObject);
       }
     );
   }
@@ -157,16 +151,6 @@ export class ChampImage extends Component {
     updateConfig({
       [e.target.name]: e.target.value,
     });
-  }
-
-  getChampInfo(id) {
-    const { assets } = this.props;
-    if (!id) {
-      return null;
-    }
-
-    var champ = assets.champions.find((item) => item.championId == id);
-    return champ;
   }
 
   getCurrentPlayer() {

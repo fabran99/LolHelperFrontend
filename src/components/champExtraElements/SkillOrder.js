@@ -1,7 +1,4 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import CustomTooltip from "../utility/CustomTooltip";
-import classnames from "classnames";
+import React from "react";
 
 const NUMBER_TO_KEY = {
   1: "Q",

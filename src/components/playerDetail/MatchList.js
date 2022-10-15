@@ -21,8 +21,12 @@ export class MatchList extends Component {
     return champ;
   }
 
-  getMatchDetail(gameId) {
-    console.log(gameId);
+  showMatchDetail(gameId) {
+    const { matchlist, updateMatchDetail } = this.props;
+    updateMatchDetail(
+      true,
+      matchlist.find((item) => item.gameId == gameId)
+    );
   }
 
   render() {
@@ -101,7 +105,9 @@ export class MatchList extends Component {
                 >
                   <div
                     className="match"
-                    onClick={this.getMatchDetail.bind(this, item.gameId)}
+                    onClick={() => {
+                      this.showMatchDetail(item.gameId);
+                    }}
                   >
                     <div className="match__champion">
                       <img src={getSquare(assets.img_links, champData.key)} />

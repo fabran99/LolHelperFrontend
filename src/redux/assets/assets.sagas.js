@@ -9,7 +9,11 @@ function* pollTask() {
     // Busco assets cada un tiempo determinado
     try {
       const { data } = yield call(() =>
-        axios.get(`${process.env.REACT_APP_HOST}${assetsUrls["get_assets"]}`)
+        axios.get(`${process.env.REACT_APP_HOST}${assetsUrls["get_assets"]}`, {
+          headers: {
+            Authorization: process.env.REACT_APP_API_KEY,
+          },
+        })
       );
       yield put(getAssets(data));
       yield delay(1000 * 60 * 15);

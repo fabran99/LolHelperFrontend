@@ -5,7 +5,9 @@ import {
   STOP_FETCHING_CURRENT_GAME,
   START_FETCHING_CURRENT_GAME,
 } from "./ingame.types";
+import { GAMESESSION_CHANGE } from "../gameSession/gameSession.types";
 import { electron } from "../../helpers/outsideObjects";
+import { getSummonerInfoByName } from "../../electron/getLauncherData";
 
 export const updateGameInfo = (data) => ({
   type: UPDATE_GAMEINFO,

@@ -10,6 +10,7 @@ import summonerReducer from "./summoner/summoner.reducer";
 import lobbyReducer from "./lobby/lobby.reducer";
 import gameSessionReducer from "./gameSession/gameSession.reducer";
 import champSelectReducer from "./champSelect/champSelect.reducer";
+import playersReducer from "./players/players.reducer";
 
 const persistConfig = {
   key: "root",
@@ -22,6 +23,7 @@ const persistConfig = {
     "lobby",
     "gameSession",
     "champSelect",
+    "players",
   ],
 };
 
@@ -34,6 +36,7 @@ const rootReducer = combineReducers({
   lobby: lobbyReducer,
   gameSession: gameSessionReducer,
   champSelect: champSelectReducer,
+  players: playersReducer,
 });
 
 export default persistReducer(persistConfig, rootReducer);
