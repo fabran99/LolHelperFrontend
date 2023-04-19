@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "Montserrat";
+  src: url("./Montserrat-Bold.ttf");
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bardAnimation {
+  0% {
+    transform: translate(-50%, -65%) rotate(0);
+  }
+  20% {
+    transform: translate(-50%, -65%) rotate(5deg);
+  }
+  40% {
+    transform: translate(-50%, -65%) rotate(-5deg);
+  }
+  65% {
+    transform: translate(-50%, -65%) rotate(360deg);
+  }
+  100% {
+    transform: translate(-50%, -65%) rotate(360deg);
+  }
+}
+
+@keyframes fadeText {
+  0% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.loading_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  -webkit-app-region: drag;
+  width: 100vw;
+  height: 100vh;
+  background: #141c25;
+  color: white;
+  font-family: "Montserrat";
+  letter-spacing: 3px;
+  font-size: 1.1em;
+  animation: fadeIn 0.25s ease;
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -65%);
+    width: 210px;
+    animation: bardAnimation 1.8s ease infinite;
+  }
+
+  .text {
+    text-align: center;
+    top: 78%;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    position: absolute;
+    animation: fadeText 1s ease infinite;
+    width: 100%;
+    transform: none;
+    text-align: center;
+    left: 0;
+  }
+}

@@ -6,6 +6,10 @@ import ListFilter from "./ListFilter";
 import ListRow from "./ListRow";
 import ChampionDetail from "./ChampionDetail";
 import { getWinrate } from "../../helpers/general";
+import {
+  selectAssetsLoaded,
+  selectChampions,
+} from "../../redux/assets/assets.selectors";
 
 export class ChampionList extends Component {
   constructor(props) {
@@ -43,11 +47,10 @@ export class ChampionList extends Component {
   };
 
   componentDidMount() {
-    const { order, order_var } = this.props;
     this.setState(
       {
-        order: order || this.state.order,
-        order_var: order_var || this.state.order_var,
+        order: this.state.order,
+        order_var: this.state.order_var,
       },
       () => {
         var list = this.filterList();
@@ -62,7 +65,7 @@ export class ChampionList extends Component {
 
   filterList() {
     const { order, order_var, search, lane } = this.state;
-    var new_list = [...this.props.list];
+    var new_list = this.props.champions;
     new_list = new_list.filter((item) => {
       let name = item.name.toLowerCase();
       let champ_lane = item.lanes.map((el) => el.toLowerCase());
@@ -162,7 +165,7 @@ export class ChampionList extends Component {
 
   render() {
     const { current_champ, search, order_var, order, lane } = this.state;
-    const { assets } = this.props;
+    const { assetsLoaded } = this.props;
     // Busco el champ seleccionado
     var list = this.filterList();
     var champ_data = list.find((champ) => champ.championId == current_champ);
@@ -197,7 +200,7 @@ export class ChampionList extends Component {
           {/* Lista */}
 
           <div className="list_wrapper" ref={this.listRef}>
-            {!this.props.list || !list.length ? (
+            {!assetsLoaded || !list.length ? (
               <h2 className="empty">No se encontraron resultados</h2>
             ) : (
               list.map((champ, i) => {
@@ -222,7 +225,8 @@ export class ChampionList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  assets: state.assets,
+  assetsLoaded: selectAssetsLoaded(state),
+  champions: selectChampions(state),
 });
 
 export default connect(mapStateToProps, null)(withRouter(ChampionList));

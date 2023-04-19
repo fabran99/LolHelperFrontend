@@ -424,3 +424,230 @@
     }
   }
 }
+
+
+// Teams
+
+.modal .teams{
+  .team{
+    &__stats{
+      color: $red;
+      text-transform: uppercase;
+      font-size: .85em;
+    }
+    &--player{
+      .team__stats .team__stat, .team__bansAndObj{
+        color:$skyblue;
+      }
+    }
+
+    // Jugador
+    &__players{
+      padding: .5em 0;
+    }
+
+    &__player{
+      overflow: hidden;
+      display: block;
+      position: relative;
+      height: 32px;
+      font-size: 0.9em;
+      background: $row_item_background;
+      margin-bottom: 0.2em;
+      cursor: pointer;
+      border-radius: 3px;
+      box-shadow: $main_page_shadow;
+
+      &:hover {
+        background: $row_item_background_active;
+      }
+      
+      &--current{
+        .team__player__name{
+          color:$yellow;
+        }
+      }
+     
+      &__name{
+        font-size: .65em;
+        transform: translateY(-5px);
+        color: lighten($gold, 22%);
+        display: inline-block;
+        width: 70px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &__champ{
+        width: 22px;
+        height: 22px;
+        overflow: hidden;
+        display: inline-block;
+        border-radius: 50%;
+        border: 2px solid $gold;
+        margin-right: 5px;
+        margin-left: 5px;
+        transform: translateY(1px);
+
+        img{
+          width: 100%;
+        }
+      }
+
+      &__runes{
+        display: inline-block;
+        width: 18px;
+        margin-left: 3px;
+        margin-right: 3px;
+        transform: translateY(-2px);
+
+        img{
+          max-width: 100%;
+        }
+
+        .runeListSecondary{
+          margin-top: -10px !important;
+        }
+      }
+
+      &__sums{
+        display: inline-block;
+        transform: translateY(2px);
+        margin-right: 2px;
+
+        .summonerSpell{
+          height: 12px;
+          width: 12px;
+          img{
+            max-width: 100%;
+          }
+        }
+      }
+      
+      &__data{
+        font-size: .75em;
+        transform: translateY(8px);
+        
+        color: lighten($gold, 22%);
+        div{
+          display: inline-block;
+        }
+
+        .team__player__kda{
+          width: 40%;
+        }
+        .team__player__farm{
+          width: 30%;
+        }
+        .team_p_layer__gold{
+          width: 40%;
+        }
+      }
+     
+    }
+
+    // Build
+    .team__build{
+      display:flex;
+      flex-wrap:wrap;
+      transform: translateY(6px);
+
+      .team__build__item{
+        width: 20px;
+        height: 20px;
+        background: $row_item_background;
+
+        img{
+          width: 100%;
+          border: 1px solid rgba($gold, .2);
+
+        }
+
+        &--empty{
+          border: 1px solid rgba($gold, .2);
+        }
+      }
+    }
+
+    &__bansAndObj{
+      color: $red;
+      text-transform: uppercase;
+      font-size: .85em;
+      height: 100%;
+      position: relative;
+
+      &:after{
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -15px;
+        width: 1px;
+        height: 70%;
+        background: rgba($gold, .2);
+        transform: translateY(-50%);
+      }
+
+      &__bans{
+      padding: 1em 0;
+
+      }
+      &__ban{
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        margin-right: .5em;
+        position: relative;
+        overflow: hidden;
+        opacity: .8;
+        background: rgba(darken($input_background, 0.5%), 0.8);
+
+        &--empty{
+          border: 2px solid rgba($red, .5);
+        }
+
+        &:hover{
+          opacity: 1;
+          cursor: pointer;
+        }
+
+
+        &::after{
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          background: rgba($red, .5);
+          width: 5px;
+          height: 150%;
+          transform: translateX(-50%) translateY(-50%) rotate(45deg);
+        }
+
+        img{
+          max-width: 100%;
+          border: 2px solid rgba($red, .5);
+        }
+      }
+
+    }
+    
+  }
+}
+
+.gameinfo{
+  margin-bottom: .5em;
+  div{
+    display: inline-block;
+    margin-right: 1em;
+  }
+  &__winner{
+    font-family: "Lora";
+    color: lighten($gold, 35%);
+    text-transform: uppercase;
+  }
+
+  &__queue, &__date{
+    font-size: .7em;
+    color: rgba(lighten($gold, 35%), .5);
+  }
+}

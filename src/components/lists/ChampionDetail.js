@@ -13,6 +13,8 @@ import RadarStats from "../champExtraElements/RadarStats";
 import DoughnutStats from "../champExtraElements/DoughnutStats";
 import WinBanPickrate from "../champExtraElements/WinBanPickrate";
 
+import { selectImgLinks } from "../../redux/assets/assets.selectors";
+
 export class ChampionDetail extends Component {
   constructor(props) {
     super(props);
@@ -71,9 +73,7 @@ export class ChampionDetail extends Component {
   }
 
   render() {
-    const { champ_data, assets } = this.props;
-    const { img_links } = assets;
-
+    const { champ_data, imgLinks } = this.props;
     const { visible_element } = this.state;
 
     return (
@@ -81,7 +81,7 @@ export class ChampionDetail extends Component {
         <div className="detailcard">
           <div className="detailcard__border"></div>
           <div className="detailcard__background">
-            <img src={getLoading(img_links, champ_data.key)} alt="" />
+            <img src={getLoading(imgLinks, champ_data.key)} alt="" />
           </div>
           <div className="detailcard__overlay"></div>
           <div className="detailcard__text">
@@ -209,7 +209,7 @@ export class ChampionDetail extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  assets: state.assets,
+  imgLinks: selectImgLinks(state),
 });
 
 export default connect(mapStateToProps, null)(ChampionDetail);

@@ -7,6 +7,7 @@ const join = path.join;
 const isDev = require("electron-is-dev");
 const { lstatSync, readdirSync } = require("fs");
 const { autoUpdater } = require("electron-updater");
+
 // LCU
 const LCUConnector = require("lcu-connector");
 const { auth, connect } = require("league-connect");
@@ -15,11 +16,12 @@ const {
   handleChampSelect,
   handleGameSession,
   handleGameLobby,
-} = require("./electron_related/lcuSockets");
+} = require("./electron_handler/lcuSockets");
 // Game requests
 const {
   updateRunePage,
   getSummonerInfoById,
+  getSummonerInfoByName,
   getBestChampsBySummoner,
   getRankedStatsByPuuid,
   checkReadyForMatch,
@@ -29,10 +31,11 @@ const {
   restartUx,
   getCurrentSummonerData,
   getCurrentGameData,
-} = require("./electron_related/gameRequests");
+  getSummonerDetail,
+} = require("./electron_handler/gameRequests");
 
 // Os handler
-const { importBuild } = require("./electron_related/osHandler");
+const { importBuild } = require("./electron_handler/osHandler");
 
 let mainWindow;
 let loadingScreen;
@@ -85,7 +88,7 @@ const createWindow = () => {
     icon: "",
     webPreferences: {
       nodeIntegration: true,
-      preload: __dirname + "/electron_related/preload.js",
+      preload: __dirname + "/electron_handler/preload.js",
     },
     frame: false,
     resizable: false,
@@ -145,21 +148,24 @@ app.on("activate", () => {
 });
 
 // Manejo listener del juego
+let connector = null;
 ipc.on("WORKING", () => {
+  if (connector) {
+    connector.stop();
+    connector = null;
+  }
   if (socket) {
     for (key in socket.subscriptions) {
       socket.unsubscribe(key);
     }
     socket = null;
   }
-  const connector = new LCUConnector();
-  console.log("working");
+  connector = new LCUConnector();
   // Escucho el archivo lockfile para avisar si hubo cambios
   connector.on("connect", (data) => {
     auth().then((res) => {
       console.log(res);
       mainWindow.webContents.send("LCU_CONNECT", res);
-
       startListeners(res);
     });
 
@@ -168,11 +174,13 @@ ipc.on("WORKING", () => {
   connector.on("disconnect", () => {
     mainWindow.webContents.send("LCU_DISCONNECT", true);
     if (socket) {
+      console.log(socket.subscriptions);
       for (key in socket.subscriptions) {
         socket.unsubscribe(key);
       }
       socket = null;
     }
+    connector = null;
     console.log("disconnected");
   });
 
@@ -183,6 +191,7 @@ ipc.on("WORKING", () => {
 
 ipc.handle("CHANGE_RUNES", updateRunePage);
 ipc.handle("GET_SUMMONER_INFO_BY_ID", getSummonerInfoById);
+ipc.handle("GET_SUMMONER_INFO_BY_NAME", getSummonerInfoByName);
 ipc.handle("GET_BEST_CHAMPS_BY_ID", getBestChampsBySummoner);
 ipc.handle("GET_RANKED_STATS_BY_PUUID", getRankedStatsByPuuid);
 ipc.handle("CHECK_READY_FOR_MATCH", checkReadyForMatch);
@@ -191,9 +200,53 @@ ipc.handle("GET_SUMMONER_MASTERIES_BY_ID", getSummonerMasteries);
 ipc.handle("GET_MATCHLIST_BY_PUUID", getMatchlist);
 ipc.handle("RESTART_UX", restartUx);
 ipc.handle("GET_CURRENT_GAME_DATA", getCurrentGameData);
+ipc.handle("GET_SUMMONER_DETAIL", getSummonerDetail);
 
 // Datos del summoner actual
 ipc.handle("GET_CURRENT_SUMMONER_DATA", getCurrentSummonerData);
+
+// Datos de la partida actual
+let timeoutFetching = null;
+let stopFetchingGame = false;
+ipc.on("START_FETCHING_CURRENT_GAME", (event, data) => {
+  stopFetchingGame = false;
+  console.log("Empezando fetching");
+  const sendGameData = () => {
+    clearTimeout(timeoutFetching);
+
+    if (stopFetchingGame) {
+      return;
+    }
+
+    getCurrentGameData()
+      .then((data) => {
+        mainWindow.webContents.send("CURRENT_GAME_CHANGE", data);
+        var gameStarted = data.events.Events && data.events.Events.length > 0;
+        timeoutFetching = setTimeout(
+          () => {
+            sendGameData();
+          },
+          gameStarted ? 1000 : 3000
+        );
+      })
+      .catch((e) => {
+        console.log(e);
+        // Reintento
+        timeoutFetching = setTimeout(() => {
+          sendGameData();
+        }, 3000);
+      });
+  };
+
+  sendGameData();
+});
+
+ipc.on("STOP_FETCHING_CURRENT_GAME", () => {
+  // Dejo de pedir datos del juego actual
+  console.log("STOP FETCHING");
+  clearTimeout(timeoutFetching);
+  stopFetchingGame = true;
+});
 
 // Acciones del os
 ipc.handle("IMPORT_ITEMS", (event, data) => {
@@ -202,6 +255,7 @@ ipc.handle("IMPORT_ITEMS", (event, data) => {
 
 // Listeners del juego
 const startListeners = (auth_data) => {
+  console.log("Inicio los listeners");
   setTimeout(() => {
     connect(auth_data).then((lcusocket) => {
       socket = lcusocket;
@@ -245,13 +299,14 @@ const addExtensions = () => {
       .filter(isDirectory);
 
   try {
-    BrowserWindow.addDevToolsExtension(
-      getDirectories(`${path.join(extension_path, react_dev_tools)}`)[0]
-    );
+    // BrowserWindow.addDevToolsExtension(
+    //   getDirectories(`${path.join(extension_path, react_dev_tools)}`)[0]
+    // );
     BrowserWindow.addDevToolsExtension(
       getDirectories(`${path.join(extension_path, redux_dev_tools)}`)[0]
     );
-  } catch {
+  } catch (e) {
+    console.log(e);
     console.log("No extensions");
   }
 };

@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import { electron } from "../../helpers/outsideObjects";
 import { Link, withRouter } from "react-router-dom";
 import classnames from "classnames";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/settings/settings.actions";
+
+import { selectLcuIsConnected } from "../../redux/lcuConnector/lcuConnector.selectors";
+import { selectSummonerName } from "../../redux/summoner/summoner.selectors";
+import { selectAssetsLoaded } from "../../redux/assets/assets.selectors";
 
 const currentWindow = electron.remote.getCurrentWindow();
 
@@ -16,29 +20,20 @@ export class TopBar extends Component {
   };
 
   showConfiguration = () => {
-    this.props.updateConfig({ configurationVisible: true });
+    this.props.updateConfig({ settingsVisible: true });
   };
 
   render() {
-    const {
-      location,
-      lcuConnector,
-      assets,
-      summoner,
-      configuration,
-    } = this.props;
-    const { configurationVisible } = configuration;
-
+    const { location, assetsLoaded, lcuIsConnected, summonerName } = this.props;
     const isActive = (path) => {
       return location.pathname == path;
     };
 
-    const showIngame =
-      lcuConnector.connected || process.env.NODE_ENV == "development";
+    const showIngame = lcuIsConnected || process.env.NODE_ENV == "development";
 
     return (
       <div className="top_bar">
-        {assets.champions && (
+        {assetsLoaded && (
           <div className="links">
             <Link
               to="/"
@@ -61,9 +56,7 @@ export class TopBar extends Component {
           </div>
         )}
         <div className="navbar_logo"></div>
-        {summoner && summoner.displayName && (
-          <div className="navbar_summoner">{summoner.displayName}</div>
-        )}
+        {summonerName && <div className="navbar_summoner">{summonerName}</div>}
 
         <div className="icons">
           <div className="minimize" onClick={this.minimize}>
@@ -82,10 +75,9 @@ export class TopBar extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  assets: state.assets,
-  lcuConnector: state.lcuConnector,
-  summoner: state.summoner,
-  configuration: state.configuration,
+  assetsLoaded: selectAssetsLoaded(state),
+  lcuIsConnected: selectLcuIsConnected(state),
+  summonerName: selectSummonerName(state),
 });
 
 export default connect(mapStateToProps, { updateConfig })(withRouter(TopBar));
