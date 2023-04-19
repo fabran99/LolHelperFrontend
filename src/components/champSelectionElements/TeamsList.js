@@ -138,7 +138,7 @@ export class TeamsList extends Component {
 
 const mapStateToProps = (state) => ({
   assets: state.assets,
-  champSelect: state.lcuConnector.champSelect,
+  champSelect: state.champSelect,
 });
 
 export default connect(mapStateToProps, null)(TeamsList);

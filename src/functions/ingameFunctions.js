@@ -5,17 +5,11 @@ const INGAME_TEAM_NAMES = {
   teamTwo: "CHAOS",
 };
 
-export const getTeams = (gameSession, summoner, ingame, assets) => {
-  if (
-    !summoner ||
-    !summoner.summonerId ||
-    !gameSession ||
-    !gameSession.gameData
-  ) {
+export const getTeams = (gameData, summoner, allPlayers, assets) => {
+  if (!summoner || !summoner.summonerId || !gameData) {
     return { team1: [], team2: [], localTeam: "teamOne" };
   }
   var { summonerId } = summoner;
-  var { gameData } = gameSession;
   var localTeam = "teamOne";
   var teamOne = [];
   var teamTwo = [];
@@ -34,6 +28,7 @@ export const getTeams = (gameSession, summoner, ingame, assets) => {
       puuid: tmember.puuid,
       displayName: tmember.summonerName,
       localPlayer,
+      teamParticipantId: tmember.teamParticipantId,
       summonerInternalName: tmember.summonerInternalName,
       team: "teamOne",
     };
@@ -69,8 +64,8 @@ export const getTeams = (gameSession, summoner, ingame, assets) => {
       memberData.spell2Id = selection.spell2Id;
       memberData.selectedSkinIndex = selection.selectedSkinIndex;
     } else {
-      if (ingame.allPlayers) {
-        var currentPlayerData = ingame.allPlayers.find(
+      if (allPlayers) {
+        var currentPlayerData = allPlayers.find(
           (el) => el.summonerName == memberData.displayName
         );
 
@@ -120,11 +115,11 @@ export const getTeams = (gameSession, summoner, ingame, assets) => {
       }
     }
 
-    if (ingame && ingame.allPlayers) {
-      var generalData = ingame.allPlayers.find(
+    if (allPlayers) {
+      var generalData = allPlayers.find(
         (el) =>
-          el.summonerName == memberData.displayName &&
-          el.team == INGAME_TEAM_NAMES[memberData.team]
+          el.summonerName === memberData.displayName &&
+          el.team === INGAME_TEAM_NAMES[memberData.team]
       );
       if (generalData) {
         memberData = {
@@ -149,6 +144,7 @@ export const getTeams = (gameSession, summoner, ingame, assets) => {
       puuid: tmember.puuid,
       displayName: tmember.summonerName,
       localPlayer,
+      teamParticipantId: tmember.teamParticipantId,
       summonerInternalName: tmember.summonerInternalName,
       team: "teamTwo",
     };
@@ -188,8 +184,8 @@ export const getTeams = (gameSession, summoner, ingame, assets) => {
       memberData.spell2Id = selection.spell2Id;
       memberData.selectedSkinIndex = selection.selectedSkinIndex;
     } else {
-      if (ingame.allPlayers) {
-        var currentPlayerData = ingame.allPlayers.find(
+      if (allPlayers) {
+        var currentPlayerData = allPlayers.find(
           (el) =>
             el.summonerName == memberData.displayName &&
             el.team == INGAME_TEAM_NAMES[memberData.team]
@@ -240,8 +236,8 @@ export const getTeams = (gameSession, summoner, ingame, assets) => {
       }
     }
 
-    if (ingame && ingame.allPlayers) {
-      var generalData = ingame.allPlayers.find(
+    if (allPlayers) {
+      var generalData = allPlayers.find(
         (el) =>
           el.summonerName == memberData.displayName &&
           el.team == INGAME_TEAM_NAMES[memberData.team]
@@ -511,7 +507,6 @@ export const getNextBaronTime = (ingame) => {
   if (ingame && ingame.events && ingame.events.Events) {
     events = ingame.events.Events.reverse();
   } else {
-    console.log(ingame);
     return false;
   }
   var timer = null;

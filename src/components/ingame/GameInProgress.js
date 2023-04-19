@@ -7,24 +7,94 @@ import { secondsToTime } from "../../helpers/general";
 
 import ChampImage from "../gameInProgressElements/ChampImage";
 import Loading from "../utility/Loading";
-import classnames from "classnames";
 import TeamsList from "../gameInProgressElements/TeamsList";
+import { asyncGetSummonerInfoByName } from "../../electron/getLauncherData";
+import { gameSessionChange } from "../../redux/gameSession/gameSession.actions";
+import { selectLcuIsConnected } from "../../redux/lcuConnector/lcuConnector.selectors";
+import { selectAllPlayers } from "../../redux/ingame/ingame.selectors";
+import {
+  selectGameSessionGameData,
+  selectIngameTeams,
+} from "../../redux/gameSession/gameSession.selectors";
+import { selectSummonerData } from "../../redux/summoner/summoner.selectors";
 
 export class GameInProgress extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      findingSummonerData: false,
+    };
+  }
   getGameName() {
     const { lcuConnector } = this.props;
     return getGameName(lcuConnector.gameSession);
   }
 
   getTeams() {
-    const { lcuConnector, summoner, ingame, assets } = this.props;
+    const { summoner, assets, ingameTeams, gameData, allPlayers } = this.props;
+    if (ingameTeams) {
+      gameData.teamOne = ingameTeams.teamOne;
+      gameData.teamTwo = ingameTeams.teamTwo;
+    }
 
-    return getTeams(lcuConnector.gameSession, summoner, ingame, assets);
+    return getTeams(gameData, summoner, allPlayers, assets);
+  }
+  async handlePlayersFromIngameData() {
+    if (this.state.findingSummonerData) {
+      return;
+    }
+    this.setState({ findingSummonerData: true });
+    var teamOne = [];
+    var teamTwo = [];
+
+    for (var i = 0; i < this.props.allPlayers.length; i++) {
+      let playerData = this.props.allPlayers[i];
+      let summData = {};
+      if (!playerData.isBot) {
+        summData = await asyncGetSummonerInfoByName(
+          this.props.lcuConnector.connection,
+          playerData.summonerName
+        );
+      }
+      playerData = { ...playerData, ...summData };
+      if (playerData.team == "ORDER") {
+        teamOne.push(playerData);
+      } else {
+        teamTwo.push(playerData);
+      }
+    }
+    let data = {
+      teams: { teamOne, teamTwo },
+    };
+    this.props.gameSessionChange({ data });
+  }
+
+  componentDidMount() {
+    const { gameData, lcuIsConnected, allPlayers } = this.props;
+    if (!this.state.findingSummonerData && gameData) {
+      if (lcuIsConnected && allPlayers) {
+        this.handlePlayersFromIngameData();
+      }
+    }
+  }
+
+  componentDidUpdate() {
+    const { gameData, lcuIsConnected, allPlayers } = this.props;
+    if (
+      !this.state.findingSummonerData &&
+      gameData &&
+      gameData.teamOne.length == 0 &&
+      gameData.teamTwo.length == 0
+    ) {
+      if (lcuIsConnected && allPlayers) {
+        this.handlePlayersFromIngameData();
+      }
+    }
   }
 
   render() {
-    const { lcuConnector, ingame, summoner } = this.props;
-    if (!lcuConnector) {
+    const { summoner, lcuIsConnected } = this.props;
+    if (!lcuIsConnected) {
       return null;
     }
     const { teamOne, teamTwo, localTeam } = this.getTeams();
@@ -35,13 +105,6 @@ export class GameInProgress extends Component {
 
     return (
       <div className="inProgress">
-        {/* Header */}
-        {/* {!timer && (
-          <div className="header_text header_text--long">
-            {this.getGameName()}
-          </div>
-        )} */}
-
         {/* Content */}
         <div className="row">
           <div className="col-3">
@@ -63,13 +126,17 @@ export class GameInProgress extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  lcuConnector: state.lcuConnector,
   assets: state.assets,
-  configuration: state.configuration,
-  summoner: state.summoner,
-  ingame: state.ingame,
+  lcuConnector: state.lcuConnector,
+  summoner: selectSummonerData(state),
+  lcuIsConnected: selectLcuIsConnected(state),
+  allPlayers: selectAllPlayers(state),
+  gameData: selectGameSessionGameData(state),
+  ingameTeams: selectIngameTeams(state),
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  gameSessionChange,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameInProgress);

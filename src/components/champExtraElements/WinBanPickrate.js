@@ -1,42 +1,39 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { getWinrate } from "../../helpers/general";
 import BarRateStat from "../utility/BarRateStat";
+import { selectLaneSelectedForRecommendations } from "../../redux/settings/settings.selectors";
 
-export class WinBanPickrate extends Component {
-  render() {
-    const { champ, configuration, useConfig } = this.props;
-
-    if (!champ) {
-      return null;
-    }
-
-    const { laneSelectedForRecommendations } = configuration;
-
-    var lane = useConfig ? laneSelectedForRecommendations : "";
-
-    var winrate = getWinrate(champ, lane);
-    const winRateContent = () => {
-      return (
-        <span>
-          Winrate <small>({lane ? lane : "Global"})</small>
-        </span>
-      );
-    };
-    return (
-      <div className="stats">
-        <BarRateStat value={winrate} title={winRateContent()} />
-        <BarRateStat value={champ.banRate} title={"Banrate"} color="pink" />
-        <BarRateStat value={champ.pickRate} title={"Pickrate"} color="green" />
-      </div>
-    );
+const WinBanPickrate = ({
+  champ,
+  useConfig,
+  laneSelectedForRecommendations,
+}) => {
+  if (!champ) {
+    return null;
   }
-}
+
+  var lane = useConfig ? laneSelectedForRecommendations : "";
+
+  var winrate = getWinrate(champ, lane);
+  const winRateContent = () => {
+    return (
+      <span>
+        Winrate <small>({lane ? lane : "Global"})</small>
+      </span>
+    );
+  };
+  return (
+    <div className="stats">
+      <BarRateStat value={winrate} title={winRateContent()} />
+      <BarRateStat value={champ.banRate} title={"Banrate"} color="pink" />
+      <BarRateStat value={champ.pickRate} title={"Pickrate"} color="green" />
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({
-  configuration: state.configuration,
+  laneSelectedForRecommendations: selectLaneSelectedForRecommendations(state),
 });
 
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(WinBanPickrate);
+export default connect(mapStateToProps, null)(WinBanPickrate);

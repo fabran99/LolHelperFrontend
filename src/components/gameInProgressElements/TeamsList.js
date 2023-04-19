@@ -18,14 +18,7 @@ export class TeamsList extends Component {
   }
 
   render() {
-    var {
-      theirTeam,
-      myTeam,
-      localTeam,
-      ingame,
-      lcuConnector,
-      assets,
-    } = this.props;
+    var { theirTeam, myTeam, localTeam, ingame, assets } = this.props;
     if (!myTeam || !theirTeam) {
       return null;
     }
@@ -89,9 +82,8 @@ export class TeamsList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  lcuConnector: state.lcuConnector,
   assets: state.assets,
-  configuration: state.configuration,
+  configuration: state.settings,
   summoner: state.summoner,
   ingame: state.ingame,
 });

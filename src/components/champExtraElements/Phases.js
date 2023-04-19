@@ -1,8 +1,4 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import CustomTooltip from "../utility/CustomTooltip";
-import classnames from "classnames";
-import BarRateStat from "../utility/BarRateStat";
+import React from "react";
 import { Line } from "react-chartjs-2";
 
 import { lineOptions } from "../../helpers/chartDefaults";
@@ -25,75 +21,69 @@ const PHASES_COLOR = {
   3: "green",
 };
 
-export class Phases extends Component {
-  render() {
-    const { champ } = this.props;
+const dataFromChamp = (champ) => {
+  return (canvas) => {
+    const ctx = canvas.getContext("2d");
+    const gradient = ctx.createLinearGradient(0, 0, 0, 170);
+    gradient.addColorStop(0, "rgba(20, 163, 230,0.2)");
+    gradient.addColorStop(0.7, "rgba(20, 163, 230,0.0)");
+    gradient.addColorStop(1, "rgba(20, 163, 230,0)");
 
-    if (!champ) {
-      return null;
-    }
-
-    const data = (canvas) => {
-      const ctx = canvas.getContext("2d");
-      const gradient = ctx.createLinearGradient(0, 0, 0, 170);
-      gradient.addColorStop(0, "rgba(20, 163, 230,0.2)");
-      gradient.addColorStop(0.7, "rgba(20, 163, 230,0.0)");
-      gradient.addColorStop(1, "rgba(20, 163, 230,0)");
-
-      return {
-        datasets: [
-          {
-            label: "Minuto",
-            backgroundColor: gradient,
-            borderColor: "rgba(20, 163, 230,1)",
-            borderCapStyle: "butt",
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: "miter",
-            pointBorderColor: "rgb(56, 192, 255)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 5,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgb(56, 192, 255)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            data: [
-              {
-                x: 20,
-                y: PHASES_VALUE[champ.phases_winrate.early],
-              },
-              {
-                x: 30,
-                y: PHASES_VALUE[champ.phases_winrate.mid],
-              },
-              {
-                x: 40,
-                y: PHASES_VALUE[champ.phases_winrate.late],
-              },
-            ],
-          },
-        ],
-      };
+    return {
+      datasets: [
+        {
+          label: "Minuto",
+          backgroundColor: gradient,
+          borderColor: "rgba(20, 163, 230,1)",
+          borderCapStyle: "butt",
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: "miter",
+          pointBorderColor: "rgb(56, 192, 255)",
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 5,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgb(56, 192, 255)",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          data: [
+            {
+              x: 20,
+              y: PHASES_VALUE[champ.phases_winrate.early],
+            },
+            {
+              x: 30,
+              y: PHASES_VALUE[champ.phases_winrate.mid],
+            },
+            {
+              x: 40,
+              y: PHASES_VALUE[champ.phases_winrate.late],
+            },
+          ],
+        },
+      ],
     };
+  };
+};
 
-    const options = { ...lineOptions };
+const Phases = ({ champ }) => {
+  if (!champ) {
+    return null;
+  }
 
-    return (
-      <div className="phases">
-        <div className="phases__title">Winrate / Minuto</div>
-        <div className="chart_container">
-          <div className="line_container">
-            <Line data={data} options={options} height={150} />
-          </div>
+  const options = { ...lineOptions };
+
+  return (
+    <div className="phases">
+      <div className="phases__title">Winrate / Minuto</div>
+      <div className="chart_container">
+        <div className="line_container">
+          <Line data={dataFromChamp(champ)} options={options} height={150} />
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-const mapStateToProps = (state) => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Phases);
+export default Phases;

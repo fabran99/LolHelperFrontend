@@ -7,48 +7,50 @@ import NotIngame from "./NotIngame";
 import Lobby from "./Lobby";
 import GameInProgress from "./GameInProgress";
 
-export class Ingame extends Component {
-  render() {
-    const { gameSession, assets } = this.props;
-    var lobbyPhases = ["Lobby", "Matchmaking", "ReadyCheck"];
-    if (!assets || assets.champions.length == 0) {
-      return <Redirect to="/" />;
-    }
+import { selectAssetsLoaded } from "../../redux/assets/assets.selectors";
+import {
+  selectCurrentPhase,
+  selectIsTFT,
+} from "../../redux/gameSession/gameSession.selectors";
 
-    if (gameSession.phase == "ChampSelect") {
-      return (
-        <AppContent>
-          <ChampSelect />
-        </AppContent>
-      );
-    } else if (lobbyPhases.indexOf(gameSession.phase) != -1) {
-      return (
-        <AppContent>
-          <Lobby />
-        </AppContent>
-      );
-    } else if (
-      gameSession.phase == "InProgress" &&
-      gameSession.map.gameMode != "TFT"
-    ) {
-      return (
-        <AppContent>
-          <GameInProgress />
-        </AppContent>
-      );
-    }
+const Ingame = ({ assetsLoaded, isTFT, currentPhase }) => {
+  var lobbyPhases = ["Lobby", "Matchmaking", "ReadyCheck"];
+  if (!assetsLoaded) {
+    //  || assets.champions.length == 0
+    return <Redirect to="/" />;
+  }
 
+  if (currentPhase == "ChampSelect") {
     return (
       <AppContent>
-        <NotIngame />
+        <ChampSelect />
+      </AppContent>
+    );
+  } else if (lobbyPhases.indexOf(currentPhase) != -1) {
+    return (
+      <AppContent>
+        <Lobby />
+      </AppContent>
+    );
+  } else if (currentPhase == "InProgress" && !isTFT) {
+    return (
+      <AppContent>
+        <GameInProgress />
       </AppContent>
     );
   }
-}
+
+  return (
+    <AppContent>
+      <NotIngame />
+    </AppContent>
+  );
+};
 
 const mapStateToProps = (state) => ({
-  gameSession: state.lcuConnector.gameSession,
-  assets: state.assets,
+  assetsLoaded: selectAssetsLoaded(state),
+  isTFT: selectIsTFT(state),
+  currentPhase: selectCurrentPhase(state),
 });
 
 export default connect(mapStateToProps, null)(Ingame);

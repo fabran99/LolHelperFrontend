@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { updateConfig } from "../../actions/configActions";
+import { updateConfig } from "../../redux/settings/settings.actions";
 import { withRouter } from "react-router-dom";
 import Switch from "../utility/Switch";
 import { electron } from "../../helpers/outsideObjects";
 import classnames from "classnames";
 import bg from "../../img/universe-bg.jpg";
+import { selectLcuConnection } from "../../redux/lcuConnector/lcuConnector.selectors";
 
 export class Configuration extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export class Configuration extends Component {
   }
 
   closeModal() {
-    this.props.updateConfig({ configurationVisible: false });
+    this.props.updateConfig({ settingsVisible: false });
   }
 
   restartUx() {
@@ -59,14 +60,10 @@ export class Configuration extends Component {
   }
 
   render() {
-    const { connection, configuration } = this.props;
+    const { connection, settings } = this.props;
 
-    const {
-      autoNavigate,
-      autoImportRunes,
-      autoAcceptMatch,
-      autoImportBuild,
-    } = configuration;
+    const { autoNavigate, autoImportRunes, autoAcceptMatch, autoImportBuild } =
+      settings;
 
     const { restartingUx } = this.state;
 
@@ -175,8 +172,8 @@ export class Configuration extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  configuration: state.configuration,
-  connection: state.lcuConnector.connection,
+  settings: state.settings,
+  connection: selectLcuConnection(state),
 });
 
 const mapDispatchToProps = {

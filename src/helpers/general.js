@@ -40,20 +40,23 @@ export const getWinrate = (champ, lane = "") => {
 export const getLaneFromRole = (role, lane) => {
   if (lane == "TOP") {
     return "Top";
-  } else if (lane == "MID") {
+  } else if (lane == "MIDDLE") {
+    if (role == "SUPPORT") {
+      return "Support";
+    }
     return "Mid";
   } else if (lane == "JUNGLE") {
     return "Jungla";
   } else if (lane == "BOTTOM") {
-    if (role == "DUO_CARRY" || role == "SOLO") {
+    if (role == "CARRY" || role == "SOLO") {
       return "ADC";
     } else {
       return "Support";
     }
   } else if (lane == "NONE") {
-    if (role == "DUO_SUPPORT") {
+    if (role == "SUPPORT") {
       return "Support";
-    } else if ((role = "DUO_CARRY")) {
+    } else if (role == "CARRY") {
       return "ADC";
     }
   }

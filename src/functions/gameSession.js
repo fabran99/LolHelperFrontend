@@ -231,15 +231,11 @@ export const QUEUENAMES = {
 
 export const queueTypeToName = (queue) => {
   var dictQueues = {
-    rank5solo: "Ranked",
-    rank5flex: "Flex",
+    [RANKEDQUEUE]: "Ranked",
+    [FLEXQUEUE]: "Flex",
   };
 
-  if (queue in dictQueues) {
-    return dictQueues[queue];
-  } else {
-    return "Normal";
-  }
+  return dictQueues[queue] || "Normal";
 };
 
 export const VALID_QUEUES = [

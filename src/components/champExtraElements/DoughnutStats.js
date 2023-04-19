@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React from "react";
 
 import {
   doughnutOptions,
@@ -8,42 +7,32 @@ import {
 
 import { Doughnut } from "react-chartjs-2";
 
-export class DoughnutStats extends Component {
-  render() {
-    const { champ } = this.props;
-
-    if (!champ) {
-      return null;
-    }
-
-    var doughnutDataset = {
-      datasets: [
-        {
-          data: [
-            champ.damageTypes.physical,
-            champ.damageTypes.magic,
-            champ.damageTypes.true,
-          ],
-          ...doughnutDatasetStyles,
-        },
-      ],
-      labels: ["AD", "AP", "True"],
-    };
-
-    return (
-      <div className="chart_container">
-        <div className="doughnut_container">
-          <Doughnut options={doughnutOptions} data={doughnutDataset} />
-        </div>
-      </div>
-    );
+const DoughnutStats = ({ champ }) => {
+  if (!champ) {
+    return null;
   }
-}
 
-const mapStateToProps = (state) => ({
-  assets: state.assets,
-});
+  var doughnutDataset = {
+    datasets: [
+      {
+        data: [
+          champ.damageTypes.physical,
+          champ.damageTypes.magic,
+          champ.damageTypes.true,
+        ],
+        ...doughnutDatasetStyles,
+      },
+    ],
+    labels: ["AD", "AP", "True"],
+  };
 
-const mapDispatchToProps = {};
+  return (
+    <div className="chart_container">
+      <div className="doughnut_container">
+        <Doughnut options={doughnutOptions} data={doughnutDataset} />
+      </div>
+    </div>
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DoughnutStats);
+export default DoughnutStats;

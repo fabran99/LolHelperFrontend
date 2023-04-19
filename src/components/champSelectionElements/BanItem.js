@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import CustomTooltip from "../utility/CustomTooltip";
 import imgPlaceholder from "../../img/placeholder.svg";
-import { getSquare, getSpell } from "../../helpers/getImgLinks";
+import { getSquare } from "../../helpers/getImgLinks";
 
 export class BanItem extends Component {
   getChampInfo(id) {

@@ -21,8 +21,12 @@ export class MatchList extends Component {
     return champ;
   }
 
-  getMatchDetail(gameId) {
-    console.log(gameId);
+  showMatchDetail(gameId) {
+    const { matchlist, updateMatchDetail } = this.props;
+    updateMatchDetail(
+      true,
+      matchlist.find((item) => item.gameId == gameId)
+    );
   }
 
   render() {
@@ -50,6 +54,7 @@ export class MatchList extends Component {
               var icon = icon_dict[lane.toLowerCase()];
               var queue = queueTypeToName(item.queueType);
               var champData = this.getChampInfo(item.championId);
+
               var date = moment
                 .unix(item.timestamp / 1000)
                 .format("DD/MM/YYYY HH:mm");
@@ -100,7 +105,9 @@ export class MatchList extends Component {
                 >
                   <div
                     className="match"
-                    onClick={this.getMatchDetail.bind(this, item.gameId)}
+                    onClick={() => {
+                      this.showMatchDetail(item.gameId);
+                    }}
                   >
                     <div className="match__champion">
                       <img src={getSquare(assets.img_links, champData.key)} />
