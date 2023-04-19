@@ -114,8 +114,7 @@ export class LobbyPlayerItem extends Component {
     // Solicito info de las ranked del jugador
     getPlayerRankedData(connection, puuid)
       .then((res) => {
-        var key = puuid || Object.keys(res)[0];
-        var data = res[key].queueMap["RANKED_SOLO_5x5"];
+        var data = res.queueMap["RANKED_SOLO_5x5"];
         var { tier, wins, division } = data;
         var isInPromo = data.miniSeriesProgress != "";
         this.setState(

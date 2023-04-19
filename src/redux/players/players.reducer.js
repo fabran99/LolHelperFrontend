@@ -17,15 +17,11 @@ export default (state = initialState, action) => {
       // Chequeo si tiene todas las keys completadas o no
       let infoIsComplete = true;
       let importantKeys = [
-        "division",
-        "tier",
         "displayName",
         "puuid",
         "summonerId",
         "summonerLevel",
         "profileIconId",
-        "wins",
-        "isInPromo",
         "bestChamps",
         "masteryLevels",
         "matchlist",

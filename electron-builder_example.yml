@@ -1,0 +1,15 @@
+publish:
+  provider: github
+  token: GITHUBTOKEN
+appId: com.electron.bardapp
+files:
+  - build/**/*
+  - node_modules/**/*"
+directories:
+  buildResources: assets
+productName: Bard App
+win:
+  icon: build/icon.ico
+nsis:
+  installerIcon: build/installerIcon.ico
+  runAfterFinish: false

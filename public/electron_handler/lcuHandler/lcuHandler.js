@@ -183,9 +183,7 @@ class SummonersHandler extends GenericHandler {
 
   // Estadisticas de ranked de jugador por su puuid
   async getRankedStatsByPuuid(puuid) {
-    var result = await this.genericGet(
-      `/lol-ranked/v1/ranked-stats?puuids=["${puuid}"]`
-    );
+    var result = await this.genericGet(`/lol-ranked/v1/ranked-stats/${puuid}`);
     return result;
   }
 

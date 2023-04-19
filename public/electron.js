@@ -299,13 +299,14 @@ const addExtensions = () => {
       .filter(isDirectory);
 
   try {
-    BrowserWindow.addDevToolsExtension(
-      getDirectories(`${path.join(extension_path, react_dev_tools)}`)[0]
-    );
+    // BrowserWindow.addDevToolsExtension(
+    //   getDirectories(`${path.join(extension_path, react_dev_tools)}`)[0]
+    // );
     BrowserWindow.addDevToolsExtension(
       getDirectories(`${path.join(extension_path, redux_dev_tools)}`)[0]
     );
-  } catch {
+  } catch (e) {
+    console.log(e);
     console.log("No extensions");
   }
 };

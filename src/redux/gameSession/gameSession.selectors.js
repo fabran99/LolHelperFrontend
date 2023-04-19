@@ -35,7 +35,7 @@ export const selectGameSessionGameData = createSelector(
 export const selectGameName = createSelector(
   [selectGameData, selectGameMap],
   (gameData, gameMap) => {
-    if (gameData || !gameMap) {
+    if (!gameData || !gameMap) {
       return "";
     }
     var isCustom = gameData.isCustomGame;

@@ -9,6 +9,7 @@ import CustomTooltip from "../utility/CustomTooltip";
 import baronIcon from "../../img/baronNashor.png";
 import Air from "../../img/cloudDrake.png";
 import Hextech from "../../img/hextechDrake.png";
+import Chemtech from "../../img/chemtechDrake.png";
 import Elder from "../../img/elderDrake.png";
 import Fire from "../../img/infernalDrake.png";
 import Earth from "../../img/mountainDrake.png";
@@ -22,7 +23,7 @@ import { selectIsSummonerRift } from "../../redux/gameSession/gameSession.select
 import DrakeStatus from "./DrakeStatus";
 import BaronStatus from "./BaronStatus";
 
-const DRAKE_IMAGES = { Air, Elder, Fire, Earth, Water, Hextech };
+const DRAKE_IMAGES = { Air, Elder, Fire, Earth, Water, Hextech, Chemtech };
 
 const TeamListHeader = ({
   myTeamStats,

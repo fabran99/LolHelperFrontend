@@ -32,13 +32,7 @@ export class GameInProgress extends Component {
 
   getTeams() {
     const { summoner, assets, ingameTeams, gameData, allPlayers } = this.props;
-    if (
-      gameData.teamOne &&
-      gameData.teamTwo &&
-      gameData.teamOne.length == 0 &&
-      gameData.teamTwo.length == 0 &&
-      ingameTeams
-    ) {
+    if (ingameTeams) {
       gameData.teamOne = ingameTeams.teamOne;
       gameData.teamTwo = ingameTeams.teamTwo;
     }
@@ -77,12 +71,7 @@ export class GameInProgress extends Component {
 
   componentDidMount() {
     const { gameData, lcuIsConnected, allPlayers } = this.props;
-    if (
-      !this.state.findingSummonerData &&
-      gameData &&
-      gameData.teamOne.length == 0 &&
-      gameData.teamTwo.length == 0
-    ) {
+    if (!this.state.findingSummonerData && gameData) {
       if (lcuIsConnected && allPlayers) {
         this.handlePlayersFromIngameData();
       }
