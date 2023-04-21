@@ -5,7 +5,6 @@ import {
 } from "../../electron/getLauncherData";
 
 export const updateSummoner = (connection, retrys) => async (dispatch) => {
-  console.log("se updaqtea el summoner");
   // Pido datos del summoner
   try {
     var response = await getSummonerData(connection);

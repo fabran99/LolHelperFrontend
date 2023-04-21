@@ -4,11 +4,9 @@ import classnames from "classnames";
 import CustomTooltip from "../../utility/CustomTooltip";
 import { numberToDots } from "../../../helpers/general";
 import { getSquare } from "../../../helpers/getImgLinks";
-import Build from "./Build";
-import Runes from "./Runes";
 import { selectImgLinks } from "../../../redux/assets/assets.selectors";
 import { selectChampionById } from "../../../redux/assets/assets.selectors";
-import SummonerSpell from "./SummonerSpell";
+import TeamPlayer from "./TeamPlayer";
 
 const Team = (props) => {
   const { data, summonerId, isPlayerTeam, getChampionById, imgLinks } = props;
@@ -56,89 +54,17 @@ const Team = (props) => {
               let isCurrentPlayer =
                 participant.identity.player.summonerId == summonerId;
               let currentChamp = getChampionById(participant.championId);
-              const items = [
-                participant.stats.item0,
-                participant.stats.item1,
-                participant.stats.item2,
-                participant.stats.item3,
-                participant.stats.item4,
-                participant.stats.item5,
-                participant.stats.item6,
-              ];
-              const runes = {
-                primary: {
-                  main: participant.stats.perkPrimaryStyle,
-                  perk0: participant.stats.perk0,
-                  perk1: participant.stats.perk1,
-                  perk2: participant.stats.perk2,
-                  perk3: participant.stats.perk3,
-                },
-                secondary: {
-                  main: participant.stats.perkSubStyle,
-                  perk4: participant.stats.perk4,
-                  perk5: participant.stats.perk5,
-                },
-              };
+              let { items, runes } = participant;
 
               return (
-                <div
-                  className={classnames("team__player", {
-                    "team__player--current": isCurrentPlayer,
-                  })}
+                <TeamPlayer
                   key={participant.participantId}
-                >
-                  <div className="row">
-                    {/* Nombre */}
-                    <div className="col-4">
-                      <div className="team__player__runes">
-                        <Runes runeData={runes} />
-                      </div>
-                      <div className="team__player__sums">
-                        <SummonerSpell spellId={participant.spell1Id} />
-                        <SummonerSpell spellId={participant.spell2Id} />
-                      </div>
-                      <div className="team__player__champ">
-                        <img
-                          src={getSquare(imgLinks, currentChamp.key)}
-                          alt=""
-                        />
-                      </div>{" "}
-                      <CustomTooltip
-                        placement="top"
-                        title={
-                          <div className="tooltip">
-                            {participant.identity.player.summonerName}
-                          </div>
-                        }
-                      >
-                        <div className="team__player__name">
-                          {participant.identity.player.summonerName}
-                        </div>
-                      </CustomTooltip>
-                    </div>
-                    {/* Items */}
-                    <div className="col-4">
-                      <div className="team__player__build">
-                        <Build build={items} />
-                      </div>
-                    </div>
-                    {/* Estadisticas */}
-                    <div className="col-4">
-                      <div className="team__player__data">
-                        <div className="team__player__kda">
-                          {participant.stats.kills} / {participant.stats.deaths}{" "}
-                          / {participant.stats.assists}
-                        </div>
-                        <div className="team__player__farm">
-                          {participant.stats.totalMinionsKilled}
-                        </div>
-                        <div className="team__player__gold">
-                          {numberToDots(participant.stats.goldEarned)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  items={items}
+                  runes={runes}
+                  isCurrentPlayer={isCurrentPlayer}
+                  currentChamp={currentChamp}
+                  participant={participant}
+                />
               );
             })}
           </div>

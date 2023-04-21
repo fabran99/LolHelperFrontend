@@ -19,7 +19,6 @@ export function* subscribeBuildApplied() {
         pauseOnHover: true,
         draggable: true,
       });
-      console.log("llega mensaje");
       return emit(updateConfig({ savingBuild: false }));
     };
     electron.ipcRenderer.on("BUILD_APPLIED", onMessage);
