@@ -1,6 +1,6 @@
 {
   "name": "bard_app",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "description": "Aplicacion de estadisticas para league of legends",
   "author": "fabran99",
   "main": "./public/electron.js",
@@ -51,14 +51,15 @@
     "update-electron-app": "^1.5.0"
   },
   "scripts": {
-    "react-start": "react-scripts start",
-    "react-build": "react-scripts build",
+    "react-start": "react-scripts --openssl-legacy-provider start",
+    "react-build": "react-scripts --openssl-legacy-provider build",
     "react-test": "react-scripts test",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
     "build": "npm run react-build && npm run electron-build",
-    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
-    "ship": "electron-builder -p always -c electron-builder.yml"
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"electron .\"",
+    "ship": "electron-builder -p always -c electron-builder.yml",
+    "electron-start": "electron ."
   },
   "eslintConfig": {
     "extends": "react-app"

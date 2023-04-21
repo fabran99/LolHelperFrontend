@@ -204,10 +204,56 @@ class SummonersHandler extends GenericHandler {
   }
   // Solicita el detalle de un match
   async getMatchDetail(matchId) {
-    var result = await this.genericGet(
+    var matchResult = await this.genericGet(
       `/lol-match-history/v1/games/${matchId}`
     );
-    return result;
+
+    // Agrego la timeline completa del match
+    var matchTimeline = await this.genericGet(
+      `/lol-match-history/v1/game-timelines/${matchId}`
+    );
+    matchResult.timeline = matchTimeline;
+
+    // Recorro los participantes del match
+    matchResult.participants = matchResult.participants.map((participant) => {
+      // Busco el timeline del participante
+      var participantTimeline = matchTimeline.frames.map((frame) => {
+        let snapshot = frame.participantFrames[participant.participantId];
+        snapshot.timestamp = frame.timestamp;
+        return snapshot;
+      });
+      participant.timeline = participantTimeline;
+      // Obtengo items
+      let items = [
+        participant.stats.item0,
+        participant.stats.item1,
+        participant.stats.item2,
+        participant.stats.item3,
+        participant.stats.item4,
+        participant.stats.item5,
+        participant.stats.item6,
+      ];
+      let runes = {
+        primary: {
+          main: participant.stats.perkPrimaryStyle,
+          perk0: participant.stats.perk0,
+          perk1: participant.stats.perk1,
+          perk2: participant.stats.perk2,
+          perk3: participant.stats.perk3,
+        },
+        secondary: {
+          main: participant.stats.perkSubStyle,
+          perk4: participant.stats.perk4,
+          perk5: participant.stats.perk5,
+        },
+      };
+      participant.items = items;
+      participant.runes = runes;
+
+      return participant;
+    });
+
+    return matchResult;
   }
 
   // Obtiene datos de la region del jugador
