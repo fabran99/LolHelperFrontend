@@ -64,7 +64,6 @@ const TeamPlayer = ({
   currentChamp,
   imgLinks,
 }) => {
-  console.log(participant);
   return (
     <div
       className={classnames("team__player", {

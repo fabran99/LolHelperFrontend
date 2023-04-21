@@ -186,7 +186,6 @@ export class ConfigurationHandler extends Component {
           updateConfig({
             savingBuild: true,
           });
-          console.log("actualizo build");
           electron.ipcRenderer
             .invoke("IMPORT_ITEMS", JSON.stringify(buildObject))
             .then((res) => {
