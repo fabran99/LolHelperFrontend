@@ -30,7 +30,6 @@ const lineFromTo = (from, to) => {
   let fromY = from.bottom;
   let toX = to.left;
   let toY = to.bottom;
-  console.log(fromX, fromY, toX, toY);
 
   // Calculate the angle of the line
   var angle = (Math.atan2(toY - fromY, toX - fromX) * 180) / Math.PI;
@@ -48,14 +47,12 @@ const lineFromTo = (from, to) => {
 
   fromX = fromX + xOffset;
   fromY = fromY + yOffset;
-  console.log(xOffset, yOffset);
   let style = {
     transform: ` translateX(-50%) rotate(${-Math.round(angle)}deg)`,
     width: `${Math.round(length)}%`,
     left: `${fromX + 3}%`,
     bottom: `${fromY + 6}%`,
   };
-  console.log(style);
   return <div className="line" style={style}></div>;
 };
 
