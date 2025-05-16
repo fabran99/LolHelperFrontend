@@ -36,12 +36,6 @@ const {
 } = require("./electron_handler/gameRequests");
 require("@electron/remote/main").initialize();
 
-const {
-  default: installExtension,
-  REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
-} = require("electron-devtools-installer");
-
 // Os handler
 const { importBuild } = require("./electron_handler/osHandler");
 
@@ -295,6 +289,11 @@ ipc.on("quitAndInstall", (event, arg) => {
 // Extensiones para desarrollo
 const addExtensions = async () => {
   try {
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS,
+      REDUX_DEVTOOLS,
+    } = require("electron-devtools-installer");
     const names = await Promise.all([
       // installExtension(REACT_DEVELOPER_TOOLS),
       installExtension(REDUX_DEVTOOLS),
