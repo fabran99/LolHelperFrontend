@@ -19,6 +19,7 @@ export default (state = initialState, action) => {
     case GET_ASSETS:
       var data = action.payload;
       data.app_version = currentVersion;
+      console.log(data);
 
       data.champions = data.champions.filter(
         (item) => item.lanes && item.info_by_lane

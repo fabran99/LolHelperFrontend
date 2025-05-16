@@ -16,6 +16,8 @@ export class MatchDetailModal extends Component {
 
   parseMatchDetail() {
     const { matchDetail, getChampionById, itemsDict } = this.props;
+
+    console.log(matchDetail);
     let result = {
       gameData: {
         gameDuration: matchDetail.gameDuration,
@@ -138,7 +140,7 @@ export class MatchDetailModal extends Component {
         });
 
         return {
-          champion: getChampionById(participant.championId).name,
+          champion: getChampionById(participant.championId)?.name,
           score: {
             assists: participant.stats.assists,
             deaths: participant.stats.deaths,
@@ -166,8 +168,6 @@ export class MatchDetailModal extends Component {
       (acc, participant) => acc + participant.goldSpent,
       0
     );
-
-    console.log(JSON.stringify(result));
   }
   render() {
     const { matchDetail, summonerId } = this.props;

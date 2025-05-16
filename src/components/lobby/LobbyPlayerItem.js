@@ -54,14 +54,20 @@ export class LobbyPlayerItem extends Component {
 
   getPlayerInfo() {
     const { player, connection, selectPlayer, updatePlayerData } = this.props;
-    const { summonerId, summonerIconId, summonerLevel, summonerName, puuid } =
-      player;
+    const {
+      summonerId,
+      summonerIconId,
+      summonerLevel,
+      summonerName,
+      puuid,
+      displayName,
+    } = player;
 
     this.setState({
       summonerId,
       summonerLevel,
       puuid,
-      displayName: summonerName,
+      displayName: displayName || summonerName,
       profileIconId: summonerIconId,
     });
 
@@ -78,29 +84,16 @@ export class LobbyPlayerItem extends Component {
       }
     }
 
-    // Info de mejores champs del jugador
-    getBestChampsBySummonerId(connection, summonerId)
-      .then((res) => {
-        var bestChamps = res.masteries.map((champ) => {
-          const { championId, championPoints } = champ;
-          return { championId, championPoints };
-        });
-        this.setState({ bestChamps }, () => {
-          updatePlayerData({ ...this.state });
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     // Pido info de las maestrias
-    getSummonerMasteriesById(connection, summonerId)
+    getSummonerMasteriesById(connection, puuid)
       .then((res) => {
         // Ordeno descendentemente por maestria
         res = res.sort((a, b) => b.championPoints - a.championPoints);
         this.setState(
           {
             masteryLevels: res,
+            // best champs are the first 3
+            bestChamps: res.slice(0, 3),
           },
           () => {
             updatePlayerData({ ...this.state });
@@ -182,12 +175,15 @@ export class LobbyPlayerItem extends Component {
       wins,
       isInPromo,
       detailModalVisible,
+      masteryLevels,
     } = this.state;
 
     var tags = [
       ...getTagsFromMatchlist(this.state.matchlist, assets, null),
       ...getTagsFromData(this.state, assets, null),
     ];
+
+    console.log(this.state);
 
     const playerData = () => {
       return (

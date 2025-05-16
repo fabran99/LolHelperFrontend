@@ -26,6 +26,8 @@ const Runes = (props) => {
     (slot) => slot.id === runeData.secondary.perk5
   );
 
+  console.log(props);
+
   return (
     <div className="team__runes">
       <CustomTooltip
@@ -35,54 +37,54 @@ const Runes = (props) => {
             <div className="tooltip__content tooltip__content--big">
               <div className="runes">
                 <div
-                  className={`runeList runeList--${perkData.key.toLowerCase()} runeList__primary`}
+                  className={`runeList runeList--${perkData?.key.toLowerCase()} runeList__primary`}
                 >
                   <div className="rune">
-                    <div className="title">{perkData.name}</div>
+                    <div className="title">{perkData?.name}</div>
                     <div className="image">
-                      <img src={perkData.image} />
+                      <img src={perkData?.image} />
                     </div>
                   </div>
                   <div className="rune">
                     <div className="image">
-                      <img src={perk0.image} />
+                      <img src={perk0?.image} />
                     </div>
                   </div>
                   <div className="rune">
                     <div className="image">
-                      <img src={perk1.image} />
+                      <img src={perk1?.image} />
                     </div>
                   </div>
                   <div className="rune">
                     <div className="image">
-                      <img src={perk2.image} />
+                      <img src={perk2?.image} />
                     </div>
                   </div>
                   <div className="rune">
                     <div className="image">
-                      <img src={perk3.image} />
+                      <img src={perk3?.image} />
                     </div>
                   </div>
                 </div>
 
                 <div className="runeListSecondary">
                   <div
-                    className={`runeList runeList--${perkDataSecondary.key.toLowerCase()} runeList__secondary`}
+                    className={`runeList runeList--${perkDataSecondary?.key.toLowerCase()} runeList__secondary`}
                   >
                     <div className="rune">
-                      <div className="title">{perkDataSecondary.name}</div>
+                      <div className="title">{perkDataSecondary?.name}</div>
                       <div className="image">
-                        <img src={perkDataSecondary.image} />
+                        <img src={perkDataSecondary?.image} />
                       </div>
                     </div>
                     <div className="rune">
                       <div className="image">
-                        <img src={perk4.image} />
+                        <img src={perk4?.image} />
                       </div>
                     </div>
                     <div className="rune">
                       <div className="image">
-                        <img src={perk5.image} />
+                        <img src={perk5?.image} />
                       </div>
                     </div>
                   </div>
@@ -92,7 +94,7 @@ const Runes = (props) => {
           </div>
         }
       >
-        <img src={perk0.image} />
+        <img src={perk0?.image} />
       </CustomTooltip>
     </div>
   );

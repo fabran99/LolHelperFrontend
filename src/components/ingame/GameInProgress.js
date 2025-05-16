@@ -32,10 +32,6 @@ export class GameInProgress extends Component {
 
   getTeams() {
     const { summoner, assets, ingameTeams, gameData, allPlayers } = this.props;
-    if (ingameTeams) {
-      gameData.teamOne = ingameTeams.teamOne;
-      gameData.teamTwo = ingameTeams.teamTwo;
-    }
 
     return getTeams(gameData, summoner, allPlayers, assets);
   }

@@ -16,7 +16,7 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
 
   //   Team 1
   gameData.teamOne.forEach((tmember, i) => {
-    var localPlayer = tmember.summonerId == summonerId;
+    var localPlayer = tmember.riotIdGameName == summoner.displayName;
     if (localPlayer) {
       localTeam = "teamOne";
     }
@@ -26,35 +26,37 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
       summonerId: tmember.summonerId,
       profileIconId: tmember.profileIconId,
       puuid: tmember.puuid,
-      displayName: tmember.summonerName,
+      riotId: tmember.riotId,
+      displayName: tmember.displayName,
       localPlayer,
       teamParticipantId: tmember.teamParticipantId,
       summonerInternalName: tmember.summonerInternalName,
       team: "teamOne",
+      championId: tmember.championId,
     };
-    var isBot = "botSkillLevel" in tmember;
+    var isBot = memberData.puuid == undefined;
 
     if (isBot) {
       memberData.isBot = tmember.botSkillLevel;
     }
 
-    var selection = gameData.playerChampionSelections.find(
-      (el) => el.summonerInternalName == tmember.summonerInternalName
-    );
+    var selection = gameData.playerChampionSelections.find((el) => {
+      if (memberData.puuid) {
+        return el.puuid == tmember.puuid;
+      }
+      return el.championId == tmember.championId;
+    });
 
     if (isBot) {
       var champ = null;
       var name = memberData.displayName;
-      if (!selection) {
-        champ = assets.champions.find((el) => el.name == name.split(" bot")[0]);
-      } else {
-        champ = assets.champions.find(
-          (el) => el.championId == selection.championId
-        );
-      }
+      champ = assets.champions.find(
+        (el) => el.championId == tmember.championId
+      );
       if (champ) {
         name = `Bot ${champ.name}`;
       }
+      memberData.champ = champ;
       memberData.displayName = name;
     }
 
@@ -65,16 +67,18 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
       memberData.selectedSkinIndex = selection.selectedSkinIndex;
     } else {
       if (allPlayers) {
+        var champion = assets.champions.find(
+          (el) => el.championId == tmember.championId
+        );
+
         var currentPlayerData = allPlayers.find(
-          (el) => el.summonerName == memberData.displayName
+          (el) =>
+            el.isBot &&
+            el.championName.toLowerCase() == champion.name.toLowerCase()
         );
 
         if (currentPlayerData) {
           memberData.selectedSkinIndex = currentPlayerData.skinID;
-          var champion = assets.champions.find(
-            (el) => el.name == currentPlayerData.championName
-          );
-
           if (champion) {
             memberData.championId = champion.championId;
           }
@@ -118,7 +122,7 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
     if (allPlayers) {
       var generalData = allPlayers.find(
         (el) =>
-          el.summonerName === memberData.displayName &&
+          el.riotIdGameName === memberData.displayName &&
           el.team === INGAME_TEAM_NAMES[memberData.team]
       );
       if (generalData) {
@@ -133,48 +137,47 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
 
   //   Team 2
   gameData.teamTwo.forEach((tmember, i) => {
-    var localPlayer = tmember.summonerId == summonerId;
+    var localPlayer = tmember.riotIdGameName == summoner.displayName;
     if (localPlayer) {
       localTeam = "teamTwo";
     }
+
     var memberData = {
       accountId: tmember.accountId,
       summonerId: tmember.summonerId,
       profileIconId: tmember.profileIconId,
       puuid: tmember.puuid,
-      displayName: tmember.summonerName,
+      riotId: tmember.riotId,
+      displayName: tmember.displayName,
       localPlayer,
       teamParticipantId: tmember.teamParticipantId,
       summonerInternalName: tmember.summonerInternalName,
       team: "teamTwo",
+      championId: tmember.championId,
     };
-
-    var isBot = "botSkillLevel" in tmember;
+    var isBot = memberData.puuid == undefined;
 
     if (isBot) {
       memberData.isBot = tmember.botSkillLevel;
     }
 
-    var selection = gameData.playerChampionSelections.find(
-      (el) => el.summonerInternalName == tmember.summonerInternalName
-    );
+    var selection = gameData.playerChampionSelections.find((el) => {
+      if (memberData.puuid) {
+        return el.puuid == tmember.puuid;
+      }
+      return el.championId == tmember.championId;
+    });
 
     if (isBot) {
       var champ = null;
       var name = memberData.displayName;
-      if (!selection) {
-        var champName = name.split(" bot")[0];
-        champ = assets.champions.find(
-          (el) => el.name == champName || el.key == champName
-        );
-      } else {
-        champ = assets.champions.find(
-          (el) => el.championId == selection.championId
-        );
-      }
+      champ = assets.champions.find(
+        (el) => el.championId == tmember.championId
+      );
       if (champ) {
         name = `Bot ${champ.name}`;
       }
+      memberData.champ = champ;
       memberData.displayName = name;
     }
 
@@ -185,17 +188,18 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
       memberData.selectedSkinIndex = selection.selectedSkinIndex;
     } else {
       if (allPlayers) {
+        var champion = assets.champions.find(
+          (el) => el.championId == tmember.championId
+        );
+
         var currentPlayerData = allPlayers.find(
           (el) =>
-            el.summonerName == memberData.displayName &&
-            el.team == INGAME_TEAM_NAMES[memberData.team]
+            el.isBot &&
+            el.championName.toLowerCase() == champion.name.toLowerCase()
         );
+
         if (currentPlayerData) {
           memberData.selectedSkinIndex = currentPlayerData.skinID;
-          var champion = assets.champions.find(
-            (el) => el.name == currentPlayerData.championName
-          );
-
           if (champion) {
             memberData.championId = champion.championId;
           }
@@ -239,8 +243,8 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
     if (allPlayers) {
       var generalData = allPlayers.find(
         (el) =>
-          el.summonerName == memberData.displayName &&
-          el.team == INGAME_TEAM_NAMES[memberData.team]
+          el.riotIdGameName === memberData.displayName &&
+          el.team === INGAME_TEAM_NAMES[memberData.team]
       );
       if (generalData) {
         memberData = {
@@ -256,25 +260,22 @@ export const getTeams = (gameData, summoner, allPlayers, assets) => {
 };
 
 export const getSummonerChamp = (gameSession, summoner) => {
-  if (
-    !summoner ||
-    !summoner.summonerId ||
-    !gameSession ||
-    !gameSession.gameData
-  ) {
+  if (!summoner || !summoner.puuid || !gameSession || !gameSession.gameData) {
     return null;
   }
 
-  var { summonerId } = summoner;
+  var { puuid } = summoner;
   var { gameData } = gameSession;
   var teams = [...gameData.teamOne, ...gameData.teamTwo];
 
   for (let i = 0; i < teams.length; i++) {
     var current_el = teams[i];
-    if (current_el.summonerId == summonerId) {
+    if (current_el.puuid == puuid) {
       var selection = gameData.playerChampionSelections.find(
-        (el) => el.summonerInternalName == current_el.summonerInternalName
+        (el) => el.puuid == current_el.puuid
       );
+
+      console.log(gameData.playerChampionSelections, current_el);
 
       if (selection) {
         return selection.championId;

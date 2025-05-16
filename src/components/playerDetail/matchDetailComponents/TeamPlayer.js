@@ -82,7 +82,7 @@ const TeamPlayer = ({
             <SummonerSpell spellId={participant.spell2Id} />
           </div>
           <div className="team__player__champ">
-            <img src={getSquare(imgLinks, currentChamp.key)} alt="" />
+            <img src={getSquare(imgLinks, currentChamp?.key)} alt="" />
           </div>{" "}
           <CustomTooltip
             placement="top"
@@ -90,7 +90,7 @@ const TeamPlayer = ({
               <div className="tooltip">
                 <div className="player_timeline">
                   <div className="player_timeline__name">
-                    {participant.identity.player.summonerName}
+                    {participant.identity.player.gameName}
                   </div>
                   <div className="player_timeline__map">
                     <img src={SummonersRiftMiniMap} />
@@ -128,7 +128,7 @@ const TeamPlayer = ({
                           >
                             <div className="icon">
                               <img
-                                src={getSquare(imgLinks, currentChamp.key)}
+                                src={getSquare(imgLinks, currentChamp?.key)}
                                 alt=""
                               />
                             </div>
@@ -142,7 +142,7 @@ const TeamPlayer = ({
             }
           >
             <div className="team__player__name">
-              {participant.identity.player.summonerName}
+              {participant.identity.player.gameName}
             </div>
           </CustomTooltip>
         </div>

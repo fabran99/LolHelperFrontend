@@ -44,19 +44,22 @@ export class ChampImage extends Component {
       return null;
     }
 
-    var champ = assets.champions.find((item) => item.name == name);
+    var champ = assets.champions.find((item) => item.key.toLowerCase() == name);
     return champ;
   }
 
   getSummonerChampInfo() {
     const { lcuConnector, summoner, ingame } = this.props;
+    console.log(ingame);
     // Si tengo la info de ingame
     if (ingame.allPlayers && summoner.displayName) {
       var playerData = ingame.allPlayers.find(
-        (el) => el.summonerName == summoner.displayName
+        (el) => el.riotIdGameName == summoner.displayName
       );
       if (playerData) {
-        var champData = this.getChampInfoByName(playerData.championName);
+        var champData = this.getChampInfoByName(
+          playerData.rawChampionName.split("_")[3].toLowerCase()
+        );
         return champData;
       }
     }
@@ -75,7 +78,7 @@ export class ChampImage extends Component {
     var data = { ...ingame.activePlayer };
 
     var generalData = ingame.allPlayers.find(
-      (el) => el.summonerName == summoner.displayName
+      (el) => el.riotIdGameName == summoner.displayName
     );
 
     if (generalData) {

@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
       let currentState = { ...state };
       let playerData = action.payload;
       // Chequeo si trae summonerId, si no tiene no hago nada
-      if (!playerData.summonerId) {
+      if (!playerData.puuid) {
         return state;
       }
 
@@ -39,7 +39,7 @@ export default (state = initialState, action) => {
         delete playerData[key];
       }
 
-      currentState[playerData.summonerId] = playerData;
+      currentState[playerData.puuid] = playerData;
 
       return currentState;
 

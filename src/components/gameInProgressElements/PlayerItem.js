@@ -79,13 +79,26 @@ export class PlayerItem extends Component {
   }
 
   getPlayerInfo() {
-    const { player, connection, selectPlayer, updatePlayerData } = this.props;
+    const {
+      player,
+      connection,
+      selectPlayer,
+      updatePlayerData,
+      summonerName,
+      displayName,
+      puuid,
+      summonerIconId,
+      riotIdGameName,
+    } = this.props;
     const { summonerId } = player;
     this.setState({
       summonerId,
+      puuid,
+      displayName: riotIdGameName || displayName || summonerName,
+      profileIconId: summonerIconId,
     });
 
-    let currentPlayerData = selectPlayer(summonerId);
+    let currentPlayerData = selectPlayer(puuid);
     if (currentPlayerData && currentPlayerData.infoIsComplete) {
       let currentDate = new Date();
       let lastUpdate = new Date(currentPlayerData.lastUpdate);
@@ -123,28 +136,15 @@ export class PlayerItem extends Component {
       });
 
     // Info de mejores champs del jugador
-    getBestChampsBySummonerId(connection, summonerId)
-      .then((res) => {
-        var bestChamps = res.masteries.map((champ) => {
-          const { championId, championPoints } = champ;
-          return { championId, championPoints };
-        });
-        this.setState({ bestChamps }, () => {
-          updatePlayerData({ ...this.state });
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // Pido info de las maestrias
-    getSummonerMasteriesById(connection, summonerId)
+    getSummonerMasteriesById(connection, puuid)
       .then((res) => {
         // Ordeno descendentemente por maestria
         res = res.sort((a, b) => b.championPoints - a.championPoints);
         this.setState(
           {
             masteryLevels: res,
+            // best champs are the first 3
+            bestChamps: res.slice(0, 3),
           },
           () => {
             updatePlayerData({ ...this.state });
@@ -416,7 +416,7 @@ export class PlayerItem extends Component {
             </div>
 
             <div className="player__name__small">
-              {player.displayName}{" "}
+              {this.state.displayName || player.displayName}{" "}
               <small>
                 {!!tier &&
                   !!division &&
@@ -539,7 +539,7 @@ const mapStateToProps = (state) => ({
   assets: state.assets,
   configuration: state.configuration,
   summoner: state.summoner,
-  selectPlayer: (summonerId) => selectPlayerBySummonerId(summonerId)(state),
+  selectPlayer: (puuid) => selectPlayerBySummonerId(puuid)(state),
 });
 
 const mapDispatchToProps = {

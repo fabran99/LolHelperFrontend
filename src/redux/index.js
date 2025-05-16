@@ -15,7 +15,7 @@ import playersReducer from "./players/players.reducer";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["settings", "assets"],
+  whitelist: ["settings"],
   blacklist: [
     "ingame",
     "lcuConnector",

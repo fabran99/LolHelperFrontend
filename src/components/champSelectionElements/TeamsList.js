@@ -62,6 +62,9 @@ export class TeamsList extends Component {
     const myTeamBans = this.getMyTeamBans();
     const theirTeamBans = this.getEnemyBans();
 
+    console.log(myTeam);
+    console.log(theirTeam);
+
     const allBans = [...theirTeamBans, ...myTeamBans];
 
     return (

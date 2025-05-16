@@ -20,6 +20,23 @@ class GenericHandler {
 
     return result;
   }
+
+  async genericRequest(url, method, body, json) {
+    var result = await request(
+      {
+        url,
+        method,
+        json,
+        body,
+      },
+      this.connection
+    );
+    if (json) {
+      result = await result.json();
+    }
+
+    return result;
+  }
 }
 
 // ==========================
@@ -158,6 +175,15 @@ class SummonersHandler extends GenericHandler {
     var result = await this.genericGet(
       `/lol-summoner/v1/summoners/${summonerId}`
     );
+    result.displayName = result.gameName;
+
+    return result;
+  }
+  async getSummonerDataByPuuid(puuid) {
+    var result = await this.genericGet(
+      `/lol-summoner/v2/summoners/puuid/${puuid}`
+    );
+    result.displayName = result.gameName;
 
     return result;
   }
@@ -172,7 +198,7 @@ class SummonersHandler extends GenericHandler {
 
   // Maestrias de un jugador por su summonerId
   async getSummonerMasteriesById(summonerId, top = null) {
-    var url = `/lol-collections/v1/inventories/${summonerId}/champion-mastery/`;
+    var url = `/lol-champion-mastery/v1/${summonerId}/champion-mastery/`;
 
     if (top) {
       url = `${url}top?limit=${top}`;
@@ -189,18 +215,22 @@ class SummonersHandler extends GenericHandler {
 
   // Retorna la lista de partidas de un jugador por su puuid
   async getMatchlistByPuuid(puuid) {
+    console.log("Puuid", puuid);
     var result = await this.genericGet(
-      `/lol-career-stats/v1/summoner-games/${puuid}`
+      `/lol-match-history/v1/products/lol/${puuid}/matches`
     );
-
     return result;
   }
 
   // Estadisticas del jugador actual
   async getCurrentSummonerData() {
     var result = await this.genericGet(`/lol-summoner/v1/current-summoner`);
+    const fullData = await this.getSummonerDataByPuuid(result.puuid);
 
-    return result;
+    return {
+      ...result,
+      ...fullData,
+    };
   }
   // Solicita el detalle de un match
   async getMatchDetail(matchId) {
@@ -363,4 +393,9 @@ class LauncherHandler extends GenericHandler {
   }
 }
 
-module.exports = { RuneHandler, SummonersHandler, LauncherHandler };
+module.exports = {
+  RuneHandler,
+  SummonersHandler,
+  LauncherHandler,
+  GenericHandler,
+};

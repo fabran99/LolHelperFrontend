@@ -4,6 +4,7 @@ const {
   RuneHandler,
   SummonersHandler,
   LauncherHandler,
+  GenericHandler,
 } = require("./lcuHandler/lcuHandler");
 
 // Runes
@@ -151,34 +152,7 @@ const getMatchlist = async (event, data) => {
 
   // Trato de pedir la lista de ids de partidas a la api del sistema, sino
   // intento usar la api del launcher
-  try {
-    var result = await rp({
-      method: "GET",
-      uri: encodeURI(
-        `${host}/stats/player_matchlist/?limit=20&username=${displayName}&region=${currentRegion.region}`
-      ),
-      strictSSL: false,
-      resolveWithFullResponse: true,
-      headers: {
-        Authorization: apiKey,
-      },
-    });
-    result = JSON.parse(result.body).game_ids;
-    usedEndpoint = true;
-  } catch (e) {
-    console.log(e);
-    var result = await summHandler.getMatchlistByPuuid(puuid);
-    result = result.map((x) => x.gameId);
-  }
-  // Tomo los primeros 20 juegos
-  var games = [];
-  var end = Math.min(20, result.length);
-  for (let i = 0; i < end; i++) {
-    let game = await summHandler.getMatchDetail(
-      result[usedEndpoint ? i : result.length - i - 1]
-    );
-    games.push(game);
-  }
+  var games = (await summHandler.getMatchlistByPuuid(puuid)).games.games;
 
   // Parseo la info
   let finalGames = games.map((game) => {
@@ -221,6 +195,13 @@ const getMatchlist = async (event, data) => {
   });
 
   return finalGames;
+};
+
+const genericRequest = async (event, data) => {
+  const { connection, url, body, method } = JSON.parse(data);
+  const handler = new GenericHandler(connection);
+  var result = await handler.genericRequest(url, body, method);
+  return result;
 };
 
 // launcher actions
@@ -282,4 +263,5 @@ module.exports = {
   getCurrentGameData,
   getSummonerInfoByName,
   getSummonerDetail,
+  genericRequest,
 };

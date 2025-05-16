@@ -32,7 +32,15 @@ const {
   getCurrentSummonerData,
   getCurrentGameData,
   getSummonerDetail,
+  genericRequest,
 } = require("./electron_handler/gameRequests");
+require("@electron/remote/main").initialize();
+
+const {
+  default: installExtension,
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
+} = require("electron-devtools-installer");
 
 // Os handler
 const { importBuild } = require("./electron_handler/osHandler");
@@ -89,6 +97,8 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       preload: __dirname + "/electron_handler/preload.js",
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
     frame: false,
     resizable: false,
@@ -103,12 +113,15 @@ const createWindow = () => {
       ? "http://localhost:3000"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
+  require("@electron/remote/main").enable(mainWindow.webContents);
 
   // Abro herramientas de desarrollo
   if (isDev) {
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.once("dom-ready", async () => {
+      await addExtensions();
+      mainWindow.webContents.openDevTools();
+    });
     // Agrego extensiones
-    addExtensions();
   }
 
   mainWindow.on("ready-to-show", () => {
@@ -201,6 +214,7 @@ ipc.handle("GET_MATCHLIST_BY_PUUID", getMatchlist);
 ipc.handle("RESTART_UX", restartUx);
 ipc.handle("GET_CURRENT_GAME_DATA", getCurrentGameData);
 ipc.handle("GET_SUMMONER_DETAIL", getSummonerDetail);
+ipc.handle("LCU_REQUEST", genericRequest);
 
 // Datos del summoner actual
 ipc.handle("GET_CURRENT_SUMMONER_DATA", getCurrentSummonerData);
@@ -279,34 +293,13 @@ ipc.on("quitAndInstall", (event, arg) => {
 });
 
 // Extensiones para desarrollo
-const addExtensions = () => {
-  var extension_path = join(
-    process.env.APPDATA.replace(process.env.APPDATA.split(path.sep).pop(), ""),
-    "Local",
-    "Google",
-    "Chrome",
-    "User Data",
-    "Default",
-    "Extensions"
-  );
-  var react_dev_tools = "fmkadmapgofadopljbjfkapdkoienihi";
-  var redux_dev_tools = "lmhkpmbekcpmknklioeibfkpmmfibljd";
-
-  const isDirectory = (source) => lstatSync(source).isDirectory();
-  const getDirectories = (source) =>
-    readdirSync(source)
-      .map((name) => join(source, name))
-      .filter(isDirectory);
-
+const addExtensions = async () => {
   try {
-    // BrowserWindow.addDevToolsExtension(
-    //   getDirectories(`${path.join(extension_path, react_dev_tools)}`)[0]
-    // );
-    BrowserWindow.addDevToolsExtension(
-      getDirectories(`${path.join(extension_path, redux_dev_tools)}`)[0]
-    );
-  } catch (e) {
-    console.log(e);
-    console.log("No extensions");
+    const names = await Promise.all([
+      // installExtension(REACT_DEVELOPER_TOOLS),
+      installExtension(REDUX_DEVTOOLS),
+    ]);
+  } catch (err) {
+    console.error("Failed to install DevTools:", err);
   }
 };
