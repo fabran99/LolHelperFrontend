@@ -187,7 +187,13 @@ export class ConfigurationHandler extends Component {
             savingBuild: true,
           });
           electron.ipcRenderer
-            .invoke("IMPORT_ITEMS", JSON.stringify(buildObject))
+            .invoke(
+              "IMPORT_ITEMS",
+              JSON.stringify({
+                ...buildObject,
+                gamePath: settings.gamePath,
+              })
+            )
             .then((res) => {
               this.props.updateConfig({
                 savingBuild: false,

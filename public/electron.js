@@ -265,13 +265,21 @@ ipc.handle("IMPORT_ITEMS", (event, data) => {
 const startListeners = (auth_data) => {
   console.log("Inicio los listeners");
   setTimeout(() => {
-    connect(auth_data).then((lcusocket) => {
-      socket = lcusocket;
-      handleChampSelect(mainWindow, auth_data, socket);
-      handleGameSession(mainWindow, auth_data, socket);
-      handleGameLobby(mainWindow, auth_data, socket);
-    });
-  }, 5000);
+    connect(auth_data)
+      .then((lcusocket) => {
+        socket = lcusocket;
+        handleChampSelect(mainWindow, auth_data, socket);
+        handleGameSession(mainWindow, auth_data, socket);
+        handleGameLobby(mainWindow, auth_data, socket);
+      })
+      .catch(async (err) => {
+        setTimeout(() => {
+          // Reintentar
+          console.log("RETRYING TO CONNECT");
+          startListeners(auth_data);
+        }, 10000);
+      });
+  }, 10000);
 };
 
 // Auto update

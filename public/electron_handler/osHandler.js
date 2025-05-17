@@ -1,5 +1,4 @@
 const fs = require("fs");
-const buildRoute = `C:\\Riot Games\\League of Legends\\Config\\Champions`;
 
 const deleteAllLolHelperFromFolder = (folder) => {
   fs.readdir(folder, (err, files) => {
@@ -19,7 +18,11 @@ const deleteAllLolHelperFromFolder = (folder) => {
 
 const importBuild = (currentWindow, build) => {
   var buildDict = JSON.parse(build);
-  var route = `${buildRoute}\\${buildDict.champion}\\Recommended\\`;
+  let { gamePath } = buildDict;
+  if (!gamePath) {
+    gamePath = `C:\\Riot Games\\League of Legends`;
+  }
+  var route = `${gamePath}\\Config\\Champions\\${buildDict.champion}\\Recommended\\`;
 
   fs.mkdir(route, { recursive: true }, (err) => {
     if (err) {

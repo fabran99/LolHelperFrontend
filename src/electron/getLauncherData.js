@@ -1,11 +1,30 @@
 import { electron } from "../helpers/outsideObjects";
 
 // Summoner data
-export const getSummonerData = async (connection) => {
-  var response = await electron.ipcRenderer.invoke(
-    "GET_CURRENT_SUMMONER_DATA",
-    JSON.stringify({ connection })
-  );
+export const getSummonerData = async (connection, retries = 0) => {
+  try {
+    var response = await electron.ipcRenderer.invoke(
+      "GET_CURRENT_SUMMONER_DATA",
+      JSON.stringify({ connection })
+    );
+  } catch (e) {
+    // Wait 5 seconds and try again
+    if (retries > 5) {
+      return { error: "Error getting summoner data" };
+    }
+    console.log("Retrying to get summoner data", retries);
+    await new Promise((resolve) => setTimeout(resolve, 5000 * (retries + 1)));
+    response = await getSummonerData(connection, retries + 1);
+  }
+
+  if (response == null) {
+    if (retries > 5) {
+      return { error: "Error getting summoner data" };
+    }
+    console.log("Retrying to get summoner data", retries);
+    await new Promise((resolve) => setTimeout(resolve, 5000 * (retries + 1)));
+    response = await getSummonerData(connection, retries + 1);
+  }
 
   return response;
 };

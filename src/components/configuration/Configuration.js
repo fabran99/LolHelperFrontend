@@ -7,6 +7,7 @@ import { electron } from "../../helpers/outsideObjects";
 import classnames from "classnames";
 import bg from "../../img/universe-bg.jpg";
 import { selectLcuConnection } from "../../redux/lcuConnector/lcuConnector.selectors";
+import { handleSelectFolder } from "../../electron/nativeActions";
 
 export class Configuration extends Component {
   constructor(props) {
@@ -67,6 +68,16 @@ export class Configuration extends Component {
 
     const { restartingUx } = this.state;
 
+    const handleLeaguePath = (e) => {
+      e.preventDefault();
+      handleSelectFolder(settings.gamePath).then((res) => {
+        if (res) {
+          console.log(res);
+          this.props.updateConfig({ gamePath: res });
+        }
+      });
+    };
+
     return (
       <div className="modal modal--forward">
         <div
@@ -93,6 +104,7 @@ export class Configuration extends Component {
                     <div className="configuration__title">
                       Acciones automáticas
                     </div>
+
                     <label className="configuration__element configuration__element--switch">
                       <Switch
                         name="autoNavigate"
@@ -104,6 +116,7 @@ export class Configuration extends Component {
                         partida.
                       </div>
                     </label>
+
                     <label className="configuration__element configuration__element--switch">
                       <Switch
                         name="autoImportRunes"
@@ -133,6 +146,18 @@ export class Configuration extends Component {
                       <div className="configuration__element__name">
                         Aceptar partida automáticamente.
                       </div>
+                    </label>
+                    <label className="configuration__element configuration__element--button">
+                      <div className="configuration__element__name configuration__element__name--block">
+                        Ruta de instalacion de League of Legends.
+                      </div>
+                      <button
+                        className="configuration__button configuration__button--select"
+                        onClick={handleLeaguePath.bind(this)}
+                      >
+                        <div className="configuration__button__border"></div>
+                        {settings.gamePath}
+                      </button>
                     </label>
                   </div>
                 </div>

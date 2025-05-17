@@ -37,10 +37,16 @@ import { selectLcuIsConnected } from "../../redux/lcuConnector/lcuConnector.sele
 
 import ConfigurationHandler from "./ConfigurationHandler";
 import Configuration from "../configuration/Configuration";
+import { initialState } from "../../redux/settings/settings.reducer";
+import { updateConfig } from "../../redux/settings/settings.actions";
 
 export class AppWrapper extends Component {
   componentDidMount() {
     this.initListeners();
+    // Actualizo las settings si la version cambia
+    if (this.props.settings.settingVersion !== initialState.settingVersion) {
+      this.props.updateConfig({ ...initialState, ...this.props.settings });
+    }
   }
 
   initListeners() {
@@ -166,6 +172,7 @@ export class AppWrapper extends Component {
 
 const mapStateToProps = (state) => ({
   settingsVisible: selectSettingsVisible(state),
+  settings: state.settings,
   assetsLoaded: selectAssetsLoaded(state),
   currentPhase: selectCurrentPhase(state),
   isTFT: selectIsTFT(state),
@@ -185,6 +192,7 @@ const mapDispatchToProps = {
   startFetchingCurrentGame,
   stopFetchingCurrentGame,
   gameSessionChange,
+  updateConfig,
 };
 
 export default connect(

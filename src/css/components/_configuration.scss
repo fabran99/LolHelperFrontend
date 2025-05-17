@@ -49,6 +49,20 @@
     }
   }
 
+  input {
+    border: none;
+    display: block;
+    width: 100%;
+    margin-top: 1em;
+    cursor: pointer;
+    z-index: 10;
+    padding: 7px 15px;
+    background: $lolbutton_background;
+    font-size: 0.7em;
+    position: relative;
+    outline: none;
+  }
+
   &__button {
     border: none;
     display: inline-block;
@@ -62,6 +76,19 @@
     color: white;
     position: relative;
     outline: none;
+
+    &--select {
+      text-align: left;
+      color: lighten($lolbutton_background, 40%);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
+
+      &:hover {
+        color: lighten($lolbutton_background, 50%);
+      }
+    }
 
     &:not(.disabled):hover {
       background: lighten($lolbutton_background, 2%);

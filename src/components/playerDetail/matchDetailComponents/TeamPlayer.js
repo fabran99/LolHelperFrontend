@@ -95,7 +95,7 @@ const TeamPlayer = ({
                   <div className="player_timeline__map">
                     <img src={SummonersRiftMiniMap} />
 
-                    {participant.timeline.map((frame, index) => {
+                    {participant?.timeline?.map((frame, index) => {
                       if (index > 4) {
                         return;
                       }

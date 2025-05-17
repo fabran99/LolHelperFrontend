@@ -87,7 +87,12 @@ const getCurrentSummonerData = async (event, data) => {
   const { connection } = JSON.parse(data);
 
   var summHandler = new SummonersHandler(connection);
-  var result = await summHandler.getCurrentSummonerData();
+  let result = null;
+  try {
+    result = await summHandler.getCurrentSummonerData();
+  } catch (e) {
+    console.log("Error al obtener el summoner actual", e);
+  }
   return result;
 };
 
@@ -153,6 +158,11 @@ const getMatchlist = async (event, data) => {
   // Trato de pedir la lista de ids de partidas a la api del sistema, sino
   // intento usar la api del launcher
   var games = (await summHandler.getMatchlistByPuuid(puuid)).games.games;
+  games = await Promise.all(
+    games.slice(0, 21).map(async (game) => {
+      return summHandler.getMatchDetail(game.gameId);
+    })
+  );
 
   // Parseo la info
   let finalGames = games.map((game) => {

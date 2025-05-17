@@ -1,6 +1,6 @@
 import { UPDATE_CONFIG } from "./settings.types";
 
-var initialState = {
+export var initialState = {
   // General
   autoNavigate: true,
   // Lane
@@ -16,8 +16,10 @@ var initialState = {
   dontAutoImportBuildNow: false,
   champSelectionVisibleData: "runes",
   savingBuild: false,
+  gamePath: `C:\\Riot Games\\League of Legends`,
   // Configuration modal
   settingsVisible: false,
+  settingVersion: "0.2.18",
 };
 
 export default (state = initialState, action) => {
