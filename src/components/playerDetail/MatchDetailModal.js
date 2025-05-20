@@ -17,7 +17,6 @@ export class MatchDetailModal extends Component {
   parseMatchDetail() {
     const { matchDetail, getChampionById, itemsDict } = this.props;
 
-    console.log(matchDetail);
     let result = {
       gameData: {
         gameDuration: matchDetail.gameDuration,

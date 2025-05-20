@@ -26,8 +26,6 @@ const Runes = (props) => {
     (slot) => slot.id === runeData.secondary.perk5
   );
 
-  console.log(props);
-
   return (
     <div className="team__runes">
       <CustomTooltip

@@ -183,8 +183,6 @@ export class LobbyPlayerItem extends Component {
       ...getTagsFromData(this.state, assets, null),
     ];
 
-    console.log(this.state);
-
     const playerData = () => {
       return (
         <div className="tooltip">

@@ -50,7 +50,6 @@ export class ChampImage extends Component {
 
   getSummonerChampInfo() {
     const { lcuConnector, summoner, ingame } = this.props;
-    console.log(ingame);
     // Si tengo la info de ingame
     if (ingame.allPlayers && summoner.displayName) {
       var playerData = ingame.allPlayers.find(

@@ -5,7 +5,6 @@ const { request } = league_connect;
 
 export const parseRunepage = (runepage, champName, make_current) => {
   make_current = make_current || false;
-  console.log(runepage);
 
   var edited = {
     primaryStyleId: runepage.primary.main,
@@ -51,7 +50,6 @@ export const updateRunePage = (
     .then((res) => {
       res.json().then((rlist) => {
         //  Edito la pagina actual con los valores nuevos
-        console.log(rlist);
         var editable = rlist.filter((item) => {
           return item.isEditable;
         });
@@ -67,7 +65,6 @@ export const updateRunePage = (
             connection
           )
             .then((ed) => {
-              console.log(ed);
               ed.json().then((res) => {
                 console.log(res);
               });
@@ -133,7 +130,6 @@ export const updateFirstRunepageByChampStats = (connection, champ, elo) => {
     .then((res) => {
       if (res.status == 200) {
         var rpage = parseRunepage(res.data.runes, res.data.champName, true);
-        console.log(rpage);
         updateRunePage(0, rpage, connection);
       }
     })

@@ -275,8 +275,6 @@ export const getSummonerChamp = (gameSession, summoner) => {
         (el) => el.puuid == current_el.puuid
       );
 
-      console.log(gameData.playerChampionSelections, current_el);
-
       if (selection) {
         return selection.championId;
       }
