@@ -139,7 +139,7 @@ app.on("ready", () => {
   autoUpdater.checkForUpdates();
   setInterval(() => {
     autoUpdater.checkForUpdates();
-  }, 1000 * 60 * 15);
+  }, 1000 * 60 * 5);
 });
 
 app.on("window-all-closed", () => {
@@ -287,6 +287,23 @@ const startListeners = (auth_data) => {
 autoUpdater.on("update-downloaded", (info) => {
   console.log("downloaded", info);
   mainWindow.webContents.send("updateReady", info);
+});
+
+autoUpdater.on("checking-for-update", () => {
+  console.log("Checking for update...");
+});
+autoUpdater.on("update-available", (info) => {
+  console.log("Update available:", info);
+});
+autoUpdater.on("update-not-available", (info) => {
+  console.log("No update available:", info);
+});
+autoUpdater.on("error", (err) => {
+  console.log("Error in auto-updater:", err);
+});
+autoUpdater.on("download-progress", (progressObj) => {
+  console.log(`Download speed: ${progressObj.bytesPerSecond}`);
+  console.log(`Downloaded ${progressObj.percent.toFixed(2)}%`);
 });
 
 ipc.on("quitAndInstall", (event, arg) => {
